@@ -1,0 +1,28 @@
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("../fonts/JetBrainsMono-VariableFont_wght.woff2") format("woff2");
+  font-weight: 400 500 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* fonts */
+  --ff-headings: "JetBrains Mono", sans-serif;
+  --ff-text: "JetBrains Mono", sans-serif;
+}
+
+h1 {
+  font-family: var(--ff-headings);
+}
+
+.visually-hidden {
+  border: 0;
+  clip-path: inset(50%);
+  height: 1px;
+  margin: 0;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
