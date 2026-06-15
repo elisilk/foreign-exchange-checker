@@ -79,7 +79,7 @@ Your users should be able to:
 ### Links
 
 - Solution URL: [https://github.com/elisilk/foreign-exchange-checker](https://github.com/elisilk/foreign-exchange-checker)
-- Live Site URL: [https://silk-fx-checker.vercel.app/](https://silk-fx-checker.vercel.app/)
+- Live Site URL: [https://foreign-exchange-checker-seven.vercel.app/](https://foreign-exchange-checker-seven.vercel.app/)
 
 ## My process
 
