@@ -27,11 +27,18 @@ const numCurrencies = computed(() => currencies.value?.length ?? 0);
           v-model="base"
           :currencies
         />
+
         <CurrencyPicker
           id="quote"
           v-model="quote"
           :currencies
         />
+
+        <CurrencySwap
+          v-model:base="base"
+          v-model:quote="quote"
+        />
+
         <CurrencyConverter :base :quote />
       </div>
     </main>
