@@ -1,75 +1,144 @@
-# Nuxt Minimal Starter
+# Frontend Mentor - FX Checker solution
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+This is a solution to the [FX Checker challenge on Frontend Mentor](https://www.frontendmentor.io/challenges/foreign-exchange-currency-converter). Frontend Mentor challenges help you improve your coding skills by building realistic projects.
 
-## Setup
+## Table of contents
 
-Make sure to install dependencies:
+- [Overview](#overview)
+  - [The challenge](#the-challenge)
+  - [Screenshots](#screenshots)
+  - [Links](#links)
+- [My process](#my-process)
+  - [Built with](#built-with)
+  - [What I learned](#what-i-learned)
+  - [Continued development](#continued-development)
+  - [Useful resources](#useful-resources)
+  - [AI Collaboration](#ai-collaboration)
+- [Author](#author)
+- [Acknowledgments](#acknowledgments)
 
-```bash
-# npm
-npm install
+## Overview
 
-# pnpm
-pnpm install
+### The challenge
 
-# yarn
-yarn install
+Your users should be able to:
 
-# bun
-bun install
-```
+#### Converter
 
-## Development Server
+- Enter an amount to send and see it convert in real time as they type
+- Pick the "send" and "receive" currencies from a searchable currency picker
+- See the live exchange rate for the active pair (for example, `1 USD = 0.8530 EUR`)
+- Swap the send and receive currencies with the swap button
+- Favorite the active pair, and log a conversion to their history
 
-Start the development server on `http://localhost:3000`:
+#### Currency picker
 
-```bash
-# npm
-npm run dev
+- Search the full list of available currencies by code or name
+- See currencies grouped into "Popular" and "Other currencies", each row showing the flag, code, and name
+- See a check against the currency that's currently selected
 
-# pnpm
-pnpm dev
+#### Live markets ticker
 
-# yarn
-yarn dev
+- See a ticker of currency pairs, each with its current rate and 24-hour change (up or down)
 
-# bun
-bun run dev
-```
+#### Rate history
 
-## Production
+- View a line and area chart of the active pair's rate over time
+- Switch the chart range between 1D, 1W, 1M, 3M, 1Y, and 5Y
+- See the open, last, absolute change, and percentage change for the selected range
 
-Build the application for production:
+#### Compare
 
-```bash
-# npm
-npm run build
+- See their send amount converted into a range of other currencies at once, each with its reference rate
+- Pin or unpin any comparison row to their favorites
 
-# pnpm
-pnpm build
+#### Favorites
 
-# yarn
-yarn build
+- See their pinned pairs, each with its live rate and 24-hour change
+- Load a pinned pair back into the converter by selecting its row
+- Unpin a pair they no longer want to track
 
-# bun
-bun run build
-```
+#### Conversion log
 
-Locally preview production build:
+- See a log of conversions they've made, each showing the relative time, the pair, and the send and receive amounts
+- Clear the whole log
+- Delete an individual entry
 
-```bash
-# npm
-npm run preview
+#### UI & accessibility
 
-# pnpm
-pnpm preview
+- View the optimal layout for the interface depending on their device's screen size
+- See hover and focus states for all interactive elements on the page
+- Navigate the entire app using only their keyboard
 
-# yarn
-yarn preview
+### Screenshots
 
-# bun
-bun run preview
-```
+|                 Mobile designed at 375px:                 |                Tablet designed at 1440px:                 | Desktop designed at 1440px:                                 |
+| :-------------------------------------------------------: | :-------------------------------------------------------: | ----------------------------------------------------------- |
+| ![Screenshot mobile](./screenshots/screenshot-mobile.png) | ![Screenshot tablet](./screenshots/screenshot-tablet.png) | ![Screenshot desktop](./screenshots/screenshot-desktop.png) |
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+### Links
+
+- Solution URL: [https://github.com/elisilk/foreign-exchange-checker](https://github.com/elisilk/foreign-exchange-checker)
+- Live Site URL: [https://silk-fx-checker.vercel.app/](https://silk-fx-checker.vercel.app/)
+
+## My process
+
+### Built with
+
+- [GitHub](https://github.com/) - code repository
+- [Nuxt](https://nuxt.com/) - full-stack web framework (built on Vue, Vite, and Nitro)
+- [Vercel](https://vercel.com/docs/getting-started-with-vercel) - web host deployment
+
+Other libraries I made use of, primarily for the workflow setup:
+
+- [Husky](https://github.com/typicode/husky)
+- [Lint-staged](https://github.com/lint-staged/lint-staged)
+- [ESLint](https://eslint.org/)
+  - [Nuxt ESLint](https://eslint.nuxt.com/)
+  - [Anthony Fu's ESLint config preset](https://github.com/antfu/eslint-config)
+
+### What I learned
+
+As always, so many cool :sunglasses: things. Here are some of the key resources I used.
+
+#### Building the App
+
+#### Testing the App
+
+Hmm 🤔 ... I still have to do this part!
+
+### Continued development
+
+Known issues - specific areas that the solution should be improved:
+
+- [ ] All of the testing part!
+
+Feature requests - specific enhancements to make:
+
+### Useful resources
+
+- [Example resource 1](https://www.example.com) - This helped me for XYZ reason. I really liked this pattern and will use it going forward.
+- [Example resource 2](https://www.example.com) - This is an amazing article which helped me finally understand XYZ. I'd recommend it to anyone still learning this concept.
+
+**Note: Delete this note and replace the list above with resources that helped you during the challenge. These could come in handy for anyone viewing your solution or for yourself when you look back on this project in the future.**
+
+### AI Collaboration
+
+Describe how you used AI tools (if any) during this project. This helps demonstrate your ability to work effectively with AI assistants.
+
+- What tools did you use (e.g., ChatGPT, Claude, GitHub Copilot)?
+- How did you use them (e.g., debugging, generating boilerplate, brainstorming solutions)?
+- What worked well? What didn't?
+
+**Note: Delete this note and the content above if you didn't use AI, or replace with your own experience.**
+
+## Author
+
+- Website - [Eli Silk](https://github.com/elisilk)
+- Frontend Mentor - [@elisilk](https://www.frontendmentor.io/profile/elisilk)
+
+## Acknowledgments
+
+This is where you can give a hat tip to anyone who helped you out on this project. Perhaps you worked in a team or got some inspiration from someone else's solution. This is the perfect place to give them some credit.
+
+**Note: Delete this note and edit this section's content as necessary. If you completed this challenge by yourself, feel free to delete this section entirely.**
