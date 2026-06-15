@@ -1,90 +1,39 @@
 <script setup lang="ts">
-type Rate = {
-  date: string;
-  base: string;
-  rate: number;
-  quote: string;
-};
+const provider = ref("ECB");
+const base = ref("USD");
+const quote = ref("EUR");
 
-const { status, data } = useFetch<Rate>(
-  "https://api.frankfurter.dev/v2/rate/EUR/USD",
+const { status, data: currencies } = useFetch<Currency[]>(
+  `https://api.frankfurter.dev/v2/currencies?providers=${provider.value}`,
   {
     lazy: true,
   },
 );
 
-const rate = computed<number | undefined>(() => {
-  if (!data.value)
-    return undefined;
-  return data.value.rate;
-});
-
-const send = ref<number | undefined>(undefined);
-const receive = computed<number | undefined>({
-  get() {
-    return rate.value && send.value != null ? send.value * rate.value : undefined;
-  },
-  set(newValue) {
-    send.value = rate.value && newValue != null ? newValue / rate.value : undefined;
-  },
-});
+const numCurrencies = computed(() => currencies.value?.length ?? 0);
 </script>
 
 <template>
   <div>
-    <header>
-      <h1>FX Checker</h1>
-    </header>
+    <AppHeader :provider :num-currencies="numCurrencies" />
 
     <main>
       <div v-if="status === 'pending'">
         Loading ...
       </div>
-      <div v-else-if="status === 'success' && data">
-        <form>
-          <h2>Check the Rate</h2>
-
-          <label>
-            <span>Send</span>
-            <input
-              id="send"
-              v-model="send"
-              type="number"
-              name="send"
-              placeholder="0"
-              step="0.01"
-            >
-            <span>EUR</span>
-          </label>
-
-          <label>
-            <span>Receive</span>
-            <input
-              id="receive"
-              v-model="receive"
-              type="number"
-              name="receive"
-              placeholder="0"
-              step="0.01"
-            >
-            <span>USD</span>
-          </label>
-        </form>
-
-        <p>1 {{ data.base }} = {{ data.rate }} {{ data.quote }}</p>
+      <div v-else-if="status === 'success' && currencies">
+        <CurrencyPicker
+          id="base"
+          v-model="base"
+          :currencies
+        />
+        <CurrencyPicker
+          id="quote"
+          v-model="quote"
+          :currencies
+        />
+        <CurrencyConverter :base :quote />
       </div>
     </main>
   </div>
 </template>
-
-<style scoped>
-form {
-  display: grid;
-  gap: 1rem;
-}
-
-label {
-  display: flex;
-  gap: 0.5rem;
-}
-</style>
