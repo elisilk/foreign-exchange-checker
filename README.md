@@ -130,7 +130,9 @@ Describe how you used AI tools (if any) during this project. This helps demonstr
 - How did you use them (e.g., debugging, generating boilerplate, brainstorming solutions)?
 - What worked well? What didn't?
 
-**Note: Delete this note and the content above if you didn't use AI, or replace with your own experience.**
+My workflow with AI is purposely restrained at the moment, so I can learn and think through much of the challenge. However, I definitely do make use of Google searches regularly, along with the AI summaries that result. For example, when ... Googled ["javascript array of objects group by property"](https://www.google.com/search?q=javascript+array+of+objects+group+by+property), which did nicely lead me to the [`Object.groupBy()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/groupBy) function, which I would have been unlikely to have found otherwise.
+
+I have also started to dabble with using ChatGPT as a helpful guide for thinking through various solution design options. For example, I ...
 
 ## Author
 
