@@ -40,6 +40,8 @@ const numCurrencies = computed(() => currencies.value?.length ?? 0);
         />
 
         <CurrencyConverter :base :quote />
+
+        <CurrencyTicker :base />
       </div>
     </main>
   </div>
