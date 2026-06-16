@@ -1,10 +1,8 @@
 <script setup lang="ts">
-const provider = ref("ECB");
-const base = ref("USD");
-const quote = ref("EUR");
+const currency = useCurrencyStore();
 
 const { status, data: currencies } = useFetch<Currency[]>(
-  `https://api.frankfurter.dev/v2/currencies?providers=${provider.value}`,
+  `https://api.frankfurter.dev/v2/currencies?providers=${currency.provider}`,
   {
     lazy: true,
   },
@@ -15,7 +13,7 @@ const numCurrencies = computed(() => currencies.value?.length ?? 0);
 
 <template>
   <div>
-    <AppHeader :provider :num-currencies="numCurrencies" />
+    <AppHeader :provider="currency.provider" :num-currencies="numCurrencies" />
 
     <main>
       <div v-if="status === 'pending'">
@@ -24,24 +22,24 @@ const numCurrencies = computed(() => currencies.value?.length ?? 0);
       <div v-else-if="status === 'success' && currencies">
         <CurrencyPicker
           id="base"
-          v-model="base"
+          v-model="currency.base"
           :currencies
         />
 
         <CurrencyPicker
           id="quote"
-          v-model="quote"
+          v-model="currency.quote"
           :currencies
         />
 
         <CurrencySwap
-          v-model:base="base"
-          v-model:quote="quote"
+          v-model:base="currency.base"
+          v-model:quote="currency.quote"
         />
 
-        <CurrencyConverter :base :quote />
+        <CurrencyConverter :base="currency.base" :quote="currency.quote" />
 
-        <CurrencyTicker :base />
+        <CurrencyTicker :base="currency.base" />
       </div>
     </main>
   </div>
