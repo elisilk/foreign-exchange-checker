@@ -6,7 +6,7 @@ type Props = {
 
 const { id } = defineProps<Props>();
 
-const selectedCurrency = defineModel();
+const selectedCurrency = defineModel<string>();
 
 const elementId = computed(() => `currency-select-${id}`);
 </script>
