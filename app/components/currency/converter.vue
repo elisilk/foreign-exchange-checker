@@ -42,7 +42,7 @@ const quoteCountry = computed(() => {
       <span>{{ exchange.base }}</span>
       <img
         v-if="baseCountry"
-        :src="`/flags/${baseCountry}.webp`"
+        :src="`/flags/${baseCountry.toLowerCase()}.webp`"
         :alt="baseCountry"
       >
     </label>
@@ -60,7 +60,7 @@ const quoteCountry = computed(() => {
       <span>{{ exchange.quote }}</span>
       <img
         v-if="quoteCountry"
-        :src="`/flags/${quoteCountry}.webp`"
+        :src="`/flags/${quoteCountry.toLowerCase()}.webp`"
         :alt="quoteCountry"
       >
     </label>
