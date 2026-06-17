@@ -1,6 +1,6 @@
 export type Currency = {
   iso_code: string;
-  iso_numeric: number;
+  iso_numeric: string;
   name: string;
   symbol: string;
   start_date: string;

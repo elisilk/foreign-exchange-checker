@@ -1,12 +1,12 @@
 <script setup lang="ts">
-const currency = useCurrencyStore();
+const exchange = useExchangeStore();
 </script>
 
 <template>
   <header>
     <h1>FX Checker</h1>
     <div>
-      {{ currency.numCurrencies }} Currencies · EOD · {{ currency.provider }} data
+      {{ exchange.numCurrencies }} Currencies · EOD · {{ exchange.provider }} data
     </div>
   </header>
 </template>

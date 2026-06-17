@@ -1,9 +1,9 @@
 <script setup lang="ts">
-const currency = useCurrencyStore();
+const exchange = useExchangeStore();
 </script>
 
 <template>
-  <button @click="currency.swap()">
+  <button @click="exchange.swap()">
     swap
   </button>
 </template>

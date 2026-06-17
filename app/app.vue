@@ -1,9 +1,9 @@
 <script setup lang="ts">
-const currency = useCurrencyStore();
+const exchange = useExchangeStore();
 
 await useAsyncData("initRates", async () => {
-  await currency.fetchCurrencies();
-  await currency.fetchRates();
+  await exchange.fetchCurrencies();
+  await exchange.fetchRates();
   return true;
 });
 
@@ -12,11 +12,11 @@ await useAsyncData("initRates", async () => {
 // });
 
 watch(
-  [() => currency.base, () => currency.quote],
+  [() => exchange.base, () => exchange.quote],
   async (/* [newBase, newQuote], [_oldBase, _oldQuote] */) => {
     // console.log(`new state: ${newBase} / ${newQuote}`);
     try {
-      await currency.fetchRates();
+      await exchange.fetchRates();
     }
     catch (error) {
       console.error("Error fetching new rates:", error);
@@ -32,12 +32,12 @@ watch(
     <main class="main">
       <CurrencyPicker
         id="base"
-        v-model="currency.base"
+        v-model="exchange.base"
       />
 
       <CurrencyPicker
         id="quote"
-        v-model="currency.quote"
+        v-model="exchange.quote"
       />
 
       <CurrencySwap />
@@ -48,7 +48,7 @@ watch(
 
       <CurrencyCompare />
 
-      <CurrencyTicker :base="currency.base" />
+      <CurrencyTicker :base="exchange.base" />
     </main>
   </div>
 </template>

@@ -1,12 +1,12 @@
 <script setup lang="ts">
-const currency = useCurrencyStore();
+const exchange = useExchangeStore();
 </script>
 
 <template>
-  <div v-if="!currency.rate">
+  <div v-if="!exchange.rate">
     No rate available
   </div>
   <div v-else>
-    1 {{ currency.base }} = {{ currency.rate }} {{ currency.quote }}
+    1 {{ exchange.base }} = {{ exchange.rate }} {{ exchange.quote }}
   </div>
 </template>

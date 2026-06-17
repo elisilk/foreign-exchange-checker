@@ -5,7 +5,7 @@ type Props = {
 
 const { id } = defineProps<Props>();
 
-const currency = useCurrencyStore();
+const exchange = useExchangeStore();
 
 const selectedCurrency = defineModel<string>();
 
@@ -21,7 +21,7 @@ const elementId = computed(() => `currency-select-${id}`);
       :name="elementId"
     >
       <option
-        v-for="currencyOption in currency.currencies"
+        v-for="currencyOption in exchange.currencies"
         :key="currencyOption.iso_numeric"
         :value="currencyOption.iso_code"
       >
