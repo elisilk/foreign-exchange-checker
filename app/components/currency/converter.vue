@@ -1,25 +1,12 @@
 <script setup lang="ts">
 const currency = useCurrencyStore();
 
-const { status, data } = useFetch<Rate>(
-  () => `https://api.frankfurter.dev/v2/rate/${currency.base}/${currency.quote}`,
-  {
-    lazy: true,
-  },
-);
-
-const rate = computed<number | undefined>(() => {
-  if (!data.value)
-    return undefined;
-  return data.value.rate;
-});
-
 const receive = computed<number | undefined>({
   get() {
-    return rate.value && currency.amount != null ? currency.amount * rate.value : undefined;
+    return currency.rate && currency.amount != null ? currency.amount * currency.rate : undefined;
   },
   set(newValue) {
-    currency.amount = rate.value && newValue != null ? newValue / rate.value : undefined;
+    currency.amount = currency.rate && newValue != null ? newValue / currency.rate : undefined;
   },
 });
 </script>
@@ -53,14 +40,6 @@ const receive = computed<number | undefined>({
       >
       <span>{{ currency.quote }}</span>
     </label>
-
-    <div v-if="status === 'pending'">
-      Loading ...
-    </div>
-
-    <div v-else-if="status === 'success' && data">
-      1 {{ data.base }} = {{ data.rate }} {{ data.quote }}
-    </div>
   </form>
 </template>
 

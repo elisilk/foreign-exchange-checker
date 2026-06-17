@@ -1,48 +1,60 @@
 <script setup lang="ts">
 const currency = useCurrencyStore();
 
-const { status, data: currencies } = useFetch<Currency[]>(
-  `https://api.frankfurter.dev/v2/currencies?providers=${currency.provider}`,
-  {
-    lazy: true,
+await useAsyncData("initRates", async () => {
+  await currency.fetchCurrencies();
+  await currency.fetchRates();
+  return true;
+});
+
+// onMounted(async () => {
+//   await currency.fetchRates();
+// });
+
+watch(
+  [() => currency.base, () => currency.quote],
+  async (/* [newBase, newQuote], [_oldBase, _oldQuote] */) => {
+    // console.log(`new state: ${newBase} / ${newQuote}`);
+    try {
+      await currency.fetchRates();
+    }
+    catch (error) {
+      console.error("Error fetching new rates:", error);
+    }
   },
 );
-
-const numCurrencies = computed(() => currencies.value?.length ?? 0);
 </script>
 
 <template>
   <div>
-    <AppHeader :provider="currency.provider" :num-currencies="numCurrencies" />
+    <AppHeader />
 
-    <main>
-      <div v-if="status === 'pending'">
-        Loading ...
-      </div>
-      <div v-else-if="status === 'success' && currencies">
-        <CurrencyPicker
-          id="base"
-          v-model="currency.base"
-          :currencies
-        />
+    <main class="main">
+      <CurrencyPicker
+        id="base"
+        v-model="currency.base"
+      />
 
-        <CurrencyPicker
-          id="quote"
-          v-model="currency.quote"
-          :currencies
-        />
+      <CurrencyPicker
+        id="quote"
+        v-model="currency.quote"
+      />
 
-        <CurrencySwap
-          v-model:base="currency.base"
-          v-model:quote="currency.quote"
-        />
+      <CurrencySwap />
 
-        <CurrencyConverter :base="currency.base" :quote="currency.quote" />
+      <CurrencyRate />
 
-        <CurrencyCompare />
+      <CurrencyConverter />
 
-        <CurrencyTicker :base="currency.base" />
-      </div>
+      <CurrencyCompare />
+
+      <CurrencyTicker :base="currency.base" />
     </main>
   </div>
 </template>
+
+<style scoped>
+.main > * + * {
+  margin-block-start: 1rem;
+}
+</style>

@@ -1,17 +1,12 @@
 <script setup lang="ts">
-type Props = {
-  provider: string;
-  numCurrencies: number;
-};
-
-const { provider, numCurrencies } = defineProps<Props>();
+const currency = useCurrencyStore();
 </script>
 
 <template>
   <header>
     <h1>FX Checker</h1>
     <div>
-      {{ numCurrencies }} Currencies · EOD · {{ provider }} data
+      {{ currency.numCurrencies }} Currencies · EOD · {{ currency.provider }} data
     </div>
   </header>
 </template>
