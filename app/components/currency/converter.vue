@@ -1,13 +1,27 @@
 <script setup lang="ts">
-const currency = useCurrencyStore();
+const exchange = useExchangeStore();
 
 const receive = computed<number | undefined>({
   get() {
-    return currency.rate && currency.amount != null ? currency.amount * currency.rate : undefined;
+    return exchange.rate && exchange.amount != null ? exchange.amount * exchange.rate : undefined;
   },
   set(newValue) {
-    currency.amount = currency.rate && newValue != null ? newValue / currency.rate : undefined;
+    exchange.amount = exchange.rate && newValue != null ? newValue / exchange.rate : undefined;
   },
+});
+
+const baseCountry = computed(() => {
+  const countries = currencyToCountryMap[exchange.base];
+  return countries && countries.length > 0
+    ? countries[0]
+    : undefined;
+});
+
+const quoteCountry = computed(() => {
+  const countries = currencyToCountryMap[exchange.quote];
+  return countries && countries.length > 0
+    ? countries[0]
+    : undefined;
 });
 </script>
 
@@ -19,13 +33,18 @@ const receive = computed<number | undefined>({
       <span>Send</span>
       <input
         id="send"
-        v-model="currency.amount"
+        v-model="exchange.amount"
         type="number"
         name="send"
         placeholder="0"
         step="0.01"
       >
-      <span>{{ currency.base }}</span>
+      <span>{{ exchange.base }}</span>
+      <img
+        v-if="baseCountry"
+        :src="`flags/${baseCountry}.webp`"
+        :alt="baseCountry"
+      >
     </label>
 
     <label>
@@ -38,7 +57,12 @@ const receive = computed<number | undefined>({
         placeholder="0"
         step="0.01"
       >
-      <span>{{ currency.quote }}</span>
+      <span>{{ exchange.quote }}</span>
+      <img
+        v-if="quoteCountry"
+        :src="`flags/${quoteCountry}.webp`"
+        :alt="quoteCountry"
+      >
     </label>
   </form>
 </template>
@@ -52,5 +76,11 @@ form {
 label {
   display: flex;
   gap: 0.5rem;
+  align-items: center;
+}
+
+label img {
+  block-size: 25px;
+  inline-size: auto;
 }
 </style>

@@ -1,4 +1,4 @@
-export const useCurrencyStore = defineStore("currency", () => {
+export const useExchangeStore = defineStore("exchange", () => {
   const loading = ref(false);
   const provider = ref("ECB");
 
@@ -21,8 +21,8 @@ export const useCurrencyStore = defineStore("currency", () => {
     }
   }
 
-  const base = ref("USD");
-  const quote = ref("EUR");
+  const base = ref<CurrencyCode>("USD");
+  const quote = ref<CurrencyCode>("EUR");
   function swap() {
     [base.value, quote.value] = [quote.value, base.value];
   }
