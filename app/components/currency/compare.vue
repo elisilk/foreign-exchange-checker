@@ -1,13 +1,6 @@
 <script setup lang="ts">
 const currency = useCurrencyStore();
 
-const { status, data } = useFetch<Rate[]>(
-  () => `https://api.frankfurter.dev/v2/rates?base=${currency.base}&providers=${currency.provider}`,
-  {
-    lazy: true,
-  },
-);
-
 const formatter = new Intl.NumberFormat("en-US", {
   minimumFractionDigits: 2,
   maximumFractionDigits: 2,
@@ -15,19 +8,20 @@ const formatter = new Intl.NumberFormat("en-US", {
 </script>
 
 <template>
-  <div>
+  <div class="compare-component">
     <h2>Compare</h2>
 
-    <div v-if="!currency.amount">
+    <template v-if="!currency.amount">
       <h3>No comparison available</h3>
       <p>Enter an amount in SEND above to see what your money is worth in other currencies.</p>
-    </div>
+    </template>
 
-    <div v-else-if="status === 'pending'">
-      Loading ...
-    </div>
+    <template v-else-if="!currency.rates || currency.rates.length === 0">
+      <h3>No rates available</h3>
+      <p>There was an issue getting the latest rates. Try to refresh the page or come back again later. Sorry!</p>
+    </template>
 
-    <div v-else-if="status === 'success' && data" class="compare-component">
+    <template v-else>
       <header class="compare-header">
         <div class="heading">
           Multi-currency
@@ -38,13 +32,13 @@ const formatter = new Intl.NumberFormat("en-US", {
           }) }} from {{ currency.base }}
         </div>
         <div class="num-pairs">
-          {{ data.length }} pairs
+          {{ currency.rates.length }} pairs
         </div>
       </header>
 
-      <div v-if="data.length > 0" class="compare-list">
+      <div class="compare-list">
         <div
-          v-for="pair in data"
+          v-for="pair in currency.rates"
           :key="`compare-${pair.base}-${pair.quote}`"
           class="compare-item"
         >
@@ -58,7 +52,7 @@ const formatter = new Intl.NumberFormat("en-US", {
           </button>
         </div>
       </div>
-    </div>
+    </template>
   </div>
 </template>
 

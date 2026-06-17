@@ -1,10 +1,11 @@
 <script setup lang="ts">
 type Props = {
   id: string;
-  currencies: Currency[];
 };
 
 const { id } = defineProps<Props>();
+
+const currency = useCurrencyStore();
 
 const selectedCurrency = defineModel<string>();
 
@@ -20,12 +21,12 @@ const elementId = computed(() => `currency-select-${id}`);
       :name="elementId"
     >
       <option
-        v-for="currency in currencies"
-        :key="currency.iso_numeric"
-        :value="currency.iso_code"
+        v-for="currencyOption in currency.currencies"
+        :key="currencyOption.iso_numeric"
+        :value="currencyOption.iso_code"
       >
-        {{ currency.iso_code }}
-        {{ currency.name }}
+        {{ currencyOption.iso_code }}
+        {{ currencyOption.name }}
       </option>
     </select>
   </label>

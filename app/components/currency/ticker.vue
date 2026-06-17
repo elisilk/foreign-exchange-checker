@@ -22,12 +22,7 @@ onMounted(() => {
   yesterday.value = yesterdayDate.toISOString().split("T")[0];
 });
 
-const { status, data } = useFetch<Rate[]>(
-  () => `https://api.frankfurter.dev/v2/rates?base=${base}${yesterday.value ? `&from=${yesterday.value}` : ""}${today.value ? `&to=${today.value}` : ""}`,
-  {
-    lazy: true,
-  },
-);
+const { status, data } = useLazyFetch<Rate[]>(() => `https://api.frankfurter.dev/v2/rates?base=${base}${yesterday.value ? `&from=${yesterday.value}` : ""}${today.value ? `&to=${today.value}` : ""}`);
 
 const groupedData = computed(() => data.value ? Object.groupBy([...data.value].sort((a, b) => a.date.localeCompare(b.date)), rate => rate.quote) : []);
 
