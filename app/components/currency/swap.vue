@@ -4,6 +4,7 @@ const exchange = useExchangeStore();
 
 <template>
   <button @click="exchange.swap()">
+    <img src="/icon-exchange.svg" alt="">
     swap
   </button>
 </template>

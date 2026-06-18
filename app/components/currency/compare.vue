@@ -55,13 +55,15 @@ const formatter = new Intl.NumberFormat("en-US", {
             class="button-favorite"
             @click="exchange.deleteFavorite(pair.base, pair.quote)"
           >
-            Unfavorite
+            <img src="/icon-star-filled.svg" alt="">
+            Favorited
           </button>
           <button
             v-else
             class="button-favorite"
             @click="exchange.addFavorite(pair.base, pair.quote)"
           >
+            <img src="/icon-star.svg" alt="">
             Favorite
           </button>
         </div>
