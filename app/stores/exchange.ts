@@ -59,6 +59,30 @@ export const useExchangeStore = defineStore("exchange", () => {
 
   const amount = ref<number | undefined>();
 
+  const favorites = ref<Pair[]>(
+    [
+      { base: "EUR", quote: "USD" },
+      { base: "EUR", quote: "CAD" },
+    ],
+  );
+
+  function doesFavoriteExist(base: string, quote: string) {
+    return favorites.value.some(favorite => favorite.base === base && favorite.quote === quote);
+  }
+
+  function addFavorite(base: string, quote: string) {
+    if (doesFavoriteExist(base, quote))
+      return;
+    favorites.value.push({ base, quote });
+  }
+
+  function deleteFavorite(base: string, quote: string) {
+    const index = favorites.value.findIndex(favorite => favorite.base === base && favorite.quote === quote);
+    if (index === -1)
+      return;
+    favorites.value.splice(index, 1);
+  }
+
   return {
     loading,
     provider,
@@ -73,5 +97,9 @@ export const useExchangeStore = defineStore("exchange", () => {
     rate,
     fetchRates,
     amount,
+    favorites,
+    doesFavoriteExist,
+    addFavorite,
+    deleteFavorite,
   };
 });

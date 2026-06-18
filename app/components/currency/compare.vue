@@ -8,8 +8,10 @@ const formatter = new Intl.NumberFormat("en-US", {
 </script>
 
 <template>
-  <div class="compare-component">
-    <h2>Compare</h2>
+  <section class="compare-component" aria-labelledby="compare-component-heading">
+    <h2 id="compare-component-heading">
+      Compare
+    </h2>
 
     <template v-if="!exchange.amount">
       <h3>No comparison available</h3>
@@ -47,13 +49,25 @@ const formatter = new Intl.NumberFormat("en-US", {
           <span class="name">(currency name)</span>
           <span class="rate">@ {{ pair.rate.toPrecision(5) }}</span>
           <span class="result">{{ formatter.format(exchange.amount * pair.rate) }}</span>
-          <button class="button-favorite">
+
+          <button
+            v-if="exchange.doesFavoriteExist(pair.base, pair.quote)"
+            class="button-favorite"
+            @click="exchange.deleteFavorite(pair.base, pair.quote)"
+          >
+            Unfavorite
+          </button>
+          <button
+            v-else
+            class="button-favorite"
+            @click="exchange.addFavorite(pair.base, pair.quote)"
+          >
             Favorite
           </button>
         </div>
       </div>
     </template>
-  </div>
+  </section>
 </template>
 
 <style scoped>

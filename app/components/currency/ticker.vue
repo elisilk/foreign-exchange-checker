@@ -63,8 +63,10 @@ const transformedGroups = computed(() => Object.values(filteredGroups.value).map
 </script>
 
 <template>
-  <div>
-    <h2>Live markets</h2>
+  <section class="ticker-component" aria-labelledby="ticker-component-heading">
+    <h2 id="ticker-component-heading">
+      Live markets
+    </h2>
 
     <div v-if="status === 'pending'">
       Loading ...
@@ -82,7 +84,7 @@ const transformedGroups = computed(() => Object.values(filteredGroups.value).map
         <span>{{ pair?.rateChangeDirection }}</span>
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <style scoped>

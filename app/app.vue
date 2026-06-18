@@ -29,20 +29,32 @@ watch(
   <div>
     <AppHeader />
 
-    <main class="main">
-      <CurrencyPicker
-        id="base"
-        v-model="exchange.base"
-      />
+    <main class="main" aria-labelledby="main-heading">
+      <h1 id="main-heading">
+        Foreign Exchange Checker
+      </h1>
 
-      <CurrencyPicker
-        id="quote"
-        v-model="exchange.quote"
-      />
+      <section class="picker" aria-labelledby="picker-component-heading">
+        <h2 id="picker-component-heading">
+          Pick Currencies
+        </h2>
 
-      <CurrencySwap />
+        <CurrencyPicker
+          id="base"
+          v-model="exchange.base"
+        />
 
-      <CurrencyRate />
+        <CurrencyPicker
+          id="quote"
+          v-model="exchange.quote"
+        />
+
+        <CurrencySwap />
+
+        <CurrencyRate />
+      </section>
+
+      <CurrencyFavorites />
 
       <CurrencyConverter />
 
@@ -54,7 +66,8 @@ watch(
 </template>
 
 <style scoped>
-.main > * + * {
+.main > * + *,
+.picker > * + * {
   margin-block-start: 1rem;
 }
 </style>

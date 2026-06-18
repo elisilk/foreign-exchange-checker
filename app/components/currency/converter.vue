@@ -26,8 +26,10 @@ const quoteCountry = computed(() => {
 </script>
 
 <template>
-  <form>
-    <h2>Check the Rate</h2>
+  <form class="converter-component" aria-labelledby="converter-component-heading">
+    <h2 id="converter-component-heading">
+      Check the Rate
+    </h2>
 
     <label>
       <span>Send</span>
