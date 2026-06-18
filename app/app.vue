@@ -59,6 +59,7 @@ watch(
           <img src="/icon-star-filled.svg" alt="">
           Favorited
         </button>
+
         <button
           v-else
           class="button-favorite"
@@ -71,9 +72,11 @@ watch(
         <CurrencyRate />
       </section>
 
-      <CurrencyFavorites />
-
       <CurrencyConverter />
+
+      <CurrencyLog />
+
+      <CurrencyFavorites />
 
       <CurrencyCompare />
 

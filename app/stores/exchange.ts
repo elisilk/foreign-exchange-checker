@@ -1,6 +1,9 @@
 export const useExchangeStore = defineStore("exchange", () => {
-  const loading = ref(false);
+  /* Provivder */
+
   const provider = ref("ECB");
+
+  /* Currencies */
 
   const currencies = ref<Currency[]>([]);
   const numCurrencies = computed(() => currencies.value.length);
@@ -21,11 +24,15 @@ export const useExchangeStore = defineStore("exchange", () => {
     }
   }
 
+  /* Base/Quote Pair */
+
   const base = ref<CurrencyCode>("USD");
   const quote = ref<CurrencyCode>("EUR");
   function swap() {
     [base.value, quote.value] = [quote.value, base.value];
   }
+
+  /* Rates */
 
   const rates = ref<Rate[]>([]);
   const numRates = computed(() => currencies.value.length);
@@ -59,12 +66,9 @@ export const useExchangeStore = defineStore("exchange", () => {
 
   const amount = ref<number | undefined>();
 
-  const favorites = ref<Pair[]>(
-    [
-      { base: "EUR", quote: "USD" },
-      { base: "EUR", quote: "CAD" },
-    ],
-  );
+  /* Favorites */
+
+  const favorites = ref<Pair[]>([]);
 
   function doesFavoriteExist(base: string, quote: string) {
     return favorites.value.some(favorite => favorite.base === base && favorite.quote === quote);
@@ -83,8 +87,35 @@ export const useExchangeStore = defineStore("exchange", () => {
     favorites.value.splice(index, 1);
   }
 
+  /* Conversion Log */
+
+  const conversionLog = ref<Conversion[]>(
+    [
+      { timestamp: 1781813332304, base: "USD", quote: "EUR", rate: 0.87252, send: 1000, receive: 872.52 },
+    ],
+  );
+
+  function doesConversionLogExist(timestamp: number) {
+    return conversionLog.value.some(log => log.timestamp === timestamp);
+  }
+
+  function addConversionLog(base: string, quote: string, rate: number | undefined, send: number | undefined, receive: number | undefined) {
+    if (rate === undefined || send === undefined || receive === undefined)
+      return;
+    const timestamp = Date.now();
+    if (doesConversionLogExist(timestamp))
+      return;
+    conversionLog.value.push({ timestamp, base, quote, rate, send, receive });
+  }
+
+  function deleteConversionLog(timestamp: number) {
+    const index = conversionLog.value.findIndex(log => log.timestamp === timestamp);
+    if (index === -1)
+      return;
+    conversionLog.value.splice(index, 1);
+  }
+
   return {
-    loading,
     provider,
     currencies,
     numCurrencies,
@@ -101,5 +132,9 @@ export const useExchangeStore = defineStore("exchange", () => {
     doesFavoriteExist,
     addFavorite,
     deleteFavorite,
+    conversionLog,
+    doesConversionLogExist,
+    addConversionLog,
+    deleteConversionLog,
   };
 });

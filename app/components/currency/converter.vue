@@ -23,10 +23,16 @@ const quoteCountry = computed(() => {
     ? countries[0]
     : undefined;
 });
+
+function handleSubmit() {}
 </script>
 
 <template>
-  <form class="converter-component" aria-labelledby="converter-component-heading">
+  <form
+    class="converter-component"
+    aria-labelledby="converter-component-heading"
+    @submit.prevent="handleSubmit"
+  >
     <h2 id="converter-component-heading">
       Check the Rate
     </h2>
@@ -66,6 +72,14 @@ const quoteCountry = computed(() => {
         :alt="quoteCountry"
       >
     </label>
+
+    <button :disabled="exchange.rate === undefined || exchange.amount === undefined || receive === undefined" @click="exchange.addConversionLog(exchange.base, exchange.quote, exchange.rate, exchange.amount, receive)">
+      Log Conversion
+    </button>
+
+    <button type="submit">
+      Submit
+    </button>
   </form>
 </template>
 
@@ -73,6 +87,7 @@ const quoteCountry = computed(() => {
 form {
   display: grid;
   gap: 1rem;
+  justify-items: start;
 }
 
 label {
@@ -84,5 +99,9 @@ label {
 label img {
   block-size: 25px;
   inline-size: auto;
+}
+
+button[type="submit"] {
+  display: none;
 }
 </style>
