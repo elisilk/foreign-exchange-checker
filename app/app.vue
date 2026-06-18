@@ -51,6 +51,23 @@ watch(
 
         <CurrencySwap />
 
+        <button
+          v-if="exchange.doesFavoriteExist(exchange.base, exchange.quote)"
+          class="button-favorite"
+          @click="exchange.deleteFavorite(exchange.base, exchange.quote)"
+        >
+          <img src="/icon-star-filled.svg" alt="">
+          Favorited
+        </button>
+        <button
+          v-else
+          class="button-favorite"
+          @click="exchange.addFavorite(exchange.base, exchange.quote)"
+        >
+          <img src="/icon-star.svg" alt="">
+          Favorite
+        </button>
+
         <CurrencyRate />
       </section>
 
@@ -62,6 +79,18 @@ watch(
 
       <CurrencyTicker :base="exchange.base" />
     </main>
+
+    <footer aria-labelledby="footer-heading">
+      <h2 id="footer-heading">
+        Icon Inspector
+      </h2>
+      <div style="background: black; height: 100px; width: 100px; display: grid; place-items: center;">
+        <img
+          src="/icon-star-filled.svg"
+          alt=""
+        >
+      </div>
+    </footer>
   </div>
 </template>
 

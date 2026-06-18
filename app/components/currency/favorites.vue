@@ -30,7 +30,7 @@ const exchange = useExchangeStore();
           class="favorites-item"
         >
           <span class="base-iso-code">{{ pair.base }}</span>
-          <span>(arrow)</span>
+          <img src="/icon-arrow-right.svg" alt="arrow">
           <span class="quote-iso-code">{{ pair.quote }}</span>
           <span>(current rate)</span>
           <span>(percent change 24hrs)</span>
@@ -40,7 +40,8 @@ const exchange = useExchangeStore();
             class="button-unfavorite"
             @click="exchange.deleteFavorite(pair.base, pair.quote)"
           >
-            Unfavorite
+            <img src="/icon-star-filled.svg" alt="">
+            Favorited
           </button>
         </div>
       </div>
