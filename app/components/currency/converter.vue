@@ -66,13 +66,14 @@ const quoteCountry = computed(() => {
 
 function handleSubmit() { }
 
+const intFormatter = new Intl.NumberFormat("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+const decFormatter = new Intl.NumberFormat("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
 function formatWithCommas(num: number | null | undefined): string {
   if (num === null || num === undefined || Number.isNaN(num))
     return "";
-  return new Intl.NumberFormat("en-US", {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 2,
-  }).format(num);
+
+  return Number.isInteger(num) ? intFormatter.format(num) : decFormatter.format(num);
 }
 
 function parseCleanFloat(str: string): number | undefined {
