@@ -95,8 +95,8 @@ export const useExchangeStore = defineStore("exchange", () => {
     return conversionLog.value.some(log => log.datetime === datetime);
   }
 
-  function addConversionLog(base: string, quote: string, rate: number | undefined, send: number | undefined, receive: number | undefined) {
-    if (rate === undefined || send === undefined || receive === undefined)
+  function addConversionLog(base: string, quote: string, rate: number | undefined, send: number | undefined, receive: number | "" | undefined) {
+    if (rate === undefined || send === undefined || receive === "" || receive === undefined)
       return;
 
     // for testing purposes:
