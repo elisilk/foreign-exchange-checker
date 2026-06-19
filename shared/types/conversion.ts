@@ -1,5 +1,5 @@
 export type Conversion = {
-  timestamp: number;
+  datetime: string | number | Date;
   base: string;
   quote: string;
   rate: number;

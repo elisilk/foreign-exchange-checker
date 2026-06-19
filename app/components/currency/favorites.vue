@@ -4,8 +4,8 @@ const exchange = useExchangeStore();
 
 <template>
   <section class="favorites-component" aria-labelledby="favorites-component-heading">
-    <h2 id="favorites-component-heading">
-      Favorites
+    <h2 id="favorites-component-heading" class="component-heading">
+      Favorites <span>{{ exchange.favorites.length }}</span>
     </h2>
 
     <template v-if="exchange.favorites.length === 0 ">
@@ -52,6 +52,16 @@ const exchange = useExchangeStore();
 <style scoped>
 .favorites-component > * + * {
   margin-block-start: 1rem;
+}
+
+.component-heading span {
+  display: inline-grid;
+  place-items: center;
+  background: black;
+  color: white;
+  block-size: 2rem;
+  inline-size: 2rem;
+  border-radius: 50%;
 }
 
 .favorites-header {
