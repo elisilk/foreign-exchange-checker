@@ -91,24 +91,32 @@ export const useExchangeStore = defineStore("exchange", () => {
 
   const conversionLog = ref<Conversion[]>([]);
 
-  function doesConversionLogExist(timestamp: number) {
-    return conversionLog.value.some(log => log.timestamp === timestamp);
+  function doesConversionLogExist(datetime: string | number | Date) {
+    return conversionLog.value.some(log => log.datetime === datetime);
   }
 
   function addConversionLog(base: string, quote: string, rate: number | undefined, send: number | undefined, receive: number | undefined) {
     if (rate === undefined || send === undefined || receive === undefined)
       return;
-    const timestamp = Date.now();
-    if (doesConversionLogExist(timestamp))
+
+    // for testing purposes:
+    // const datetime = "2026-06-18T10:10:00.000Z";
+    const datetime = new Date().toISOString();
+
+    if (doesConversionLogExist(datetime))
       return;
-    conversionLog.value.push({ timestamp, base, quote, rate, send, receive });
+    conversionLog.value.unshift({ datetime, base, quote, rate, send, receive });
   }
 
-  function deleteConversionLog(timestamp: number) {
-    const index = conversionLog.value.findIndex(log => log.timestamp === timestamp);
+  function deleteConversionLog(datetime: string | number | Date) {
+    const index = conversionLog.value.findIndex(log => log.datetime === datetime);
     if (index === -1)
       return;
     conversionLog.value.splice(index, 1);
+  }
+
+  function deleteAllConversionLogs() {
+    conversionLog.value.length = 0;
   }
 
   return {
@@ -132,6 +140,7 @@ export const useExchangeStore = defineStore("exchange", () => {
     doesConversionLogExist,
     addConversionLog,
     deleteConversionLog,
+    deleteAllConversionLogs,
   };
 }, {
   persist: {

@@ -15,7 +15,7 @@ const formatter = new Intl.NumberFormat("en-US", {
 
     <template v-if="!exchange.amount">
       <h3>No comparison available</h3>
-      <p>Enter an amount in SEND above to see what your money is worth in other currencies.</p>
+      <p>Enter an amount in <span>SEND</span> above to see what your money is worth in other currencies.</p>
     </template>
 
     <template v-else-if="!exchange.rates || exchange.rates.length === 0">
