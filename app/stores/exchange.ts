@@ -89,11 +89,7 @@ export const useExchangeStore = defineStore("exchange", () => {
 
   /* Conversion Log */
 
-  const conversionLog = ref<Conversion[]>(
-    [
-      { timestamp: 1781813332304, base: "USD", quote: "EUR", rate: 0.87252, send: 1000, receive: 872.52 },
-    ],
-  );
+  const conversionLog = ref<Conversion[]>([]);
 
   function doesConversionLogExist(timestamp: number) {
     return conversionLog.value.some(log => log.timestamp === timestamp);
@@ -137,4 +133,16 @@ export const useExchangeStore = defineStore("exchange", () => {
     addConversionLog,
     deleteConversionLog,
   };
+}, {
+  persist: {
+    storage: piniaPluginPersistedstate.cookies(),
+    pick: [
+      "provider",
+      "base",
+      "quote",
+      "amount",
+      "favorites",
+      "conversionLog",
+    ],
+  },
 });
