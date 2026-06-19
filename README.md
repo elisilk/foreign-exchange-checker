@@ -87,7 +87,9 @@ Your users should be able to:
 
 - [GitHub](https://github.com/) - code repository
 - [Nuxt](https://nuxt.com/) - full-stack web framework (built on Vue, Vite, and Nitro)
-- [Vercel](https://vercel.com/docs/getting-started-with-vercel) - web host deployment
+- [Vercel](https://vercel.com/) - web host deployment
+- [Pinia](https://pinia.vuejs.org/) - state management
+- [Pinia Plugin Persistedstate](https://prazdevs.github.io/pinia-plugin-persistedstate/) - persistent state storage
 
 Other libraries I made use of, primarily for the workflow setup:
 
