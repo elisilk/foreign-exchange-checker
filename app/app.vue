@@ -80,7 +80,7 @@ watch(
 
       <CurrencyCompare />
 
-      <CurrencyTicker :base="exchange.base" />
+      <!-- <CurrencyTicker :base="exchange.base" /> -->
     </main>
 
     <footer aria-labelledby="footer-heading">
