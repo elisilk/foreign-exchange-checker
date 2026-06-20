@@ -50,20 +50,6 @@ const isReceiveInvalid = computed(() => {
   return (exchange.amount * exchange.rate) < 0;
 });
 
-const baseCountry = computed(() => {
-  const countries = currencyToCountryMap[exchange.base];
-  return countries && countries.length > 0
-    ? countries[0]
-    : undefined;
-});
-
-const quoteCountry = computed(() => {
-  const countries = currencyToCountryMap[exchange.quote];
-  return countries && countries.length > 0
-    ? countries[0]
-    : undefined;
-});
-
 function handleSubmit() { }
 
 const intFormatter = new Intl.NumberFormat("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 });
@@ -144,6 +130,8 @@ function handleFocus(event: FocusEvent, field: "send" | "receive"): void {
 function handleBlur(): void {
   activeField.value = null;
 }
+
+const announcerText = computed(() => `${send.value} ${exchange.base} equals ${receive.value} ${exchange.quote}.`);
 </script>
 
 <template>
@@ -156,105 +144,125 @@ function handleBlur(): void {
       Check the Rate
     </h2>
 
-    <!-- SEND Input Group -->
-    <div class="input-group">
-      <UFormField
-        label="Send"
-        name="send"
-        :class="{ 'is-invalid': isSendInvalid }"
+    <UCard>
+      <div
+        id="converter-announcer"
+        class="sr-only"
+        aria-live="polite"
+        aria-atomic="true"
       >
-        <UInput
-          id="send"
-          v-model="send"
-          name="send"
-          type="text"
-          inputmode="decimal"
-          step="0.01"
-          min="0"
-          placeholder="0"
-          :disabled="!exchange.rate"
-          @focus="handleFocus($event, 'send')"
-          @blur="handleBlur"
-          @beforeinput="validateKey"
-          @paste="handlePaste"
-          @input="checkClearance"
-        />
-      </UFormField>
-
-      <div>
-        <span>{{ exchange.base }}</span>
-        <img
-          v-if="baseCountry"
-          :src="`/flags/${baseCountry.toLowerCase()}.webp`"
-          :alt="baseCountry"
-        >
-        <span v-if="isSendInvalid" class="error-msg">Please enter a valid positive number</span>
+        {{ announcerText }}
       </div>
-    </div>
 
-    <!-- RECEIVE Input Group -->
-    <div class="input-group">
-      <UFormField
-        label="Receive"
-        name="receive"
-        :class="{ 'is-invalid': isReceiveInvalid }"
-      >
-        <UInput
-          id="receive"
-          v-model="receive"
-          name="receive"
-          type="text"
-          inputmode="decimal"
-          step="0.01"
-          min="0"
-          :placeholder="exchange.rate ? '0' : 'Loading rate...'"
-          :disabled="!exchange.rate"
-          @focus="handleFocus($event, 'receive')"
-          @blur="handleBlur"
-          @beforeinput="validateKey"
-          @paste="handlePaste"
-          @input="checkClearance"
-        />
-      </UFormField>
+      <!-- BODY inner container -->
+      <div class="flex flex-col items-center gap-4 md:flex-row md:justify-between">
+        <!-- SEND Input Group -->
+        <div class="flex gap-4 items-end">
+          <UFormField
+            label="Send"
+            name="send"
+            :class="{ 'is-invalid': isSendInvalid }"
+          >
+            <UInput
+              id="send"
+              v-model="send"
+              name="send"
+              type="text"
+              inputmode="decimal"
+              step="0.01"
+              min="0"
+              placeholder="0"
+              :disabled="!exchange.rate"
+              @focus="handleFocus($event, 'send')"
+              @blur="handleBlur"
+              @beforeinput="validateKey"
+              @paste="handlePaste"
+              @input="checkClearance"
+            />
+          </UFormField>
 
-      <div>
-        <span>{{ exchange.quote }}</span>
-        <img
-          v-if="quoteCountry"
-          :src="`/flags/${quoteCountry.toLowerCase()}.webp`"
-          :alt="quoteCountry"
-        >
+          <span v-if="isSendInvalid" class="error-msg">Please enter a valid positive number</span>
+
+          <CurrencyPicker
+            id="base"
+            v-model="exchange.base"
+          />
+        </div>
+
+        <CurrencySwap />
+
+        <!-- RECEIVE Input Group -->
+        <div class="flex gap-4 items-end">
+          <UFormField
+            label="Receive"
+            name="receive"
+            :class="{ 'is-invalid': isReceiveInvalid }"
+          >
+            <UInput
+              id="receive"
+              v-model="receive"
+              name="receive"
+              type="text"
+              inputmode="decimal"
+              step="0.01"
+              min="0"
+              :placeholder="exchange.rate ? '0' : 'Loading rate...'"
+              :disabled="!exchange.rate"
+              @focus="handleFocus($event, 'receive')"
+              @blur="handleBlur"
+              @beforeinput="validateKey"
+              @paste="handlePaste"
+              @input="checkClearance"
+            />
+          </UFormField>
+
+          <CurrencyPicker
+            id="quote"
+            v-model="exchange.quote"
+          />
+        </div>
       </div>
-    </div>
 
-    <UButton :disabled="exchange.rate === undefined || exchange.amount === undefined || receive === ''" @click="exchange.addConversionLog(exchange.base, exchange.quote, exchange.rate, exchange.amount, Number(parseFloat(receive).toFixed(2)))">
-      Log Conversion
-    </UButton>
+      <template #footer>
+        <!-- FOOTER inner container -->
+        <div class="flex flex-col items-center gap-2 md:flex-row md:justify-between">
+          <CurrencyRate />
 
-    <UButton type="submit">
-      Submit
-    </UButton>
+          <!-- Form Actions Group -->
+          <div class="form-actions flex gap-2">
+            <UButton
+              v-if="exchange.doesFavoriteExist(exchange.base, exchange.quote)"
+              class="button-favorite"
+              @click="exchange.deleteFavorite(exchange.base, exchange.quote)"
+            >
+              <UIcon name="ion:star" class="size-5" />
+              Favorited
+            </UButton>
+
+            <UButton
+              v-else
+              class="button-favorite"
+              @click="exchange.addFavorite(exchange.base, exchange.quote)"
+            >
+              <UIcon name="ion:star-outline" class="size-5" />
+              Favorite
+            </UButton>
+
+            <UButton
+              variant="outline"
+              :disabled="exchange.rate === undefined || exchange.amount === undefined || receive === ''"
+              @click="exchange.addConversionLog(exchange.base, exchange.quote, exchange.rate, exchange.amount, Number(parseFloat(receive).toFixed(2)))"
+            >
+              Log Conversion
+            </UButton>
+          </div>
+        </div>
+      </template>
+    </UCard>
   </UForm>
 </template>
 
 <style scoped>
-form {
-  display: grid;
-  gap: 1rem;
-  justify-items: start;
-}
-
-.input-group {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-}
-
-.input-group img {
-  block-size: 25px;
-  inline-size: auto;
-}
-
 .input-group.is-invalid input {
   border-color: #dc3545;
   background-color: #fff8f8;

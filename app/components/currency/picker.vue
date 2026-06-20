@@ -18,22 +18,28 @@ const selectedFlagIcon = computed(() => getFlagIcon(selectedCurrency.value as Cu
 const currenciesMenuItems = computed<SelectMenuItem[]>(() => [...exchange.currencies].map((item) => {
   return {
     id: item.iso_code,
-    label: `${item.iso_code} ${item.name}`,
+    label: item.iso_code,
+    name: item.name,
     icon: getFlagIcon(item.iso_code as CurrencyCode),
   };
 }));
 </script>
 
 <template>
-  <label>
-    <span>{{ id }}:</span>
-    <USelectMenu
-      :id="elementId"
-      v-model="selectedCurrency"
-      :icon="selectedFlagIcon"
-      value-key="id"
-      :items="currenciesMenuItems"
-      class="w-72"
-    />
-  </label>
+  <USelectMenu
+    :id="elementId"
+    v-model="selectedCurrency"
+    :icon="selectedFlagIcon"
+    value-key="id"
+    :items="currenciesMenuItems"
+    class="w-26"
+    :ui="{ content: 'min-w-max' }"
+  >
+    <template #item-label="{ item }: { item: any }">
+      {{ item.label }}
+      <span class="text-muted">
+        {{ item.name }}
+      </span>
+    </template>
+  </USelectMenu>
 </template>
