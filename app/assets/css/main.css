@@ -1,19 +1,9 @@
-@font-face {
-  font-family: "JetBrains Mono";
-  src: url("../fonts/JetBrainsMono-VariableFont_wght.woff2") format("woff2");
-  font-weight: 400 500 700;
-  font-style: normal;
-  font-display: swap;
-}
+@import "tailwindcss";
+@import "@nuxt/ui";
 
-:root {
-  /* fonts */
-  --ff-headings: "JetBrains Mono", sans-serif;
-  --ff-text: "JetBrains Mono", sans-serif;
-}
-
-h1 {
-  font-family: var(--ff-headings);
+@theme {
+  --font-sans: "JetBrains Mono", monospace;
+  --font-mono: "JetBrains Mono", monospace;
 }
 
 .visually-hidden {

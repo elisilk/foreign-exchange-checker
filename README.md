@@ -91,7 +91,16 @@ Your users should be able to:
 - [Pinia](https://pinia.vuejs.org/) - state management
 - [Pinia Plugin Persistedstate](https://prazdevs.github.io/pinia-plugin-persistedstate/) - persistent state storage
 
-Other libraries I made use of, primarily for the workflow setup:
+Other libraries I made use of:
+
+For the styling and icons:
+
+- [Nuxt UI](https://ui.nuxt.com/)
+- [Nuxt Icon](https://nuxt.com/modules/icon)
+  - [IonIcons](https://icones.js.org/collection/ion)
+  - [Circle Flags](https://icones.js.org/collection/circle-flags)
+
+For the workflow setup:
 
 - [Husky](https://github.com/typicode/husky)
 - [Lint-staged](https://github.com/lint-staged/lint-staged)

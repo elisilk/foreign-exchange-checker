@@ -44,28 +44,31 @@ const formatter = new Intl.NumberFormat("en-US", {
           :key="`compare-${pair.base}-${pair.quote}`"
           class="compare-item"
         >
-          <span class="flag">(flag)</span>
+          <UIcon
+            :name="getFlagIcon(pair.quote as CurrencyCode)"
+            class="flag size-5"
+          />
           <span class="iso-code">{{ pair.quote }}</span>
           <span class="name">(currency name)</span>
           <span class="rate">@ {{ pair.rate.toPrecision(5) }}</span>
           <span class="result">{{ formatter.format(exchange.amount * pair.rate) }}</span>
 
-          <button
+          <UButton
             v-if="exchange.doesFavoriteExist(pair.base, pair.quote)"
             class="button-favorite"
+            icon="ion:star"
             @click="exchange.deleteFavorite(pair.base, pair.quote)"
           >
-            <img src="/icon-star-filled.svg" alt="">
             Favorited
-          </button>
-          <button
+          </UButton>
+          <UButton
             v-else
             class="button-favorite"
+            icon="ion:star-outline"
             @click="exchange.addFavorite(pair.base, pair.quote)"
           >
-            <img src="/icon-star.svg" alt="">
             Favorite
-          </button>
+          </UButton>
         </div>
       </div>
     </template>
@@ -117,5 +120,6 @@ const formatter = new Intl.NumberFormat("en-US", {
 
 .button-favorite {
   grid-area: fav;
+  place-self: end;
 }
 </style>

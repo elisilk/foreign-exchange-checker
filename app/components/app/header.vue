@@ -3,12 +3,15 @@ const exchange = useExchangeStore();
 </script>
 
 <template>
-  <header>
-    <h1>FX Checker</h1>
-    <div>
+  <UHeader>
+    <template #title>
+      <h1>FX Checker</h1>
+    </template>
+
+    <template #right>
       {{ exchange.numCurrencies }} Currencies · EOD · {{ exchange.provider }} data
-    </div>
-  </header>
+    </template>
+  </UHeader>
 </template>
 
 <style scoped>

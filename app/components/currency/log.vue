@@ -28,9 +28,9 @@ const formatter = new Intl.NumberFormat("en-US", {
         </div>
         <div class="num-logs">
           <span>{{ exchange.conversionLog.length }} logged</span>
-          <button @click="exchange.deleteAllConversionLogs">
+          <UButton @click="exchange.deleteAllConversionLogs">
             Clear All
-          </button>
+          </UButton>
         </div>
       </header>
 
@@ -42,15 +42,14 @@ const formatter = new Intl.NumberFormat("en-US", {
         >
           <CurrencyTime :datetime="log.datetime" />
           <span class="base-iso-code">{{ log.base }}</span>
-          <img src="/icon-arrow-right.svg" alt="arrow">
+          <UIcon name="ion:arrow-forward" class="size-5" />
           <span class="quote-iso-code">{{ log.quote }}</span>
           <span class="send">{{ formatter.format(log.send) }}</span>
           <span class="receive">{{ formatter.format(log.receive) }}</span>
 
-          <button @click="exchange.deleteConversionLog(log.datetime)">
-            <img src="/icon-delete.svg" alt="">
+          <UButton icon="ion:trash-outline" @click="exchange.deleteConversionLog(log.datetime)">
             Delete
-          </button>
+          </UButton>
         </div>
       </div>
     </template>

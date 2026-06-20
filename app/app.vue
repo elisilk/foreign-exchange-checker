@@ -26,75 +26,67 @@ watch(
 </script>
 
 <template>
-  <div>
+  <UApp class="font-sans antialiased">
     <AppHeader />
 
-    <main class="main" aria-labelledby="main-heading">
-      <h1 id="main-heading">
-        Foreign Exchange Checker
-      </h1>
+    <UContainer>
+      <UMain class="main" aria-labelledby="main-heading">
+        <h1 id="main-heading">
+          Foreign Exchange Checker
+        </h1>
 
-      <section class="picker" aria-labelledby="picker-component-heading">
-        <h2 id="picker-component-heading">
-          Pick Currencies
-        </h2>
+        <section class="picker" aria-labelledby="picker-component-heading">
+          <h2 id="picker-component-heading">
+            Pick Currencies
+          </h2>
 
-        <CurrencyPicker
-          id="base"
-          v-model="exchange.base"
-        />
+          <CurrencyPicker
+            id="base"
+            v-model="exchange.base"
+          />
 
-        <CurrencyPicker
-          id="quote"
-          v-model="exchange.quote"
-        />
+          <CurrencyPicker
+            id="quote"
+            v-model="exchange.quote"
+          />
 
-        <CurrencySwap />
+          <CurrencySwap />
 
-        <button
-          v-if="exchange.doesFavoriteExist(exchange.base, exchange.quote)"
-          class="button-favorite"
-          @click="exchange.deleteFavorite(exchange.base, exchange.quote)"
-        >
-          <img src="/icon-star-filled.svg" alt="">
-          Favorited
-        </button>
+          <UButton
+            v-if="exchange.doesFavoriteExist(exchange.base, exchange.quote)"
+            class="button-favorite"
+            @click="exchange.deleteFavorite(exchange.base, exchange.quote)"
+          >
+            <UIcon name="ion:star" class="size-5" />
+            Favorited
+          </UButton>
 
-        <button
-          v-else
-          class="button-favorite"
-          @click="exchange.addFavorite(exchange.base, exchange.quote)"
-        >
-          <img src="/icon-star.svg" alt="">
-          Favorite
-        </button>
+          <UButton
+            v-else
+            class="button-favorite"
+            @click="exchange.addFavorite(exchange.base, exchange.quote)"
+          >
+            <UIcon name="ion:star-outline" class="size-5" />
+            Favorite
+          </UButton>
 
-        <CurrencyRate />
-      </section>
+          <CurrencyRate />
+        </section>
 
-      <CurrencyConverter />
+        <CurrencyConverter />
 
-      <CurrencyLog />
+        <CurrencyLog />
 
-      <CurrencyFavorites />
+        <CurrencyFavorites />
 
-      <CurrencyCompare />
+        <CurrencyCompare />
 
-      <!-- <CurrencyTicker :base="exchange.base" /> -->
-    </main>
+        <!-- <CurrencyTicker :base="exchange.base" /> -->
 
-    <footer aria-labelledby="footer-heading">
-      <h2 id="footer-heading">
-        Icon Inspector
-      </h2>
-      <div style="background: black; height: 100px; width: 100px; display: grid; place-items: center;">
-        <img
-          src="/icon-star-filled.svg"
-          alt=""
-        >
-      </div>
-    </footer>
-  </div>
+        <AppIconViewer />
+      </UMain>
+    </UContainer>
+  </UApp>
 </template>
 
 <style scoped>
