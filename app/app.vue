@@ -29,31 +29,20 @@ watch(
   <UApp class="font-sans antialiased">
     <AppHeader />
 
-    <UContainer>
-      <UMain class="main" aria-labelledby="main-heading">
+    <UMain class="main" aria-labelledby="main-heading">
+      <!-- <CurrencyTicker :base="exchange.base" /> -->
+
+      <UContainer>
         <h1 id="main-heading" class="sr-only">
           Foreign Exchange Checker
         </h1>
 
         <CurrencyConverter />
 
-        <CurrencyLog />
+        <AppTabs />
 
-        <CurrencyFavorites />
-
-        <CurrencyCompare />
-
-        <!-- <CurrencyTicker :base="exchange.base" /> -->
-
-        <AppIconViewer />
-      </UMain>
-    </UContainer>
+        <!-- <AppIconViewer /> -->
+      </UContainer>
+    </UMain>
   </UApp>
 </template>
-
-<style scoped>
-.main > * + *,
-.picker > * + * {
-  margin-block-start: 1rem;
-}
-</style>

@@ -3,79 +3,73 @@ const exchange = useExchangeStore();
 </script>
 
 <template>
-  <section class="favorites-component" aria-labelledby="favorites-component-heading">
-    <h2 id="favorites-component-heading" class="component-heading">
-      Favorites <span>{{ exchange.favorites.length }}</span>
-    </h2>
-
+  <section class="favorites-component" aria-label="Favorites">
     <template v-if="exchange.favorites.length === 0 ">
       <h3>No pinned pairs yet</h3>
       <p>Pin a pair to track its rate here. Tap the star icon on any conversion or comparison row.</p>
     </template>
 
-    <template v-else>
-      <header class="favorites-header">
-        <div class="heading">
-          Pinned Pairs
-        </div>
-        <div class="num-pairs">
-          {{ exchange.favorites.length }} favorite{{ exchange.favorites.length === 1 ? '' : 's' }}
-        </div>
-      </header>
-
+    <UCard
+      v-else
+      title="Pinned Pairs"
+      :description="`${exchange.favorites.length} favorite${exchange.favorites.length === 1 ? '' : 's'}`"
+    >
       <div class="favorites-list">
         <div
           v-for="pair in exchange.favorites"
           :key="`favorite-${pair.base}-${pair.quote}`"
           class="favorites-item"
         >
-          <span class="base-iso-code">{{ pair.base }}</span>
-          <UIcon name="ion:arrow-forward" class="size-5" />
-          <span class="quote-iso-code">{{ pair.quote }}</span>
-          <span>(current rate)</span>
-          <span>(percent change 24hrs)</span>
+          <div class="pair">
+            <span class="base-iso-code">{{ pair.base }}</span>
+            <UIcon name="ion:arrow-forward" class="size-5" />
+            <span class="quote-iso-code">{{ pair.quote }}</span>
+          </div>
+
+          <div class="rate">
+            <span>(rate)</span>
+            <span>(% change)</span>
+          </div>
 
           <UButton
             v-if="exchange.doesFavoriteExist(pair.base, pair.quote)"
-            class="button-unfavorite"
+            class="action"
+            aria-label="Unfavorite this pair"
             icon="ion:star"
+            variant="outline"
+            square
             @click="exchange.deleteFavorite(pair.base, pair.quote)"
-          >
-            Favorited
-          </UButton>
+          />
         </div>
       </div>
-    </template>
+    </UCard>
   </section>
 </template>
 
 <style scoped>
-.favorites-component > * + * {
-  margin-block-start: 1rem;
-}
-
-.component-heading span {
-  display: inline-grid;
-  place-items: center;
-  background: black;
-  color: white;
-  block-size: 2rem;
-  inline-size: 2rem;
-  border-radius: 50%;
-}
-
-.favorites-header {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1ch;
-}
-
 .favorites-list > * + * {
   margin-block-start: 1rem;
 }
 
 .favorites-item {
   display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid grey;
+  background: black;
+}
+
+.pair {
+  display: flex;
+  align-items: center;
   gap: 1ch;
+}
+
+.rate {
+  margin-inline-start: auto;
+  display: grid;
+  justify-items: end;
 }
 </style>

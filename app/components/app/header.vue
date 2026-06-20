@@ -3,9 +3,12 @@ const exchange = useExchangeStore();
 </script>
 
 <template>
-  <UHeader>
+  <UHeader :toggle="false">
     <template #title>
-      <h1>FX Checker</h1>
+      <h1>
+        <span class="sr-only">FX Checker</span>
+        <img src="/logo.svg" alt="FX Checker logo">
+      </h1>
     </template>
 
     <template #right>
@@ -13,11 +16,3 @@ const exchange = useExchangeStore();
     </template>
   </UHeader>
 </template>
-
-<style scoped>
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-</style>
