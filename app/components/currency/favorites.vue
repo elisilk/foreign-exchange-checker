@@ -30,19 +30,19 @@ const exchange = useExchangeStore();
           class="favorites-item"
         >
           <span class="base-iso-code">{{ pair.base }}</span>
-          <img src="/icon-arrow-right.svg" alt="arrow">
+          <UIcon name="ion:arrow-forward" class="size-5" />
           <span class="quote-iso-code">{{ pair.quote }}</span>
           <span>(current rate)</span>
           <span>(percent change 24hrs)</span>
 
-          <button
+          <UButton
             v-if="exchange.doesFavoriteExist(pair.base, pair.quote)"
             class="button-unfavorite"
+            icon="ion:star"
             @click="exchange.deleteFavorite(pair.base, pair.quote)"
           >
-            <img src="/icon-star-filled.svg" alt="">
             Favorited
-          </button>
+          </UButton>
         </div>
       </div>
     </template>

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { SelectMenuItem } from "@nuxt/ui";
+
 type Props = {
   id: string;
 };
@@ -10,41 +12,28 @@ const exchange = useExchangeStore();
 const selectedCurrency = defineModel<string>();
 
 const elementId = computed(() => `currency-select-${id}`);
+
+const selectedFlagIcon = computed(() => getFlagIcon(selectedCurrency.value as CurrencyCode));
+
+const currenciesMenuItems = computed<SelectMenuItem[]>(() => [...exchange.currencies].map((item) => {
+  return {
+    id: item.iso_code,
+    label: `${item.iso_code} ${item.name}`,
+    icon: getFlagIcon(item.iso_code as CurrencyCode),
+  };
+}));
 </script>
 
 <template>
   <label>
     <span>{{ id }}:</span>
-    <select
+    <USelectMenu
       :id="elementId"
       v-model="selectedCurrency"
-      :name="elementId"
-    >
-      <option
-        v-for="currencyOption in exchange.currencies"
-        :key="currencyOption.iso_numeric"
-        :value="currencyOption.iso_code"
-      >
-        {{ currencyOption.iso_code }}
-        {{ currencyOption.name }}
-      </option>
-    </select>
+      :icon="selectedFlagIcon"
+      value-key="id"
+      :items="currenciesMenuItems"
+      class="w-72"
+    />
   </label>
 </template>
-
-<style scoped>
-label {
-  display: flex;
-  gap: 1ch;
-  align-items: center;
-}
-
-select {
-  appearance: base-select;
-}
-
-option {
-  display: flex;
-  gap: 1rem;
-}
-</style>

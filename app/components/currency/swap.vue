@@ -3,8 +3,7 @@ const exchange = useExchangeStore();
 </script>
 
 <template>
-  <button @click="exchange.swap()">
-    <img src="/icon-exchange.svg" alt="">
+  <UButton icon="ion:swap-horizontal" @click="exchange.swap()">
     swap
-  </button>
+  </UButton>
 </template>

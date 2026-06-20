@@ -147,7 +147,7 @@ function handleBlur(): void {
 </script>
 
 <template>
-  <form
+  <UForm
     class="converter-component"
     aria-labelledby="converter-component-heading"
     @submit.prevent="handleSubmit"
@@ -157,68 +157,84 @@ function handleBlur(): void {
     </h2>
 
     <!-- SEND Input Group -->
-    <div class="input-group" :class="{ 'is-invalid': isSendInvalid }">
-      <label for="send">Send</label>
-      <input
-        id="send"
-        v-model="send"
+    <div class="input-group">
+      <UFormField
+        label="Send"
         name="send"
-        type="text"
-        inputmode="decimal"
-        step="0.01"
-        min="0"
-        placeholder="0"
-        :disabled="!exchange.rate"
-        @focus="handleFocus($event, 'send')"
-        @blur="handleBlur"
-        @beforeinput="validateKey"
-        @paste="handlePaste"
-        @input="checkClearance"
+        :class="{ 'is-invalid': isSendInvalid }"
       >
-      <span>{{ exchange.base }}</span>
-      <img
-        v-if="baseCountry"
-        :src="`/flags/${baseCountry.toLowerCase()}.webp`"
-        :alt="baseCountry"
-      >
-      <span v-if="isSendInvalid" class="error-msg">Please enter a valid positive number</span>
+        <UInput
+          id="send"
+          v-model="send"
+          name="send"
+          type="text"
+          inputmode="decimal"
+          step="0.01"
+          min="0"
+          placeholder="0"
+          :disabled="!exchange.rate"
+          @focus="handleFocus($event, 'send')"
+          @blur="handleBlur"
+          @beforeinput="validateKey"
+          @paste="handlePaste"
+          @input="checkClearance"
+        />
+      </UFormField>
+
+      <div>
+        <span>{{ exchange.base }}</span>
+        <img
+          v-if="baseCountry"
+          :src="`/flags/${baseCountry.toLowerCase()}.webp`"
+          :alt="baseCountry"
+        >
+        <span v-if="isSendInvalid" class="error-msg">Please enter a valid positive number</span>
+      </div>
     </div>
 
     <!-- RECEIVE Input Group -->
-    <div class="input-group" :class="{ 'is-invalid': isReceiveInvalid }">
-      <label for="receive">Receive</label>
-      <input
-        id="receive"
-        v-model="receive"
+    <div class="input-group">
+      <UFormField
+        label="Receive"
         name="receive"
-        type="text"
-        inputmode="decimal"
-        step="0.01"
-        min="0"
-        :placeholder="exchange.rate ? '0' : 'Loading rate...'"
-        :disabled="!exchange.rate"
-        @focus="handleFocus($event, 'receive')"
-        @blur="handleBlur"
-        @beforeinput="validateKey"
-        @paste="handlePaste"
-        @input="checkClearance"
+        :class="{ 'is-invalid': isReceiveInvalid }"
       >
-      <span>{{ exchange.quote }}</span>
-      <img
-        v-if="quoteCountry"
-        :src="`/flags/${quoteCountry.toLowerCase()}.webp`"
-        :alt="quoteCountry"
-      >
+        <UInput
+          id="receive"
+          v-model="receive"
+          name="receive"
+          type="text"
+          inputmode="decimal"
+          step="0.01"
+          min="0"
+          :placeholder="exchange.rate ? '0' : 'Loading rate...'"
+          :disabled="!exchange.rate"
+          @focus="handleFocus($event, 'receive')"
+          @blur="handleBlur"
+          @beforeinput="validateKey"
+          @paste="handlePaste"
+          @input="checkClearance"
+        />
+      </UFormField>
+
+      <div>
+        <span>{{ exchange.quote }}</span>
+        <img
+          v-if="quoteCountry"
+          :src="`/flags/${quoteCountry.toLowerCase()}.webp`"
+          :alt="quoteCountry"
+        >
+      </div>
     </div>
 
-    <button :disabled="exchange.rate === undefined || exchange.amount === undefined || receive === ''" @click="exchange.addConversionLog(exchange.base, exchange.quote, exchange.rate, exchange.amount, Number(parseFloat(receive).toFixed(2)))">
+    <UButton :disabled="exchange.rate === undefined || exchange.amount === undefined || receive === ''" @click="exchange.addConversionLog(exchange.base, exchange.quote, exchange.rate, exchange.amount, Number(parseFloat(receive).toFixed(2)))">
       Log Conversion
-    </button>
+    </UButton>
 
-    <button type="submit">
+    <UButton type="submit">
       Submit
-    </button>
-  </form>
+    </UButton>
+  </UForm>
 </template>
 
 <style scoped>
@@ -237,10 +253,6 @@ form {
 .input-group img {
   block-size: 25px;
   inline-size: auto;
-}
-
-button[type="submit"] {
-  display: none;
 }
 
 .input-group.is-invalid input {

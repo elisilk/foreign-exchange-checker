@@ -24,6 +24,9 @@
     "class",
     "ui"
   ],
+  "tailwindCSS.classFunctions": [
+    "defineAppConfig"
+  ],
   "tailwindCSS.experimental.classRegex": [
     [
       "ui:\\s*{([^)]*)\\s*}",
