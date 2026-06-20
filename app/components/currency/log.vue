@@ -10,29 +10,19 @@ const formatter = new Intl.NumberFormat("en-US", {
 </script>
 
 <template>
-  <section class="log-component" aria-labelledby="log-component-heading">
-    <h2 id="log-component-heading" class="component-heading">
-      Log
-      <span>{{ exchange.conversionLog.length }}</span>
-    </h2>
-
+  <section class="log-component" aria-label="Log">
     <template v-if="exchange.conversionLog.length === 0 ">
       <h3>No conversions logged yet</h3>
       <p>Every conversion is recorded here automatically when you tap <span>LOG CONVERSION</span>. Your log is private to this session and this browser.</p>
     </template>
 
-    <template v-else>
-      <header class="log-header">
-        <div class="heading">
-          Conversion Log
-        </div>
-        <div class="num-logs">
-          <span>{{ exchange.conversionLog.length }} logged</span>
-          <UButton @click="exchange.deleteAllConversionLogs">
-            Clear All
-          </UButton>
-        </div>
-      </header>
+    <UCard v-else title="Conversion Log">
+      <template #description>
+        <span>{{ exchange.conversionLog.length }} logged</span>
+        <UButton variant="soft" @click="exchange.deleteAllConversionLogs">
+          Clear All
+        </UButton>
+      </template>
 
       <div class="log-list">
         <div
@@ -40,49 +30,57 @@ const formatter = new Intl.NumberFormat("en-US", {
           :key="`log-${log.base}-${log.quote}`"
           class="log-item"
         >
-          <CurrencyTime :datetime="log.datetime" />
-          <span class="base-iso-code">{{ log.base }}</span>
-          <UIcon name="ion:arrow-forward" class="size-5" />
-          <span class="quote-iso-code">{{ log.quote }}</span>
-          <span class="send">{{ formatter.format(log.send) }}</span>
-          <span class="receive">{{ formatter.format(log.receive) }}</span>
+          <CurrencyTime class="time" :datetime="log.datetime" />
 
-          <UButton icon="ion:trash-outline" @click="exchange.deleteConversionLog(log.datetime)">
-            Delete
-          </UButton>
+          <div class="pair">
+            <span class="base-iso-code">{{ log.base }}</span>
+            <UIcon name="ion:arrow-forward" class="size-5" />
+            <span class="quote-iso-code">{{ log.quote }}</span>
+          </div>
+
+          <div class="amounts">
+            <span class="send">{{ formatter.format(log.send) }}</span>
+            <span class="receive">{{ formatter.format(log.receive) }}</span>
+          </div>
+
+          <UButton
+            class="action"
+            icon="ion:trash-outline"
+            aria-label="Delete log item"
+            variant="soft"
+            square
+            @click="exchange.deleteConversionLog(log.datetime)"
+          />
         </div>
       </div>
-    </template>
+    </UCard>
   </section>
 </template>
 
 <style scoped>
-.log-component > * + * {
-  margin-block-start: 1rem;
-}
-
-.component-heading span {
-  display: inline-grid;
-  place-items: center;
-  background: black;
-  color: white;
-  block-size: 2rem;
-  inline-size: 2rem;
-  border-radius: 50%;
-}
-
-.log-header {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1ch;
-}
-
 .log-list > * + * {
   margin-block-start: 1rem;
 }
 
 .log-item {
   display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid grey;
+  background: black;
+}
+
+.pair {
+  display: flex;
+  align-items: center;
   gap: 1ch;
+}
+
+.amounts {
+  margin-inline-start: auto;
+  display: grid;
+  justify-items: end;
 }
 </style>

@@ -8,11 +8,7 @@ const formatter = new Intl.NumberFormat("en-US", {
 </script>
 
 <template>
-  <section class="compare-component" aria-labelledby="compare-component-heading">
-    <h2 id="compare-component-heading">
-      Compare
-    </h2>
-
+  <section class="compare-component" aria-label="Compare">
     <template v-if="!exchange.amount">
       <h3>No comparison available</h3>
       <p>Enter an amount in <span>SEND</span> above to see what your money is worth in other currencies.</p>
@@ -23,21 +19,13 @@ const formatter = new Intl.NumberFormat("en-US", {
       <p>There was an issue getting the latest rates. Try to refresh the page or come back again later. Sorry!</p>
     </template>
 
-    <template v-else>
-      <header class="compare-header">
-        <div class="heading">
-          Multi-currency
-        </div>
-        <div class="base-amount">
-          {{ exchange.amount.toLocaleString('en-US', {
-            maximumFractionDigits: 2,
-          }) }} from {{ exchange.base }}
-        </div>
-        <div class="num-pairs">
-          {{ exchange.rates.length }} pairs
-        </div>
-      </header>
-
+    <UCard
+      v-else
+      :title="`Multi-currency ${exchange.amount.toLocaleString('en-US', {
+        maximumFractionDigits: 2,
+      })} from ${exchange.base}`"
+      :description="`${exchange.rates.length} pairs`"
+    >
       <div class="compare-list">
         <div
           v-for="pair in exchange.rates"
@@ -48,78 +36,62 @@ const formatter = new Intl.NumberFormat("en-US", {
             :name="getFlagIcon(pair.quote as CurrencyCode)"
             class="flag size-5"
           />
-          <span class="iso-code">{{ pair.quote }}</span>
-          <span class="name">(currency name)</span>
-          <span class="rate">@ {{ pair.rate.toPrecision(5) }}</span>
-          <span class="result">{{ formatter.format(exchange.amount * pair.rate) }}</span>
+
+          <div class="currency">
+            <span class="iso-code">{{ pair.quote }}</span>
+            <span class="name">(currency name)</span>
+          </div>
+
+          <div class="amounts">
+            <span class="rate">@ {{ pair.rate.toPrecision(5) }}</span>
+            <span class="result">{{ formatter.format(exchange.amount * pair.rate) }}</span>
+          </div>
 
           <UButton
             v-if="exchange.doesFavoriteExist(pair.base, pair.quote)"
-            class="button-favorite"
+            aria-label="Unfavorite this pair"
+            class="action"
             icon="ion:star"
+            variant="outline"
+            square
             @click="exchange.deleteFavorite(pair.base, pair.quote)"
-          >
-            Favorited
-          </UButton>
+          />
           <UButton
             v-else
-            class="button-favorite"
+            aria-label="Favorite this pair"
+            class="action"
             icon="ion:star-outline"
+            variant="soft"
             @click="exchange.addFavorite(pair.base, pair.quote)"
-          >
-            Favorite
-          </UButton>
+          />
         </div>
       </div>
-    </template>
+    </UCard>
   </section>
 </template>
 
 <style scoped>
-.compare-component > * + * {
-  margin-block-start: 1rem;
-}
-
-.compare-header {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1ch;
-}
-
-.base-amount {
-  flex-grow: 1;
-}
-
 .compare-list > * + * {
   margin-block-start: 1rem;
 }
 
 .compare-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid grey;
+  background: black;
+}
+
+.currency {
   display: grid;
-  grid-template-areas:
-    "flag code result fav"
-    "flag name rate fav";
-  gap: 1ch;
 }
 
-.iso-code {
-  grid-area: code;
-}
-
-.name {
-  grid-area: name;
-}
-
-.rate {
-  grid-area: rate;
-}
-
-.result {
-  grid-area: result;
-}
-
-.button-favorite {
-  grid-area: fav;
-  place-self: end;
+.amounts {
+  margin-inline-start: auto;
+  display: grid;
+  justify-items: end;
 }
 </style>
