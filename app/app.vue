@@ -31,47 +31,9 @@ watch(
 
     <UContainer>
       <UMain class="main" aria-labelledby="main-heading">
-        <h1 id="main-heading">
+        <h1 id="main-heading" class="sr-only">
           Foreign Exchange Checker
         </h1>
-
-        <section class="picker" aria-labelledby="picker-component-heading">
-          <h2 id="picker-component-heading">
-            Pick Currencies
-          </h2>
-
-          <CurrencyPicker
-            id="base"
-            v-model="exchange.base"
-          />
-
-          <CurrencyPicker
-            id="quote"
-            v-model="exchange.quote"
-          />
-
-          <CurrencySwap />
-
-          <UButton
-            v-if="exchange.doesFavoriteExist(exchange.base, exchange.quote)"
-            class="button-favorite"
-            @click="exchange.deleteFavorite(exchange.base, exchange.quote)"
-          >
-            <UIcon name="ion:star" class="size-5" />
-            Favorited
-          </UButton>
-
-          <UButton
-            v-else
-            class="button-favorite"
-            @click="exchange.addFavorite(exchange.base, exchange.quote)"
-          >
-            <UIcon name="ion:star-outline" class="size-5" />
-            Favorite
-          </UButton>
-
-          <CurrencyRate />
-        </section>
 
         <CurrencyConverter />
 
