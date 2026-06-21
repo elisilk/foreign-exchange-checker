@@ -6,13 +6,106 @@
   --font-mono: "JetBrains Mono", monospace;
 }
 
-.visually-hidden {
-  border: 0;
-  clip-path: inset(50%);
-  height: 1px;
-  margin: 0;
-  overflow: hidden;
-  position: absolute;
-  white-space: nowrap;
-  width: 1px;
+@theme static {
+  /* Customized typography presets */
+
+  /* Text Preset 6 */
+  /* fs 10px / lh 100% / ls 0px / fw Regular */
+  --text-preset-6: 0.625rem;
+  --text-preset-6--line-height: 100%;
+  --text-preset-6--letter-spacing: 0px;
+  --text-preset-6--font-weight: 400;
+
+  /* Text Preset 5 (Medium) */
+  /* fs 12px / lh 130% / ls 0.5px / fw Medium */
+  --text-preset-5-medium: 0.75rem;
+  --text-preset-5-medium--line-height: 130%;
+  --text-preset-5-medium--letter-spacing: 0.5px;
+  --text-preset-5-medium--font-weight: 500;
+
+  /* Text Preset 5 */
+  /* fs 12px / lh 120% / ls 0.5px / fw Regular */
+  --text-preset-5: 0.75rem;
+  --text-preset-5--line-height: 120%;
+  --text-preset-5--letter-spacing: 0.5px;
+  --text-preset-5--font-weight: 400;
+
+  /* Text Preset 4 */
+  /* fs 14px / lh 120% / ls 1px / fw Regular */
+  --text-preset-4: 0.875rem;
+  --text-preset-4--line-height: 120%;
+  --text-preset-4--letter-spacing: 1px;
+  --text-preset-4--font-weight: 400;
+
+  /* Text Preset 3 (Bold) */
+  /* fs 16px / lh 110% / ls 1px / fw Bold */
+
+  /* Text Preset 3 (Medium) */
+  /* fs 16px / lh 120% / ls 1px / fw Medium */
+
+  /* Text Preset 3 (Regular) */
+  /* fs 16px / lh 120% / ls 1px / fw Regular */
+
+  /* Text Preset 2 (Bold) */
+  /* fs 20px / lh 140% / ls -0.5px / fw Bold */
+
+  /* Text Preset 2 (Regular) */
+  /* fs 20px / lh 120% / ls -0.5px / fw Regular */
+
+  /* Text Preset 1 (Tablet) */
+  /* fs 32px / lh 100% / ls -0.5px / fw Bold */
+
+  /* Text Preset 1 */
+  /* fs 40px / lh 100% / ls -0.5px / fw Bold */
+
+  /* Override colors */
+  --color-neutral-50: #ffffff;
+  --color-neutral-100: #c6c6c6;
+  --color-neutral-200: #9d9d9d;
+  --color-neutral-300: #454547;
+  --color-neutral-400: #3d3d3d;
+  --color-neutral-500: #2e2e2e;
+  --color-neutral-600: #202022;
+  --color-neutral-700: #171719;
+  --color-neutral-900: #0a0a0a;
+
+  --color-lime-500: #cef739;
+  --color-lime-800: #283300;
+
+  --color-green-500: #42eb05;
+
+  --color-red-500: #ff4141;
+
+  /* default tailwind colors
+  https://uicolors.app/tailwind-colors
+
+  --color-neutral-50: #fafafa;
+  --color-neutral-100: #f5f5f5;
+  --color-neutral-200: #e5e5e5;
+  --color-neutral-300: #d4d4d4;
+  --color-neutral-400: #a1a1a1;
+  --color-neutral-500: #737373;
+  --color-neutral-600: #525252;
+  --color-neutral-700: #404040;
+  --color-neutral-800: #262626;
+  --color-neutral-900: #171717;
+  --color-neutral-950: #0a0a0a;
+
+  --color-lime-500: #7ccf00;
+  --color-lime-800: #3c6300;
+
+  --color-green-500: #00c950;
+
+  --color-red-500: #fb2c36;
+  */
+
+  /* Customized border radius values */
+  --radius-xs: 4px; /* originally 0.125rem (2px) */
+  --radius-sm: 6px; /* originally 0.25rem (4px) */
+  --radius-md: 8px; /* originally 0.375rem (6px) */
+  --radius-lg: 10px; /* originally 0.5rem (8px) */
+  --radius-xl: 12px; /* originally 0.75rem (12px) */
+  --radius-2xl: 16px; /* originally 1rem (16px) */
+  --radius-3xl: 20px; /* originally 1.5rem (24px) */
+  --radius-4xl: 24px; /* originally 2rem (32px) */
 }

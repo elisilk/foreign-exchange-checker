@@ -29,10 +29,10 @@ watch(
   <UApp class="font-sans antialiased">
     <AppHeader />
 
-    <UMain class="main" aria-labelledby="main-heading">
+    <UMain aria-labelledby="main-heading">
       <!-- <CurrencyTicker :base="exchange.base" /> -->
 
-      <UContainer>
+      <UContainer class="space-y-4 py-4">
         <h1 id="main-heading" class="sr-only">
           Foreign Exchange Checker
         </h1>

@@ -24,11 +24,14 @@ const items = computed(() => [
 </script>
 
 <template>
-  <UTabs :items variant="link">
+  <UTabs
+    :items
+    variant="link"
+  >
     <template #default="{ item }">
       <div class="flex items-center gap-2">
-        <span>{{ item.label }}</span>
-        <span v-if="item.count" class="rounded-full bg-primary-500 px-2 py-0.5 text-xs text-white font-bold">
+        <span class="uppercase">{{ item.label }}</span>
+        <span v-if="item.count" class="inline-flex rounded-full bg-primary-800 w-5 h-5 items-center justify-center text-preset-6 text-primary">
           {{ item.count }}
         </span>
       </div>

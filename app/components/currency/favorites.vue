@@ -3,7 +3,7 @@ const exchange = useExchangeStore();
 </script>
 
 <template>
-  <section class="favorites-component" aria-label="Favorites">
+  <section aria-label="Favorites">
     <template v-if="exchange.favorites.length === 0 ">
       <h3>No pinned pairs yet</h3>
       <p>Pin a pair to track its rate here. Tap the star icon on any conversion or comparison row.</p>

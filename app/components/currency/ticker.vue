@@ -63,7 +63,7 @@ const transformedGroups = computed(() => Object.values(filteredGroups.value).map
 </script>
 
 <template>
-  <section class="ticker-component" aria-labelledby="ticker-component-heading">
+  <section aria-labelledby="ticker-component-heading">
     <h2 id="ticker-component-heading">
       Live markets
     </h2>
@@ -76,7 +76,6 @@ const transformedGroups = computed(() => Object.values(filteredGroups.value).map
       <div
         v-for="pair in transformedGroups"
         :key="`${pair?.base}-${pair?.quote}`"
-        class="pair"
       >
         <span>{{ pair?.base }}/{{ pair?.quote }}</span>
         <span>{{ pair?.rate2?.toPrecision(5) }}</span>
@@ -86,10 +85,3 @@ const transformedGroups = computed(() => Object.values(filteredGroups.value).map
     </div>
   </section>
 </template>
-
-<style scoped>
-.pair {
-  display: flex;
-  gap: 1ch;
-}
-</style>

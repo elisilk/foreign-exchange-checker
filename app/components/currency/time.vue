@@ -66,7 +66,7 @@ onUnmounted(() => {
 
 <template>
   <ClientOnly>
-    <span v-if="isMounted && isRecent" class="time-relative">
+    <span v-if="isMounted && isRecent">
       {{ liveRelativeText }}
     </span>
 

@@ -1,10 +1,10 @@
 <template>
-  <section aria-labelledby="icon-viewer-heading">
+  <section aria-labelledby="icon-viewer-heading" class="space-y-4">
     <h2 id="icon-viewer-heading">
       Icon Viewer
     </h2>
 
-    <div class="icon-viewer-container">
+    <div class="flex gap-4 justify-center p-4 bg-neutral-600 border border-neutral-500 rounded-lg">
       <img src="/icon-arrow-right.svg" alt="arrow right">
       <img src="/icon-check.svg" alt="check">
       <img src="/icon-chevron-down.svg" alt="chevron down">
@@ -18,18 +18,3 @@
     </div>
   </section>
 </template>
-
-<style scoped>
-section > * + * {
-  margin-block-start: 1rem;
-}
-
-.icon-viewer-container {
-  background: black;
-  block-size: 100px;
-  display: flex;
-  gap: 1rem;
-  place-content: center;
-  place-items: center;
-}
-</style>
