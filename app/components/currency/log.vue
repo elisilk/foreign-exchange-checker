@@ -19,9 +19,13 @@ const formatter = new Intl.NumberFormat("en-US", {
     <UCard v-else title="Conversion Log">
       <template #description>
         <span>{{ exchange.conversionLog.length }} logged</span>
-        <UButton variant="soft" @click="exchange.deleteAllConversionLogs">
-          Clear All
-        </UButton>
+        <UButton
+          label="Clear All"
+          color="neutral"
+          variant="subtle"
+          class="h-7.5 w-23.25"
+          @click="exchange.deleteAllConversionLogs"
+        />
       </template>
 
       <div class="log-list">
@@ -44,13 +48,23 @@ const formatter = new Intl.NumberFormat("en-US", {
           </div>
 
           <UButton
-            class="action"
-            icon="ion:trash-outline"
             aria-label="Delete log item"
-            variant="soft"
+            variant="subtle"
+            color="neutral"
+            class="group relative overflow-hidden"
+            size="sm"
             square
             @click="exchange.deleteConversionLog(log.datetime)"
-          />
+          >
+            <UIcon
+              name="ion:trash-outline"
+              class="shrink-0 size-4 inline-block group-hover:hidden transition-all"
+            />
+            <UIcon
+              name="ion:trash"
+              class="hidden shrink-0 size-4 group-hover:inline-block transition-all"
+            />
+          </UButton>
         </div>
       </div>
     </UCard>

@@ -43,25 +43,27 @@ const formatter = new Intl.NumberFormat("en-US", {
           </div>
 
           <div class="amounts">
-            <span class="rate">@ {{ pair.rate.toPrecision(5) }}</span>
             <span class="result">{{ formatter.format(exchange.amount * pair.rate) }}</span>
+            <span class="rate">@ {{ pair.rate.toPrecision(5) }}</span>
           </div>
 
           <UButton
             v-if="exchange.doesFavoriteExist(pair.base, pair.quote)"
             aria-label="Unfavorite this pair"
-            class="action"
             icon="ion:star"
             variant="outline"
+            size="sm"
             square
             @click="exchange.deleteFavorite(pair.base, pair.quote)"
           />
           <UButton
             v-else
             aria-label="Favorite this pair"
-            class="action"
             icon="ion:star-outline"
-            variant="soft"
+            variant="subtle"
+            color="neutral"
+            size="sm"
+            square
             @click="exchange.addFavorite(pair.base, pair.quote)"
           />
         </div>

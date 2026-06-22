@@ -16,7 +16,7 @@ const exchange = useExchangeStore();
     </template>
 
     <template #right>
-      <div class="uppercase text-neutral-200 text-preset-6 sm:text-preset-4 text-right text-balance">
+      <div class="uppercase text-neutral-200 text-right text-balance text-xs sm:text-lg">
         {{ exchange.numCurrencies }} Currencies · EOD · {{ exchange.provider }} data
       </div>
     </template>

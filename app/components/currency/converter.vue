@@ -232,29 +232,23 @@ const announcerText = computed(() => `${send.value} ${exchange.base} equals ${re
           <div class="form-actions flex gap-2">
             <UButton
               v-if="exchange.doesFavoriteExist(exchange.base, exchange.quote)"
-              class="button-favorite"
+              label="Favorited"
+              class="h-8 w-29.25"
+              icon="ion:star"
               @click="exchange.deleteFavorite(exchange.base, exchange.quote)"
-            >
-              <UIcon name="ion:star" class="size-5" />
-              Favorited
-            </UButton>
+            />
 
             <UButton
               v-else
-              class="button-favorite"
+              label="Favorite"
+              class="h-8 w-29.25"
+              icon="ion:star-outline"
+              variant="subtle"
+              color="neutral"
               @click="exchange.addFavorite(exchange.base, exchange.quote)"
-            >
-              <UIcon name="ion:star-outline" class="size-5" />
-              Favorite
-            </UButton>
+            />
 
-            <UButton
-              variant="outline"
-              :disabled="exchange.rate === undefined || exchange.amount === undefined || receive === ''"
-              @click="exchange.addConversionLog(exchange.base, exchange.quote, exchange.rate, exchange.amount, Number(parseFloat(receive).toFixed(2)))"
-            >
-              Log Conversion
-            </UButton>
+            <BtnLogConversion :receive />
           </div>
         </div>
       </template>
