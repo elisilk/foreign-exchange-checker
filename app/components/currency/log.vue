@@ -12,8 +12,12 @@ const formatter = new Intl.NumberFormat("en-US", {
 <template>
   <section class="log-component" aria-label="Log">
     <template v-if="exchange.conversionLog.length === 0 ">
-      <h3>No conversions logged yet</h3>
-      <p>Every conversion is recorded here automatically when you tap <span>LOG CONVERSION</span>. Your log is private to this session and this browser.</p>
+      <AppTabEmpty class="max-w-185">
+        <template #heading>
+          No conversions logged yet
+        </template>
+        Every conversion is recorded here automatically when you tap <span>LOG CONVERSION</span>. Your log is private to this session and this browser.
+      </AppTabEmpty>
     </template>
 
     <UCard v-else title="Conversion Log">
