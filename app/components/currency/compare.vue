@@ -10,13 +10,21 @@ const formatter = new Intl.NumberFormat("en-US", {
 <template>
   <section class="compare-component" aria-label="Compare">
     <template v-if="!exchange.amount">
-      <h3>No comparison available</h3>
-      <p>Enter an amount in <span>SEND</span> above to see what your money is worth in other currencies.</p>
+      <AppTabEmpty class="max-w-115">
+        <template #heading>
+          No comparison available
+        </template>
+        Enter an amount in <span>SEND</span> above to see what your money is worth in other currencies.
+      </AppTabEmpty>
     </template>
 
     <template v-else-if="!exchange.rates || exchange.rates.length === 0">
-      <h3>No rates available</h3>
-      <p>There was an issue getting the latest rates. Try to refresh the page or come back again later. Sorry!</p>
+      <AppTabEmpty class="max-w-115">
+        <template #heading>
+          No rates available
+        </template>
+        There was an issue getting the latest rates. Try to refresh the page or come back again later. Sorry!
+      </AppTabEmpty>
     </template>
 
     <UCard

@@ -3,11 +3,6 @@ const exchange = useExchangeStore();
 
 const items = computed(() => [
   {
-    slot: "log",
-    label: "Log",
-    count: exchange.conversionLog.length,
-  },
-  {
     slot: "history",
     label: "History",
   },
@@ -19,6 +14,11 @@ const items = computed(() => [
     slot: "favorites",
     label: "Favorites",
     count: exchange.favorites.length,
+  },
+  {
+    slot: "log",
+    label: "Log",
+    count: exchange.conversionLog.length,
   },
 ]);
 </script>
@@ -41,16 +41,16 @@ const items = computed(() => [
       <CurrencyHistory />
     </template>
 
+    <template #compare>
+      <CurrencyCompare />
+    </template>
+
     <template #favorites>
       <CurrencyFavorites />
     </template>
 
     <template #log>
       <CurrencyLog />
-    </template>
-
-    <template #compare>
-      <CurrencyCompare />
     </template>
   </UTabs>
 </template>

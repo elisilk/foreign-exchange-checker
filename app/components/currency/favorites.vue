@@ -5,8 +5,12 @@ const exchange = useExchangeStore();
 <template>
   <section aria-label="Favorites">
     <template v-if="exchange.favorites.length === 0 ">
-      <h3>No pinned pairs yet</h3>
-      <p>Pin a pair to track its rate here. Tap the star icon on any conversion or comparison row.</p>
+      <AppTabEmpty class="max-w-115">
+        <template #heading>
+          No pinned pairs yet
+        </template>
+        Pin a pair to track its rate here. Tap the star icon on any conversion or comparison row.
+      </AppTabEmpty>
     </template>
 
     <UCard
