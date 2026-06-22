@@ -33,10 +33,10 @@ const exchange = useExchangeStore();
 
           <UButton
             v-if="exchange.doesFavoriteExist(pair.base, pair.quote)"
-            class="action"
             aria-label="Unfavorite this pair"
             icon="ion:star"
             variant="outline"
+            size="sm"
             square
             @click="exchange.deleteFavorite(pair.base, pair.quote)"
           />

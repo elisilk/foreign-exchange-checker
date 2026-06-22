@@ -2,62 +2,68 @@
 @import "@nuxt/ui";
 
 @theme {
-  --font-sans: "JetBrains Mono", monospace;
-  --font-mono: "JetBrains Mono", monospace;
+  /* Fonts */
+  --font-mono:
+    "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --font-sans: var(--font-mono);
+
+  /* Customized Typography text-presets */
+
+  /*
+  text-xs - Text Preset 6 - fs 10px / lh 100% / ls 0px / fw Regular
+  text-sm - Text Preset 5 - fs 12px / lh 120% / ls 0.5px / fw Regular
+  text-md - Text Preset 5 Medium - fs 12px / lh 130% / ls 0.5px / fw Medium
+  text-lg - Text Preset 4 - fs 14px / lh 120% / ls 1px / fw Regular
+  text-xl - Text Preset 3 Regular + Medium - fs 16px / lh 120% / ls 1px / fw Medium + fw Regular
+  text-2xl - Text Preset 3 Bold - fs 16px / lh 110% / ls 1px / fw Bold
+  text-3xl - Text Preset 2 - fs 20px / lh 120% / ls -0.5px / fw Regular
+  text-4xl - Text Preset 2 Bold - fs 20px / lh 140% / ls -0.5px / fw Bold
+  text-5xl - Text Preset 1 Tablet - fs 32px / lh 100% / ls -0.5px / fw Bold
+  text-6xl - Text Preset 1 - fs 40px / lh 100% / ls -0.5px / fw Bold
+  */
+
+  --text-xs: 0.625rem;
+  --text-xs--line-height: 100%;
+  --text-xs--letter-spacing: 0px;
+
+  --text-sm: 0.75rem;
+  --text-sm--line-height: 120%;
+  --text-sm--letter-spacing: 0.5px;
+
+  --text-md: 0.75rem;
+  --text-md--line-height: 130%;
+  --text-md--letter-spacing: 0.5px;
+
+  --text-lg: 0.875rem;
+  --text-lg--line-height: 120%;
+  --text-lg--letter-spacing: 1px;
+
+  --text-xl: 1rem;
+  --text-xl--line-height: 120%;
+  --text-xl--letter-spacing: 1px;
+
+  --text-2xl: 1rem;
+  --text-2xl--line-height: 110%;
+  --text-2xl--letter-spacing: 1px;
+
+  --text-3xl: 1.25rem;
+  --text-3xl--line-height: 120%;
+  --text-3xl--letter-spacing: -0.5px;
+
+  --text-4xl: 1.25rem;
+  --text-4xl--line-height: 140%;
+  --text-4xl--letter-spacing: -0.5px;
+
+  --text-5xl: 2rem;
+  --text-5xl--line-height: 100%;
+  --text-5xl--letter-spacing: -0.5px;
+
+  --text-6xl: 2.5rem;
+  --text-6xl--line-height: 100%;
+  --text-6xl--letter-spacing: -0.5px;
 }
 
 @theme static {
-  /* Customized typography presets */
-
-  /* Text Preset 6 */
-  /* fs 10px / lh 100% / ls 0px / fw Regular */
-  --text-preset-6: 0.625rem;
-  --text-preset-6--line-height: 100%;
-  --text-preset-6--letter-spacing: 0px;
-  --text-preset-6--font-weight: 400;
-
-  /* Text Preset 5 (Medium) */
-  /* fs 12px / lh 130% / ls 0.5px / fw Medium */
-  --text-preset-5-medium: 0.75rem;
-  --text-preset-5-medium--line-height: 130%;
-  --text-preset-5-medium--letter-spacing: 0.5px;
-  --text-preset-5-medium--font-weight: 500;
-
-  /* Text Preset 5 */
-  /* fs 12px / lh 120% / ls 0.5px / fw Regular */
-  --text-preset-5: 0.75rem;
-  --text-preset-5--line-height: 120%;
-  --text-preset-5--letter-spacing: 0.5px;
-  --text-preset-5--font-weight: 400;
-
-  /* Text Preset 4 */
-  /* fs 14px / lh 120% / ls 1px / fw Regular */
-  --text-preset-4: 0.875rem;
-  --text-preset-4--line-height: 120%;
-  --text-preset-4--letter-spacing: 1px;
-  --text-preset-4--font-weight: 400;
-
-  /* Text Preset 3 (Bold) */
-  /* fs 16px / lh 110% / ls 1px / fw Bold */
-
-  /* Text Preset 3 (Medium) */
-  /* fs 16px / lh 120% / ls 1px / fw Medium */
-
-  /* Text Preset 3 (Regular) */
-  /* fs 16px / lh 120% / ls 1px / fw Regular */
-
-  /* Text Preset 2 (Bold) */
-  /* fs 20px / lh 140% / ls -0.5px / fw Bold */
-
-  /* Text Preset 2 (Regular) */
-  /* fs 20px / lh 120% / ls -0.5px / fw Regular */
-
-  /* Text Preset 1 (Tablet) */
-  /* fs 32px / lh 100% / ls -0.5px / fw Bold */
-
-  /* Text Preset 1 */
-  /* fs 40px / lh 100% / ls -0.5px / fw Bold */
-
   /* Override colors */
   --color-neutral-50: #ffffff;
   --color-neutral-100: #c6c6c6;
@@ -108,4 +114,8 @@
   --radius-2xl: 16px; /* originally 1rem (16px) */
   --radius-3xl: 20px; /* originally 1.5rem (24px) */
   --radius-4xl: 24px; /* originally 2rem (32px) */
+}
+
+:root {
+  --ui-radius: 8px;
 }
