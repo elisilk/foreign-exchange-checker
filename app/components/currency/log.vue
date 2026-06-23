@@ -20,7 +20,10 @@ const formatter = new Intl.NumberFormat("en-US", {
       </AppTabEmpty>
     </template>
 
-    <UCard v-else title="Conversion Log">
+    <UCard
+      v-else
+      title="Conversion Log"
+    >
       <template #description>
         <span>{{ exchange.conversionLog.length }} logged</span>
         <UButton
@@ -32,29 +35,29 @@ const formatter = new Intl.NumberFormat("en-US", {
         />
       </template>
 
-      <div class="log-list">
+      <div class="space-y-4">
         <div
           v-for="log in conversionLogSorted"
           :key="`log-${log.base}-${log.quote}`"
-          class="log-item"
+          class="flex items-center gap-4 py-3 px-4 border border-neutral-500 rounded-lg bg-neutral-600"
         >
-          <CurrencyTime class="time" :datetime="log.datetime" />
+          <CurrencyTime class="text-lg text-neutral-200" :datetime="log.datetime" />
 
-          <div class="pair">
-            <span class="base-iso-code">{{ log.base }}</span>
-            <UIcon name="ion:arrow-forward" class="size-5" />
-            <span class="quote-iso-code">{{ log.quote }}</span>
+          <div class="flex items-center gap-2 text-lg text-neutral-50">
+            <span>{{ log.base }}</span>
+            <UIcon name="ion:arrow-forward" class="size-3 text-neutral-200" />
+            <span>{{ log.quote }}</span>
           </div>
 
-          <div class="amounts">
-            <span class="send">{{ formatter.format(log.send) }}</span>
-            <span class="receive">{{ formatter.format(log.receive) }}</span>
+          <div class="ms-auto grid gap-1.5 justify-items-end">
+            <span class="text-xl text-neutral-100">{{ formatter.format(log.send) }}</span>
+            <span class="text-xl text-primary">{{ formatter.format(log.receive) }}</span>
           </div>
 
           <UButton
             aria-label="Delete log item"
-            variant="subtle"
             color="neutral"
+            variant="subtle"
             class="group relative overflow-hidden"
             size="sm"
             square
@@ -62,11 +65,11 @@ const formatter = new Intl.NumberFormat("en-US", {
           >
             <UIcon
               name="ion:trash-outline"
-              class="shrink-0 size-4 inline-block group-hover:hidden transition-all"
+              class="shrink-0 size-3 inline-block group-hover:hidden transition-all"
             />
             <UIcon
               name="ion:trash"
-              class="hidden shrink-0 size-4 group-hover:inline-block transition-all"
+              class="hidden shrink-0 size-3 group-hover:inline-block transition-all"
             />
           </UButton>
         </div>
@@ -74,31 +77,3 @@ const formatter = new Intl.NumberFormat("en-US", {
     </UCard>
   </section>
 </template>
-
-<style scoped>
-.log-list > * + * {
-  margin-block-start: 1rem;
-}
-
-.log-item {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 12px 16px;
-  border-radius: 10px;
-  border: 1px solid grey;
-  background: black;
-}
-
-.pair {
-  display: flex;
-  align-items: center;
-  gap: 1ch;
-}
-
-.amounts {
-  margin-inline-start: auto;
-  display: grid;
-  justify-items: end;
-}
-</style>

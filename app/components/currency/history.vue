@@ -13,6 +13,9 @@ const exchange = useExchangeStore();
       </AppTabEmpty>
     </template>
 
-    <UCard v-else title="History" />
+    <UCard
+      v-else
+      title="History"
+    />
   </section>
 </template>

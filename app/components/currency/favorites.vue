@@ -18,21 +18,32 @@ const exchange = useExchangeStore();
       title="Pinned Pairs"
       :description="`${exchange.favorites.length} favorite${exchange.favorites.length === 1 ? '' : 's'}`"
     >
-      <div class="favorites-list">
+      <div class="space-y-4">
         <div
-          v-for="pair in exchange.favorites"
+          v-for="(pair, index) in exchange.favorites"
           :key="`favorite-${pair.base}-${pair.quote}`"
-          class="favorites-item"
+          class="flex items-center gap-4 py-3 px-4 border border-neutral-500 rounded-lg bg-neutral-600"
         >
-          <div class="pair">
-            <span class="base-iso-code">{{ pair.base }}</span>
-            <UIcon name="ion:arrow-forward" class="size-5" />
-            <span class="quote-iso-code">{{ pair.quote }}</span>
+          <div class="flex items-center gap-2 text-lg text-neutral-50">
+            <span>{{ pair.base }}</span>
+            <UIcon name="ion:arrow-forward" class="size-3 text-neutral-200" />
+            <span>{{ pair.quote }}</span>
           </div>
 
-          <div class="rate">
-            <span>(rate)</span>
-            <span>(% change)</span>
+          <div class="ms-auto grid gap-1.5 justify-items-end">
+            <span class="text-xl text-neutral-50">1.3575</span>
+            <template v-if="index % 2 === 0">
+              <span class="text-xs text-red-500 flex gap-1 items-center">
+                <UIcon name="ion:arrow-down-b" class="size-3" />
+                <span>-0.22%</span>
+              </span>
+            </template>
+            <template v-else>
+              <div class="text-xs text-primary flex gap-1 items-center">
+                <UIcon name="ion:arrow-up-b" class="size-3" />
+                <span>+0.34%</span>
+              </div>
+            </template>
           </div>
 
           <UButton
@@ -49,31 +60,3 @@ const exchange = useExchangeStore();
     </UCard>
   </section>
 </template>
-
-<style scoped>
-.favorites-list > * + * {
-  margin-block-start: 1rem;
-}
-
-.favorites-item {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 12px 16px;
-  border-radius: 10px;
-  border: 1px solid grey;
-  background: black;
-}
-
-.pair {
-  display: flex;
-  align-items: center;
-  gap: 1ch;
-}
-
-.rate {
-  margin-inline-start: auto;
-  display: grid;
-  justify-items: end;
-}
-</style>
