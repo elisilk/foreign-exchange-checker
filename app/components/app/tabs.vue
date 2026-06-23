@@ -27,6 +27,7 @@ const items = computed(() => [
   <UTabs
     :items
     variant="link"
+    class="gap-4 md:gap-5"
   >
     <template #default="{ item }">
       <div class="flex items-center gap-2">

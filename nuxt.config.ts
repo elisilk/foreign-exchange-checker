@@ -12,6 +12,17 @@ export default defineNuxtConfig({
   /* Nuxt UI */
   css: ["~/assets/css/main.css"],
 
+  /* Fonts */
+  fonts: {
+    families: [
+      {
+        name: "JetBrains Mono",
+        provider: "google",
+        weights: [400, 500, 700],
+      },
+    ],
+  },
+
   /* eslint */
   eslint: {
     config: {

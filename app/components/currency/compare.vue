@@ -29,30 +29,33 @@ const formatter = new Intl.NumberFormat("en-US", {
 
     <UCard
       v-else
-      :title="`Multi-currency ${exchange.amount.toLocaleString('en-US', {
-        maximumFractionDigits: 2,
-      })} from ${exchange.base}`"
       :description="`${exchange.rates.length} pairs`"
     >
-      <div class="compare-list">
+      <template #title>
+        <span class="text-lg text-neutral-200">Multi-currency</span>
+        <span>{{ exchange.amount.toLocaleString('en-US', {
+          maximumFractionDigits: 2,
+        }) }} from {{ exchange.base }}</span>
+      </template>
+      <div class="space-y-4">
         <div
           v-for="pair in exchange.rates"
           :key="`compare-${pair.base}-${pair.quote}`"
-          class="compare-item"
+          class="flex items-center gap-4 py-3 px-4 border border-neutral-500 rounded-lg bg-neutral-600"
         >
           <UIcon
             :name="getFlagIcon(pair.quote as CurrencyCode)"
-            class="flag size-5"
+            class="flag size-6"
           />
 
-          <div class="currency">
-            <span class="iso-code">{{ pair.quote }}</span>
-            <span class="name">(currency name)</span>
+          <div class="grid gap-1.5">
+            <span class="text-lg text-neutral-50">{{ pair.quote }}</span>
+            <span class="text-sm text-neutral-200">(currency name)</span>
           </div>
 
-          <div class="amounts">
-            <span class="result">{{ formatter.format(exchange.amount * pair.rate) }}</span>
-            <span class="rate">@ {{ pair.rate.toPrecision(5) }}</span>
+          <div class="ms-auto grid gap-1.5 justify-items-end">
+            <span class="text-xl text-neutral-50">{{ formatter.format(exchange.amount * pair.rate) }}</span>
+            <span class="text-xs text-neutral-200">@ {{ pair.rate.toPrecision(5) }}</span>
           </div>
 
           <UButton
@@ -79,29 +82,3 @@ const formatter = new Intl.NumberFormat("en-US", {
     </UCard>
   </section>
 </template>
-
-<style scoped>
-.compare-list > * + * {
-  margin-block-start: 1rem;
-}
-
-.compare-item {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 12px 16px;
-  border-radius: 10px;
-  border: 1px solid grey;
-  background: black;
-}
-
-.currency {
-  display: grid;
-}
-
-.amounts {
-  margin-inline-start: auto;
-  display: grid;
-  justify-items: end;
-}
-</style>
