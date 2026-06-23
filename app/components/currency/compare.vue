@@ -5,6 +5,13 @@ const formatter = new Intl.NumberFormat("en-US", {
   minimumFractionDigits: 2,
   maximumFractionDigits: 2,
 });
+
+function getCurrencyName(isoCode: string): string | undefined {
+  const currency = currencies.find(item => item.iso_code === isoCode);
+  if (!currency)
+    return undefined;
+  return currency.name;
+}
 </script>
 
 <template>
@@ -50,7 +57,7 @@ const formatter = new Intl.NumberFormat("en-US", {
 
           <div class="grid gap-1.5">
             <span class="text-lg text-neutral-50">{{ pair.quote }}</span>
-            <span class="text-sm text-neutral-200">(currency name)</span>
+            <span class="text-sm text-neutral-200">{{ getCurrencyName(pair.quote) }}</span>
           </div>
 
           <div class="ms-auto grid gap-1.5 justify-items-end">
