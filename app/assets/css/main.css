@@ -123,4 +123,5 @@
 
 .dark {
   --ui-bg: var(--color-neutral-900);
+  --ui-primary: var(--color-lime-500);
 }

@@ -6,17 +6,22 @@ export default defineAppConfig({
     },
     card: {
       slots: {
-        root: "p-4 sm:p-5 space-y-4 sm:space-y-5",
-        header: (defaultClasses: string) => `${defaultClasses} uppercase grid gap-2.5 sm:flex sm:justify-between sm:items-center p-0 sm:p-0`,
-        body: "p-0 sm:p-0",
-        footer: "p-0 sm:p-0",
-        title: "text-xl font-medium flex gap-3 items-center",
+        header: "p-4 md:p-5",
+        body: "p-4 md:p-5",
+        footer: "p-4 md:p-5",
+        title: (defaultClasses: string) => `${defaultClasses} text-xl font-medium flex gap-3 items-center`,
         description: "mt-0 text-sm flex gap-4 items-center justify-between",
       },
       variants: {
         variant: {
           outline: {
-            root: "bg-neutral-700 divide-y-0",
+            root: "bg-neutral-700 divide-y-0 border-neutral-600 rounded-2xl p-4 md:p-5 space-y-4 md:space-y-5",
+            header: "uppercase grid gap-2.5 md:flex md:justify-between md:items-center p-0 sm:p-0 md:p-0",
+            body: "p-0 sm:p-0 md:p-0",
+            footer: "p-0 sm:p-0 md:p-0",
+          },
+          subtle: {
+            root: "bg-neutral-700 rounded-3xl border-0 ring-0 shadow-[0_12px_40px_rgba(0,0,0,0.4)] divide-dashed divide-neutral-500",
           },
         },
       },
@@ -55,6 +60,67 @@ export default defineAppConfig({
           size: "md",
           square: true,
           class: "h-12 w-12",
+        },
+      ],
+    },
+    formField: {
+      slots: {
+        label: "text-lg text-neutral-100 uppercase",
+      },
+      variants: {
+        orientation: {
+          vertical: {
+            container: "mt-5",
+          },
+        },
+      },
+    },
+    input: {
+      variants: {
+        size: {
+          xl: {
+            base: "px-0 py-0 text-5xl field-sizing-content max-w-full min-w-4",
+          },
+        },
+      },
+      compoundVariants: [
+        {
+          color: "primary",
+          variant: [
+            "ghost",
+          ],
+          class: "text-primary selection:bg-primary/25 outline-primary focus-visible:outline-3 focus-visible:ring-primary",
+        },
+        {
+          color: "neutral",
+          variant: [
+            "ghost",
+          ],
+          class: "selection:bg-primary/25 outline-primary focus-visible:outline-3 focus-visible:ring-primary",
+        },
+        {
+          fixed: false,
+          size: "xl",
+          class: "md:text-5xl lg:text-6xl",
+        },
+      ],
+    },
+    selectMenu: {
+      variants: {
+        size: {
+          md: {
+            base: "p-2.5 text-lg gap-1.5",
+          },
+        },
+        variant: {
+          outline: "bg-neutral-500",
+        },
+      },
+      compoundVariants: [
+        {
+          fixed: false,
+          size: "md",
+          class: "md:text-lg",
         },
       ],
     },

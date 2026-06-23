@@ -32,8 +32,17 @@ const currenciesMenuItems = computed<SelectMenuItem[]>(() => [...exchange.curren
     :icon="selectedFlagIcon"
     value-key="id"
     :items="currenciesMenuItems"
-    class="w-26"
-    :ui="{ content: 'min-w-max' }"
+    class="w-26 h-10"
+    :filter-fields="['label', 'name']"
+    :search-input="{
+      placeholder: 'Search currencies ...',
+      icon: 'ion:search',
+    }"
+    :ui="{
+      input: 'text-neutral-50',
+      content: 'min-w-max',
+      item: 'items-center',
+    }"
   >
     <template #item-label="{ item }: { item: any }">
       {{ item.label }}
