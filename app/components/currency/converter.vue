@@ -136,15 +136,15 @@ const announcerText = computed(() => `${send.value} ${exchange.base} equals ${re
 
 <template>
   <UForm
-    class="converter-component"
+    class="space-y-4"
     aria-labelledby="converter-component-heading"
     @submit.prevent="handleSubmit"
   >
-    <h2 id="converter-component-heading">
+    <h2 id="converter-component-heading" class="uppercase text-3xl text-neutral-50">
       Check the Rate
     </h2>
 
-    <UCard>
+    <UCard variant="subtle">
       <div
         id="converter-announcer"
         class="sr-only"
@@ -155,18 +155,20 @@ const announcerText = computed(() => `${send.value} ${exchange.base} equals ${re
       </div>
 
       <!-- BODY inner container -->
-      <div class="flex flex-col items-center gap-4 md:flex-row md:justify-between">
+      <div class="grid gap-4 md:gap-6 md:grid-cols-[minmax(0,1fr)_48px_minmax(0,1fr)]">
         <!-- SEND Input Group -->
-        <div class="flex gap-4 items-end">
+        <div class="bg-neutral-600 rounded-2xl border border-neutral-500 p-4 md:p-5 flex gap-4 items-end justify-between overflow-scroll">
           <UFormField
             label="Send"
             name="send"
             :class="{ 'is-invalid': isSendInvalid }"
           >
             <UInput
-              id="send"
               v-model="send"
               name="send"
+              size="xl"
+              variant="ghost"
+              color="neutral"
               type="text"
               inputmode="decimal"
               step="0.01"
@@ -189,19 +191,21 @@ const announcerText = computed(() => `${send.value} ${exchange.base} equals ${re
           />
         </div>
 
-        <CurrencySwap />
+        <CurrencySwap class="justify-self-center self-center" />
 
         <!-- RECEIVE Input Group -->
-        <div class="flex gap-4 items-end">
+        <div class="bg-neutral-600 rounded-2xl border border-neutral-500 p-4 md:p-5 flex gap-4 items-end justify-between overflow-scroll">
           <UFormField
             label="Receive"
             name="receive"
             :class="{ 'is-invalid': isReceiveInvalid }"
           >
             <UInput
-              id="receive"
               v-model="receive"
               name="receive"
+              size="xl"
+              variant="ghost"
+              color="primary"
               type="text"
               inputmode="decimal"
               step="0.01"
@@ -225,8 +229,8 @@ const announcerText = computed(() => `${send.value} ${exchange.base} equals ${re
 
       <template #footer>
         <!-- FOOTER inner container -->
-        <div class="flex flex-col items-center gap-2 md:flex-row md:justify-between">
-          <CurrencyRate />
+        <div class="flex flex-col items-center gap-4 md:flex-row md:justify-between">
+          <CurrencyRate class="text-neutral-50 text-xs md:text-sm" />
 
           <!-- Form Actions Group -->
           <div class="form-actions flex gap-2">
