@@ -1,5 +1,5 @@
 export const useExchangeStore = defineStore("exchange", () => {
-  /* Provivder */
+  /* Provider */
 
   const provider = ref("ECB");
 
