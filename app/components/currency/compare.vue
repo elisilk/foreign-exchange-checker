@@ -37,29 +37,6 @@ const compareRates = computed<Rate[]>(() => {
 
   return transformedRates.sort((a, b) => a.quote > b.quote ? 1 : -1);
 });
-
-const formatter = new Intl.NumberFormat("en-US", {
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
-});
-
-function getCurrencyName(isoCode: string): string | undefined {
-  const currency = currencies.find(item => item.iso_code === isoCode);
-  if (!currency)
-    return undefined;
-  return currency.name;
-}
-
-function getExchangeAmount(pair: Rate, amount: number): string {
-  if (pair.rate === undefined)
-    return "Error";
-  return formatter.format(amount * pair.rate);
-}
-
-function handlePairClick(quote: string) {
-  // console.log(`handling pair click: ${exchange.base}/${quote}`);
-  exchange.quote = quote as CurrencyCode;
-}
 </script>
 
 <template>
@@ -92,35 +69,13 @@ function handlePairClick(quote: string) {
           maximumFractionDigits: 2,
         }) }} from {{ exchange.base }}</span>
       </template>
+
       <div class="space-y-4">
-        <div
-          v-for="pair in compareRates"
-          :key="`compare-${pair.base}-${pair.quote}`"
-          tabindex="0"
-          role="group"
-          :aria-label="`Comparison for pair: ${pair.base} to ${pair.quote}`"
-          class="flex items-center gap-4 py-3 px-4 border border-neutral-500 rounded-lg bg-neutral-600 hover:cursor-pointer hover:border-primary focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
-          @click="handlePairClick(pair.quote)"
-          @keydown.enter="handlePairClick(pair.quote)"
-          @keydown.space.prevent="handlePairClick(pair.quote)"
-        >
-          <UIcon
-            :name="getFlagIcon(pair.quote as CurrencyCode)"
-            class="flag size-6"
-          />
-
-          <div class="grid gap-1.5">
-            <span class="text-lg text-neutral-50">{{ pair.quote }}</span>
-            <span class="text-sm text-neutral-200">{{ getCurrencyName(pair.quote) }}</span>
-          </div>
-
-          <div class="ms-auto grid gap-1.5 justify-items-end">
-            <span class="text-xl text-neutral-50">{{ getExchangeAmount(pair, exchange.amount) }}</span>
-            <span class="text-xs text-neutral-200">@ {{ pair.rate }}</span>
-          </div>
-
-          <ButtonToggleFavorite :base="pair.base" :quote="pair.quote" />
-        </div>
+        <ItemCompare
+          v-for="rate in compareRates"
+          :key="`compare-item-${rate.base}-${rate.quote}`"
+          :rate
+        />
       </div>
     </UCard>
   </section>

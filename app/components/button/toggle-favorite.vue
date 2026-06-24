@@ -1,22 +1,20 @@
 <script setup lang="ts">
 type Props = {
-  base: string;
-  quote: string;
+  pair: Pair;
 };
 
-const { base, quote } = defineProps<Props>();
+const { pair } = defineProps<Props>();
 
 const exchange = useExchangeStore();
 
-const isFavorited = computed<boolean>(() => exchange.doesFavoriteExist(base, quote));
+const isFavorited = computed<boolean>(() => exchange.doesFavoriteExist(pair.base, pair.quote));
 
 function toggleFavorite() {
-  // console.log(`toggling favorite: ${base}/${quote}`);
   if (isFavorited.value) {
-    exchange.deleteFavorite(base, quote);
+    exchange.deleteFavorite(pair.base, pair.quote);
   }
   else {
-    exchange.addFavorite(base, quote);
+    exchange.addFavorite(pair.base, pair.quote);
   }
 }
 </script>
@@ -31,7 +29,5 @@ function toggleFavorite() {
     :aria-label="isFavorited ? 'Unfavorite this pair' : 'Favorite this pair'"
     :aria-pressed="isFavorited"
     @click.stop="toggleFavorite"
-    @keydown.enter.stop="toggleFavorite"
-    @keydown.space.stop.prevent="toggleFavorite"
   />
 </template>

@@ -10,20 +10,7 @@ const exchange = useExchangeStore();
 const isLoading = ref(false);
 const isSuccess = ref(false);
 
-const defaultVariant = "outline";
-const successVariant = "solid";
-
-const defaultClasses = "text-neutral-50";
-const successClasses = "text-inverted capitalize";
-
-const defaultLabel = "Log Conversion";
-const successLabel = "Logged";
-
 const successTimeoutMs = 2000;
-
-const currentVariant = computed(() => isSuccess.value ? successVariant : defaultVariant);
-const currentClasses = computed(() => isSuccess.value ? successClasses : defaultClasses);
-const currentLabel = computed(() => isSuccess.value ? successLabel : defaultLabel);
 
 const isInvalid = computed(() => isLoading.value || exchange.rate === undefined || exchange.amount === undefined || receive === "");
 
@@ -43,10 +30,10 @@ async function handleClick() {
 <template>
   <UButton
     :icon="isSuccess ? 'ion:checkmark' : undefined"
-    :variant="currentVariant"
-    :label="currentLabel"
+    :variant="isSuccess ? 'solid' : 'outline'"
+    :label="isSuccess ? 'Logged' : 'Log Conversion'"
     class="h-8 w-33 justify-center"
-    :class="currentClasses"
+    :class="isSuccess ? 'text-inverted capitalize' : 'text-neutral-50'"
     :disabled="isInvalid"
     @click="handleClick"
   />

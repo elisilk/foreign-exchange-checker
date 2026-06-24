@@ -44,12 +44,12 @@ export default defineAppConfig({
         {
           color: "primary",
           variant: "outline",
-          class: "ring-primary hover:bg-neutral-500 focus-visible:ring-primary focus-visible:outline-offset-1",
+          class: "relative z-10 bg-neutral-600 ring-primary hover:bg-neutral-500 focus-visible:ring-primary focus-visible:outline-offset-1",
         },
         {
           color: "neutral",
           variant: "subtle",
-          class: "focus-visible:ring-neutral focus-visible:outline focus-visible:outline-primary focus-visible:outline-offset-1 font-normal text-neutral-200",
+          class: "relative z-10 focus-visible:ring-neutral focus-visible:outline focus-visible:outline-primary focus-visible:outline-offset-1 font-normal text-neutral-200",
         },
         {
           size: "sm",
