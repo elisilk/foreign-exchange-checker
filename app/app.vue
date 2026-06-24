@@ -8,21 +8,21 @@ await useAsyncData("initRates", async () => {
 });
 
 // onMounted(async () => {
-//   await currency.fetchRates();
+//   await exchange.fetchRates();
 // });
 
-watch(
-  [() => exchange.base, () => exchange.quote],
-  async (/* [newBase, newQuote], [_oldBase, _oldQuote] */) => {
-    // console.log(`new state: ${newBase} / ${newQuote}`);
-    try {
-      await exchange.fetchRates();
-    }
-    catch (error) {
-      console.error("Error fetching new rates:", error);
-    }
-  },
-);
+// watch(
+//   [() => exchange.base, () => exchange.quote],
+//   async (/* [newBase, newQuote], [_oldBase, _oldQuote] */) => {
+//     // console.log(`new state: ${newBase} / ${newQuote}`);
+//     try {
+//       await exchange.fetchRates();
+//     }
+//     catch (error) {
+//       console.error("Error fetching new rates:", error);
+//     }
+//   },
+// );
 </script>
 
 <template>
@@ -39,9 +39,12 @@ watch(
 
         <CurrencyConverter />
 
-        <AppTabs />
+        <AppRateVerifier />
+        <!--
+        <AppIconViewer />
+        -->
 
-        <!-- <AppIconViewer /> -->
+        <AppTabs />
       </UContainer>
     </UMain>
   </UApp>

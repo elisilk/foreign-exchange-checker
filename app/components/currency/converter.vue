@@ -252,7 +252,7 @@ const announcerText = computed(() => `${send.value} ${exchange.base} equals ${re
               @click="exchange.addFavorite(exchange.base, exchange.quote)"
             />
 
-            <BtnLogConversion :receive />
+            <ButtonLogConversion :receive />
           </div>
         </div>
       </template>

@@ -1,11 +1,11 @@
 <script setup lang="ts">
-const { receive } = defineProps<Props>();
-
-const exchange = useExchangeStore();
-
 type Props = {
   receive: string;
 };
+
+const { receive } = defineProps<Props>();
+
+const exchange = useExchangeStore();
 
 const isLoading = ref(false);
 const isSuccess = ref(false);
