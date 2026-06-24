@@ -52,14 +52,11 @@ const isReceiveInvalid = computed(() => {
 
 function handleSubmit() { }
 
-const intFormatter = new Intl.NumberFormat("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-const decFormatter = new Intl.NumberFormat("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-
 function formatWithCommas(num: number | null | undefined): string {
   if (num === null || num === undefined || Number.isNaN(num))
     return "";
 
-  return Number.isInteger(num) ? intFormatter.format(num) : decFormatter.format(num);
+  return Number.isInteger(num) ? integerFormatter.format(num) : decimalFormatter.format(num);
 }
 
 function parseCleanFloat(str: string): number | undefined {
