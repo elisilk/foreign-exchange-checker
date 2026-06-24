@@ -36,33 +36,48 @@ export const useExchangeStore = defineStore("exchange", () => {
 
   const rates = ref<Rate[]>([]);
   const numRates = computed(() => currencies.value.length);
-  const rate = ref<number | undefined>();
   async function fetchRates() {
     try {
-      const data = await $fetch<Rate[]>(`https://api.frankfurter.dev/v2/rates?base=${base.value}&providers=${provider.value}`);
+      const data = await $fetch<Rate[]>(`https://api.frankfurter.dev/v2/rates?providers=${provider.value}`);
 
       if (!data || data.length === 0) {
         console.error(`No rates found for ${base.value} with provider ${provider.value}`);
-        rates.value = [];
-        rate.value = undefined;
-        return;
+        // rates.value = [];
       }
 
       rates.value = data;
-      const newRate = data.find(item => item.quote === quote.value);
-
-      if (newRate) {
-        rate.value = newRate.rate;
-      }
-      else {
-        console.error(`Rate comparison (${base.value}/${quote.value}) not found with provider ${provider.value}`);
-        rate.value = undefined;
-      }
     }
     catch (error) {
       console.error("Fetch rates failed:", error);
     }
   }
+
+  function rateRelativeToEur(quote: string): number | undefined {
+    if (quote === "EUR")
+      return 1;
+
+    return rates.value.find(item => item.quote === quote)?.rate;
+  }
+
+  function rateForPair(base: string, quote: string): number | undefined {
+    const rateOfEurToQuote = rateRelativeToEur(quote);
+    if (rateOfEurToQuote === undefined)
+      return undefined;
+    if (base === "EUR")
+      return rateOfEurToQuote;
+
+    const rateOfEurToBase = rateRelativeToEur(base);
+    if (rateOfEurToBase === undefined)
+      return undefined;
+    if (quote === "EUR")
+      return Number((1 / rateOfEurToBase).toPrecision(5));
+
+    return Number((rateOfEurToQuote / rateOfEurToBase).toPrecision(5));
+  }
+
+  const rate = computed<number | undefined>(() => {
+    return rateForPair(base.value, quote.value);
+  });
 
   const amount = ref<number | undefined>();
 
@@ -129,8 +144,10 @@ export const useExchangeStore = defineStore("exchange", () => {
     swap,
     rates,
     numRates,
-    rate,
     fetchRates,
+    rateRelativeToEur,
+    rateForPair,
+    rate,
     amount,
     favorites,
     doesFavoriteExist,

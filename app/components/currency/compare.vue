@@ -1,6 +1,43 @@
 <script setup lang="ts">
 const exchange = useExchangeStore();
 
+const compareRates = computed<Rate[]>(() => {
+  // if EUR is base, then return the rates as they are
+  // (no need for additional calculations or additions/removals)
+  if (exchange.base === "EUR")
+    return exchange.rates;
+
+  // otherwise
+  //  - remove base from array
+  //  - re-calculate array rates using the actual base currency
+  //  - retrieve and add rate with EUR as quote to the array
+  //  - sort
+  //  - return the new array
+
+  const transformedRates = exchange.rates
+    .filter(rate => rate.quote !== exchange.base)
+    .map((rate) => {
+      const rateForPair = exchange.rateForPair(exchange.base, rate.quote);
+      return ({
+        date: rate.date,
+        base: exchange.base as string,
+        quote: rate.quote as string,
+        rate: rateForPair,
+      });
+    });
+
+  const rateEuroToBase = exchange.rateRelativeToEur(exchange.base);
+  const euroRate: Rate = {
+    date: getTodayLocal(),
+    base: exchange.base as string,
+    quote: "EUR",
+    rate: rateEuroToBase ? Number((1 / rateEuroToBase).toPrecision(5)) : undefined,
+  };
+  transformedRates.push(euroRate);
+
+  return transformedRates.sort((a, b) => a.quote > b.quote ? 1 : -1);
+});
+
 const formatter = new Intl.NumberFormat("en-US", {
   minimumFractionDigits: 2,
   maximumFractionDigits: 2,
@@ -11,6 +48,17 @@ function getCurrencyName(isoCode: string): string | undefined {
   if (!currency)
     return undefined;
   return currency.name;
+}
+
+function getExchangeAmount(pair: Rate, amount: number): string {
+  if (pair.rate === undefined)
+    return "Error";
+  return formatter.format(amount * pair.rate);
+}
+
+function handlePairClick(quote: string) {
+  // console.log(`handling pair click: ${exchange.base}/${quote}`);
+  exchange.quote = quote as CurrencyCode;
 }
 </script>
 
@@ -46,9 +94,15 @@ function getCurrencyName(isoCode: string): string | undefined {
       </template>
       <div class="space-y-4">
         <div
-          v-for="pair in exchange.rates"
+          v-for="pair in compareRates"
           :key="`compare-${pair.base}-${pair.quote}`"
-          class="flex items-center gap-4 py-3 px-4 border border-neutral-500 rounded-lg bg-neutral-600"
+          tabindex="0"
+          role="group"
+          :aria-label="`Comparison for pair: ${pair.base} to ${pair.quote}`"
+          class="flex items-center gap-4 py-3 px-4 border border-neutral-500 rounded-lg bg-neutral-600 hover:cursor-pointer hover:border-primary focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
+          @click="handlePairClick(pair.quote)"
+          @keydown.enter="handlePairClick(pair.quote)"
+          @keydown.space.prevent="handlePairClick(pair.quote)"
         >
           <UIcon
             :name="getFlagIcon(pair.quote as CurrencyCode)"
@@ -61,29 +115,11 @@ function getCurrencyName(isoCode: string): string | undefined {
           </div>
 
           <div class="ms-auto grid gap-1.5 justify-items-end">
-            <span class="text-xl text-neutral-50">{{ formatter.format(exchange.amount * pair.rate) }}</span>
-            <span class="text-xs text-neutral-200">@ {{ pair.rate.toPrecision(5) }}</span>
+            <span class="text-xl text-neutral-50">{{ getExchangeAmount(pair, exchange.amount) }}</span>
+            <span class="text-xs text-neutral-200">@ {{ pair.rate }}</span>
           </div>
 
-          <UButton
-            v-if="exchange.doesFavoriteExist(pair.base, pair.quote)"
-            aria-label="Unfavorite this pair"
-            icon="ion:star"
-            variant="outline"
-            size="sm"
-            square
-            @click="exchange.deleteFavorite(pair.base, pair.quote)"
-          />
-          <UButton
-            v-else
-            aria-label="Favorite this pair"
-            icon="ion:star-outline"
-            variant="subtle"
-            color="neutral"
-            size="sm"
-            square
-            @click="exchange.addFavorite(pair.base, pair.quote)"
-          />
+          <ButtonToggleFavorite :base="pair.base" :quote="pair.quote" />
         </div>
       </div>
     </UCard>
