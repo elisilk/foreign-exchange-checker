@@ -41,23 +41,17 @@ const compareRates = computed<Rate[]>(() => {
 
 <template>
   <section class="compare-component" aria-label="Compare">
-    <template v-if="!exchange.amount">
-      <AppTabEmpty class="max-w-115">
-        <template #heading>
-          No comparison available
-        </template>
-        Enter an amount in <span>SEND</span> above to see what your money is worth in other currencies.
-      </AppTabEmpty>
-    </template>
+    <UEmpty
+      v-if="!exchange.amount"
+      title="No comparison available"
+      description="Enter an amount in SEND above to see what your money is worth in other currencies."
+    />
 
-    <template v-else-if="!exchange.rates || exchange.rates.length === 0">
-      <AppTabEmpty class="max-w-115">
-        <template #heading>
-          No rates available
-        </template>
-        There was an issue getting the latest rates. Try to refresh the page or come back again later. Sorry!
-      </AppTabEmpty>
-    </template>
+    <UEmpty
+      v-else-if="!exchange.rates || exchange.rates.length === 0"
+      title="No rates available"
+      description="There was an issue getting the latest rates. Try to refresh the page or come back again later. Sorry!"
+    />
 
     <UCard
       v-else

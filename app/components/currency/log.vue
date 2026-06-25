@@ -6,14 +6,11 @@ const conversionLogSorted = computed<Conversion[]>(() => [...exchange.conversion
 
 <template>
   <section class="log-component" aria-label="Log">
-    <template v-if="exchange.conversionLog.length === 0 ">
-      <AppTabEmpty class="max-w-185">
-        <template #heading>
-          No conversions logged yet
-        </template>
-        Every conversion is recorded here automatically when you tap <span>LOG CONVERSION</span>. Your log is private to this session and this browser.
-      </AppTabEmpty>
-    </template>
+    <UEmpty
+      v-if="exchange.conversionLog.length === 0"
+      title="No conversions logged yet"
+      description="Every conversion is recorded here automatically when you tap LOG CONVERSION. Your log is private to this session and this browser."
+    />
 
     <UCard
       v-else

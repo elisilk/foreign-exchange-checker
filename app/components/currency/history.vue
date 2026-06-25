@@ -4,14 +4,14 @@ const exchange = useExchangeStore();
 
 <template>
   <section aria-label="History">
-    <template v-if="!exchange.amount">
-      <AppTabEmpty class="max-w-127">
-        <template #heading>
-          No chart data available
-        </template>
+    <UEmpty
+      v-if="!exchange.amount"
+      title="No chart data available"
+    >
+      <template #description>
         We couldn't load rate history for {{ exchange.base }}/{{ exchange.quote }} right now. This usually clears up in a minute.
-      </AppTabEmpty>
-    </template>
+      </template>
+    </UEmpty>
 
     <UCard
       v-else

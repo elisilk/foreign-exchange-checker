@@ -4,6 +4,24 @@ export default defineAppConfig({
       primary: "lime",
       neutral: "neutral",
     },
+    empty: {
+      slots: {
+        root: "py-10 sm:py-10 lg:py-10",
+        header: "gap-4 max-w-2xl",
+      },
+      variants: {
+        size: {
+          md: {
+            title: "text-3xl",
+            description: "text-lg",
+          },
+        },
+      },
+      defaultVariants: {
+        variant: "naked",
+        size: "md",
+      },
+    },
     card: {
       slots: {
         header: "p-4 md:p-5",

@@ -4,14 +4,11 @@ const exchange = useExchangeStore();
 
 <template>
   <section aria-label="Favorites">
-    <template v-if="exchange.favorites.length === 0 ">
-      <AppTabEmpty class="max-w-115">
-        <template #heading>
-          No pinned pairs yet
-        </template>
-        Pin a pair to track its rate here. Tap the star icon on any conversion or comparison row.
-      </AppTabEmpty>
-    </template>
+    <UEmpty
+      v-if="exchange.favorites.length === 0"
+      title="No pinned pairs yet"
+      description="Pin a pair to track its rate here. Tap the star icon on any conversion or comparison row."
+    />
 
     <UCard
       v-else
