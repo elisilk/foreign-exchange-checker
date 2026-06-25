@@ -28,7 +28,7 @@ const compareRates = computed<Rate[]>(() => {
 
   const rateEuroToBase = exchange.rateRelativeToEur(exchange.base);
   const euroRate: Rate = {
-    date: getTodayLocal(),
+    date: getTodaysDate(),
     base: exchange.base as string,
     quote: "EUR",
     rate: rateEuroToBase ? Number((1 / rateEuroToBase).toPrecision(5)) : undefined,

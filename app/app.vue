@@ -4,25 +4,9 @@ const exchange = useExchangeStore();
 await useAsyncData("initRates", async () => {
   await exchange.fetchCurrencies();
   await exchange.fetchRates();
+  await exchange.fetchRatesYesterday();
   return true;
 });
-
-// onMounted(async () => {
-//   await exchange.fetchRates();
-// });
-
-// watch(
-//   [() => exchange.base, () => exchange.quote],
-//   async (/* [newBase, newQuote], [_oldBase, _oldQuote] */) => {
-//     // console.log(`new state: ${newBase} / ${newQuote}`);
-//     try {
-//       await exchange.fetchRates();
-//     }
-//     catch (error) {
-//       console.error("Error fetching new rates:", error);
-//     }
-//   },
-// );
 </script>
 
 <template>
@@ -39,8 +23,8 @@ await useAsyncData("initRates", async () => {
 
         <CurrencyConverter />
 
-        <AppRateVerifier />
         <!--
+        <AppRateVerifier />
         <AppIconViewer />
         -->
 
