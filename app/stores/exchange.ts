@@ -1,4 +1,9 @@
 export const useExchangeStore = defineStore("exchange", () => {
+  /* Dates */
+
+  const dateToday = computed(() => getTodaysDate());
+  const dateYesterday = computed(() => getYesterdaysDate());
+
   /* Provider */
 
   const provider = ref("ECB");
@@ -62,7 +67,7 @@ export const useExchangeStore = defineStore("exchange", () => {
 
   async function fetchRatesYesterday() {
     try {
-      const data = await $fetch<Rate[]>(`https://api.frankfurter.dev/v2/rates?date=${getYesterdaysDate()}providers=${provider.value}`);
+      const data = await $fetch<Rate[]>(`https://api.frankfurter.dev/v2/rates?date=${dateYesterday.value}providers=${provider.value}`);
 
       if (!data || data.length === 0) {
         console.error(`No rates found for ${base.value} with provider ${provider.value}`);
@@ -167,6 +172,8 @@ export const useExchangeStore = defineStore("exchange", () => {
   }
 
   return {
+    dateToday,
+    dateYesterday,
     provider,
     currencies,
     numCurrencies,
