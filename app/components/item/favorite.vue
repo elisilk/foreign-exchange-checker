@@ -7,7 +7,13 @@ const { pair } = defineProps<Props>();
 
 const exchange = useExchangeStore();
 
-const index = 1;
+const rateToday = computed(() => exchange.rateForPair(pair.base, pair.quote));
+
+const rateYesterday = computed(() => exchange.rateForPair(pair.base, pair.quote, "yesterday"));
+
+const ratePercentChange = computed<number>(() => (rateToday.value === undefined || rateYesterday.value === undefined) ? 0 : Number((100 * (rateToday.value - rateYesterday.value) / rateYesterday.value).toPrecision(2)));
+
+const ratePercentChangeIsPositive = computed<boolean>(() => ratePercentChange.value >= 0);
 
 function handleItemClick() {
   exchange.base = pair.base as CurrencyCode;
@@ -28,19 +34,14 @@ function handleItemClick() {
       </div>
 
       <div class="ms-auto grid gap-1.5 justify-items-end">
-        <span class="text-xl text-neutral-50">1.3575</span>
-        <template v-if="index % 2 === 0">
-          <span class="text-xs text-red-500 flex gap-1 items-center">
-            <UIcon name="ion:arrow-down-b" class="size-3" />
-            <span>-0.22%</span>
-          </span>
-        </template>
-        <template v-else>
-          <div class="text-xs text-primary flex gap-1 items-center">
-            <UIcon name="ion:arrow-up-b" class="size-3" />
-            <span>+0.34%</span>
-          </div>
-        </template>
+        <!-- today's rate -->
+        <span class="text-xl text-neutral-50">{{ rateToday }}</span>
+
+        <!-- percent change -->
+        <div class="text-xs flex gap-1 items-center" :class="[ratePercentChangeIsPositive ? 'text-primary' : 'text-red-500']">
+          <UIcon :name="ratePercentChangeIsPositive === true ? 'ion:arrow-up-b' : 'ion:arrow-down-b'" class="size-3" />
+          <span>{{ ratePercentChangeIsPositive === true ? '+' : '' }}{{ ratePercentChange.toFixed(2) }}%</span>
+        </div>
       </div>
     </button>
 
