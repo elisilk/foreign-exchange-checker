@@ -23,8 +23,8 @@ await useAsyncData("initRates", async () => {
 
         <CurrencyConverter />
 
-        <!--
         <AppRateVerifier />
+        <!--
         <AppIconViewer />
         -->
 

@@ -1,7 +1,28 @@
 <script setup lang="ts">
 const exchange = useExchangeStore();
 
-const { data, pending, error } = useLazyFetch<Rate>(() => `https://api.frankfurter.dev/v2/rate/${exchange.base}/${exchange.quote}?providers=${exchange.provider}`);
+const { data: dataFetched, status } = useLazyFetch<Rate[]>(
+  () =>
+    `https://api.frankfurter.dev/v2/rates?from=${exchange.dateYesterday}&base=${exchange.base}&quotes=${exchange.quote}&providers=${exchange.provider}`,
+  {
+    server: false,
+  },
+);
+
+const dataCalculated = computed(() => [
+  {
+    date: exchange.dateToday,
+    base: exchange.base,
+    quote: exchange.quote,
+    rate: exchange.rateForPair(exchange.base, exchange.quote, "today"),
+  },
+  {
+    date: exchange.dateYesterday,
+    base: exchange.base,
+    quote: exchange.quote,
+    rate: exchange.rateForPair(exchange.base, exchange.quote, "yesterday"),
+  },
+]);
 </script>
 
 <template>
@@ -9,33 +30,23 @@ const { data, pending, error } = useLazyFetch<Rate>(() => `https://api.frankfurt
     <h2 id="rate-verifier-heading">
       Rate Verifier
     </h2>
+
+    <UEmpty
+      v-if="!exchange.rates || exchange.rates.length === 0"
+      title="No rates available"
+      description="There was an issue getting the latest rates. Try to refresh the page or come back again later. Sorry!"
+    />
+
+    <UCard v-else>
+      <h3>Calculated data</h3>
+      <UTable :data="dataCalculated" class="flex-1" />
+
+      <h3>Fetched data</h3>
+      <UTable
+        :data="dataFetched"
+        :loading="status === 'pending' || status === 'idle'"
+        class="flex-1"
+      />
+    </UCard>
   </section>
-
-  <UCard>
-    <div v-if="!exchange.rate">
-      No rate available
-    </div>
-    <div v-else class="grid gap-4 md:gap-6 md:grid-cols-[minmax(0,1fr)_48px_minmax(0,1fr)] items-center justify-items-center">
-      <div class="text-center space-y-2">
-        <h3>Calculated Rate</h3>
-        <div>1 {{ exchange.base }} = {{ exchange.rate }} {{ exchange.quote }}</div>
-      </div>
-
-      <div>VS</div>
-
-      <div class="text-center space-y-2">
-        <h3>Fetched Rate</h3>
-
-        <div v-if="pending">
-          Loading...
-        </div>
-        <div v-else-if="!pending && data">
-          1 {{ data.base }} = {{ data.rate }} {{ data.quote }}
-        </div>
-        <div v-else>
-          Error loading data: {{ error }}
-        </div>
-      </div>
-    </div>
-  </UCard>
 </template>
