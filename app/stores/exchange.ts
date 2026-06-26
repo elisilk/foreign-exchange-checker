@@ -1,8 +1,11 @@
 export const useExchangeStore = defineStore("exchange", () => {
   /* Dates */
 
-  const dateToday = computed(() => getTodaysDate());
-  const dateYesterday = computed(() => getYesterdaysDate());
+  const daysInPastToFetch = ref(5);
+  const startDate = computed(() => getRelativeDate(daysInPastToFetch.value));
+
+  const todaysDate = computed(() => getTodaysDate());
+  const yesterdaysDate = computed(() => getYesterdaysDate());
 
   /* Provider */
 
@@ -39,15 +42,15 @@ export const useExchangeStore = defineStore("exchange", () => {
     [base.value, quote.value] = [quote.value, base.value];
   }
 
-  /* Rates */
+  /* Rates as Time Series (today through 5 days ago) */
 
   const rates = ref<Rate[]>([]);
 
-  const numRates = computed(() => currencies.value.length);
-
   async function fetchRates() {
     try {
-      const data = await $fetch<Rate[]>(`https://api.frankfurter.dev/v2/rates?providers=${provider.value}`);
+      const data = await $fetch<Rate[]>(
+        `https://api.frankfurter.dev/v2/rates?from=${startDate.value}&providers=${provider.value}`,
+      );
 
       if (!data || data.length === 0) {
         console.error(`No rates found for ${base.value} with provider ${provider.value}`);
@@ -61,38 +64,26 @@ export const useExchangeStore = defineStore("exchange", () => {
     }
   }
 
-  /* Rates the Day Prior (yesterday) */
+  const availableDates = computed<string[]>(() => rates.value ? [...new Set(rates.value.map(rate => rate.date))].sort((a, b) => a < b ? 1 : -1) : []);
+  const latestDate = computed<string | undefined>(() => availableDates.value.length > 0 ? availableDates.value[0] : undefined);
+  const previousDate = computed<string | undefined>(() => availableDates.value.length > 1 ? availableDates.value[1] : undefined);
 
-  const ratesYesterday = ref<Rate[]>([]);
-
-  async function fetchRatesYesterday() {
-    try {
-      const data = await $fetch<Rate[]>(`https://api.frankfurter.dev/v2/rates?date=${dateYesterday.value}providers=${provider.value}`);
-
-      if (!data || data.length === 0) {
-        console.error(`No rates found for ${base.value} with provider ${provider.value}`);
-      }
-
-      ratesYesterday.value = data;
-    }
-    catch (error) {
-      console.error("Fetch rates for yesterday failed:", error);
-    }
-  }
+  const latestRates = computed<Rate[]>(() => rates.value.filter(rate => rate.date === latestDate.value));
+  const previousRates = computed<Rate[]>(() => rates.value.filter(rate => rate.date === previousDate.value));
 
   /* Rate actions */
 
-  function rateRelativeToEur(quote: string, date: "today" | "yesterday" = "today"): number | undefined {
+  function rateRelativeToEur(quote: string, date: "latest" | "previous" = "latest"): number | undefined {
     if (quote === "EUR")
       return 1;
 
-    if (date === "yesterday")
-      return ratesYesterday.value.find(item => item.quote === quote)?.rate;
+    if (date === "previous")
+      return rates.value.find(item => item.quote === quote && item.date === previousDate.value)?.rate;
 
-    return rates.value.find(item => item.quote === quote)?.rate;
+    return rates.value.find(item => item.quote === quote && item.date === latestDate.value)?.rate;
   }
 
-  function rateForPair(base: string, quote: string, date: "today" | "yesterday" = "today"): number | undefined {
+  function rateForPair(base: string, quote: string, date: "latest" | "previous" = "latest"): number | undefined {
     const rateOfEurToQuote = rateRelativeToEur(quote, date);
     if (rateOfEurToQuote === undefined)
       return undefined;
@@ -108,7 +99,7 @@ export const useExchangeStore = defineStore("exchange", () => {
     return Number((rateOfEurToQuote / rateOfEurToBase).toPrecision(5));
   }
 
-  /* Amount */
+  /* Rate */
 
   const rate = computed<number | undefined>(() => {
     return rateForPair(base.value, quote.value);
@@ -172,8 +163,10 @@ export const useExchangeStore = defineStore("exchange", () => {
   }
 
   return {
-    dateToday,
-    dateYesterday,
+    daysInPastToFetch,
+    startDate,
+    todaysDate,
+    yesterdaysDate,
     provider,
     currencies,
     numCurrencies,
@@ -182,10 +175,12 @@ export const useExchangeStore = defineStore("exchange", () => {
     quote,
     swap,
     rates,
-    numRates,
     fetchRates,
-    ratesYesterday,
-    fetchRatesYesterday,
+    availableDates,
+    latestDate,
+    previousDate,
+    latestRates,
+    previousRates,
     rateRelativeToEur,
     rateForPair,
     rate,

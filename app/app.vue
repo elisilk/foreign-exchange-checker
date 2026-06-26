@@ -4,7 +4,6 @@ const exchange = useExchangeStore();
 await useAsyncData("initRates", async () => {
   await exchange.fetchCurrencies();
   await exchange.fetchRates();
-  await exchange.fetchRatesYesterday();
   return true;
 });
 </script>
@@ -23,8 +22,8 @@ await useAsyncData("initRates", async () => {
 
         <CurrencyConverter />
 
-        <AppRateVerifier />
         <!--
+        <AppRateVerifier />
         <AppIconViewer />
         -->
 

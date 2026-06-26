@@ -5,7 +5,7 @@ const compareRates = computed<Rate[]>(() => {
   // if EUR is base, then return the rates as they are
   // (no need for additional calculations or additions/removals)
   if (exchange.base === "EUR")
-    return exchange.rates;
+    return exchange.latestRates;
 
   // otherwise
   //  - remove base from array
@@ -14,7 +14,7 @@ const compareRates = computed<Rate[]>(() => {
   //  - sort
   //  - return the new array
 
-  const transformedRates = exchange.rates
+  const transformedRates = exchange.latestRates
     .filter(rate => rate.quote !== exchange.base)
     .map((rate) => {
       const rateForPair = exchange.rateForPair(exchange.base, rate.quote);
@@ -28,7 +28,7 @@ const compareRates = computed<Rate[]>(() => {
 
   const rateEuroToBase = exchange.rateRelativeToEur(exchange.base);
   const euroRate: Rate = {
-    date: exchange.dateToday,
+    date: exchange.latestDate || "",
     base: exchange.base as string,
     quote: "EUR",
     rate: rateEuroToBase ? Number((1 / rateEuroToBase).toPrecision(5)) : undefined,
@@ -48,14 +48,14 @@ const compareRates = computed<Rate[]>(() => {
     />
 
     <UEmpty
-      v-else-if="!exchange.rates || exchange.rates.length === 0"
+      v-else-if="!exchange.latestRates || exchange.latestRates.length === 0"
       title="No rates available"
       description="There was an issue getting the latest rates. Try to refresh the page or come back again later. Sorry!"
     />
 
     <UCard
       v-else
-      :description="`${exchange.rates.length} pairs`"
+      :description="`${exchange.latestRates.length} pairs`"
     >
       <template #title>
         <span class="text-lg text-neutral-200">Multi-currency</span>
