@@ -7,11 +7,11 @@ const { pair } = defineProps<Props>();
 
 const exchange = useExchangeStore();
 
-const rateToday = computed(() => exchange.rateForPair(pair.base, pair.quote));
+const rateLatest = computed(() => exchange.rateForPair(pair.base, pair.quote));
 
-const rateYesterday = computed(() => exchange.rateForPair(pair.base, pair.quote, "yesterday"));
+const ratePrevious = computed(() => exchange.rateForPair(pair.base, pair.quote, "previous"));
 
-const ratePercentChange = computed<number>(() => (rateToday.value === undefined || rateYesterday.value === undefined) ? 0 : Number((100 * (rateToday.value - rateYesterday.value) / rateYesterday.value).toPrecision(2)));
+const ratePercentChange = computed<number>(() => (rateLatest.value === undefined || ratePrevious.value === undefined) ? 0 : Number((100 * (rateLatest.value - ratePrevious.value) / ratePrevious.value).toPrecision(2)));
 
 const ratePercentChangeIsPositive = computed<boolean>(() => ratePercentChange.value >= 0);
 
@@ -34,8 +34,8 @@ function handleItemClick() {
       </div>
 
       <div class="ms-auto grid gap-1.5 justify-items-end">
-        <!-- today's rate -->
-        <span class="text-xl text-neutral-50">{{ rateToday }}</span>
+        <!-- latest rate -->
+        <span class="text-xl text-neutral-50">{{ rateLatest }}</span>
 
         <!-- percent change -->
         <div class="text-xs flex gap-1 items-center" :class="[ratePercentChangeIsPositive ? 'text-primary' : 'text-red-500']">

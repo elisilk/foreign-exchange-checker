@@ -3,24 +3,36 @@ const exchange = useExchangeStore();
 
 const { data: dataFetched, status } = useLazyFetch<Rate[]>(
   () =>
-    `https://api.frankfurter.dev/v2/rates?from=${exchange.dateYesterday}&base=${exchange.base}&quotes=${exchange.quote}&providers=${exchange.provider}`,
+    `https://api.frankfurter.dev/v2/rates?from=${exchange.startDate}&base=${exchange.base}&quotes=${exchange.quote}&providers=${exchange.provider}`,
   {
     server: false,
+    transform: (rates) => {
+      return [...rates].sort((a, b) => a.date > b.date ? -1 : 1);
+    },
   },
 );
 
+// Function to count the total number of rates for each date
+// const dateCounts = computed(() => exchange.rates
+//   ? exchange.rates.reduce<Record<string, number>>((accumulator, rate) => {
+//       const key = rate.date;
+//       accumulator[key] = (accumulator[key] || 0) + 1;
+//       return accumulator;
+//     }, {})
+//   : {});
+
 const dataCalculated = computed(() => [
   {
-    date: exchange.dateToday,
+    date: exchange.latestDate,
     base: exchange.base,
     quote: exchange.quote,
-    rate: exchange.rateForPair(exchange.base, exchange.quote, "today"),
+    rate: exchange.rateForPair(exchange.base, exchange.quote, "latest"),
   },
   {
-    date: exchange.dateYesterday,
+    date: exchange.previousDate,
     base: exchange.base,
     quote: exchange.quote,
-    rate: exchange.rateForPair(exchange.base, exchange.quote, "yesterday"),
+    rate: exchange.rateForPair(exchange.base, exchange.quote, "previous"),
   },
 ]);
 </script>
@@ -38,10 +50,16 @@ const dataCalculated = computed(() => [
     />
 
     <UCard v-else>
-      <h3>Calculated data</h3>
+      <h3 class="mb-2">
+        Calculated data
+      </h3>
       <UTable :data="dataCalculated" class="flex-1" />
 
-      <h3>Fetched data</h3>
+      <h3 class="mt-6 mb-2">
+        Fetched data
+        <span class="text-sm">({{ exchange.startDate }} - {{ exchange.latestDate }})</span>
+      </h3>
+      <p />
       <UTable
         :data="dataFetched"
         :loading="status === 'pending' || status === 'idle'"
