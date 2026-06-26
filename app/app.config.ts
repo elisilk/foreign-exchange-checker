@@ -124,6 +124,9 @@ export default defineAppConfig({
       ],
     },
     selectMenu: {
+      slots: {
+        label: "uppercase",
+      },
       variants: {
         size: {
           md: {

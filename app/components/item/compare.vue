@@ -8,7 +8,7 @@ const { rate } = defineProps<Props>();
 const exchange = useExchangeStore();
 
 function getCurrencyName(isoCode: string): string | undefined {
-  const currency = currencies.find(item => item.iso_code === isoCode);
+  const currency = currencyMeta[isoCode];
   if (!currency)
     return undefined;
   return currency.name;
@@ -32,7 +32,7 @@ function handleItemClick() {
   >
     <button class="item-data flex-1 min-w-0 bg-transparent border-none cursor-pointer p-0 rounded-lg flex items-center gap-4 focus:outline-none after:absolute after:inset-0" @click="handleItemClick">
       <UIcon
-        :name="getFlagIcon(rate.quote as CurrencyCode)"
+        :name="currencyMeta[rate.quote]?.flagIcon"
         class="flag size-6"
       />
 

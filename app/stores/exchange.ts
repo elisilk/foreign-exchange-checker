@@ -1,37 +1,13 @@
 export const useExchangeStore = defineStore("exchange", () => {
-  /* Dates */
+  /* Dates (config) */
 
   const daysInPastToFetch = ref(5);
   const startDate = computed(() => getRelativeDate(daysInPastToFetch.value));
 
-  const todaysDate = computed(() => getTodaysDate());
-  const yesterdaysDate = computed(() => getYesterdaysDate());
-
-  /* Provider */
+  /* Currency + Provider (config) */
 
   const provider = ref("ECB");
-
-  /* Currencies */
-
-  const currencies = ref<Currency[]>([]);
-  const numCurrencies = computed(() => currencies.value.length);
-
-  async function fetchCurrencies() {
-    try {
-      const data = await $fetch<Currency[]>(`https://api.frankfurter.dev/v2/currencies?providers=${provider.value}`);
-
-      if (!data || data.length === 0) {
-        console.error(`No currencies found with provider ${provider.value}`);
-        currencies.value = [];
-        return;
-      }
-
-      currencies.value = data;
-    }
-    catch (error) {
-      console.error("Fetch currencies failed:", error);
-    }
-  }
+  const referenceCurrency = ref("EUR");
 
   /* Base/Quote Pair */
 
@@ -49,7 +25,7 @@ export const useExchangeStore = defineStore("exchange", () => {
   async function fetchRates() {
     try {
       const data = await $fetch<Rate[]>(
-        `https://api.frankfurter.dev/v2/rates?from=${startDate.value}&providers=${provider.value}`,
+        `https://api.frankfurter.dev/v2/rates?base=${referenceCurrency.value}&from=${startDate.value}&providers=${provider.value}`,
       );
 
       if (!data || data.length === 0) {
@@ -64,9 +40,17 @@ export const useExchangeStore = defineStore("exchange", () => {
     }
   }
 
+  /* Dates (derived) */
+
   const availableDates = computed<string[]>(() => rates.value ? [...new Set(rates.value.map(rate => rate.date))].sort((a, b) => a < b ? 1 : -1) : []);
   const latestDate = computed<string | undefined>(() => availableDates.value.length > 0 ? availableDates.value[0] : undefined);
   const previousDate = computed<string | undefined>(() => availableDates.value.length > 1 ? availableDates.value[1] : undefined);
+
+  /* Currencies */
+
+  const availableCurrencies = computed<string[]>(() => rates.value ? [...new Set(rates.value.map(rate => rate.quote)), referenceCurrency.value].sort((a, b) => a < b ? -1 : 1) : []);
+
+  /* Rates (convenvience filters by date) */
 
   const latestRates = computed<Rate[]>(() => rates.value.filter(rate => rate.date === latestDate.value));
   const previousRates = computed<Rate[]>(() => rates.value.filter(rate => rate.date === previousDate.value));
@@ -74,7 +58,7 @@ export const useExchangeStore = defineStore("exchange", () => {
   /* Rate actions */
 
   function rateRelativeToEur(quote: string, date: "latest" | "previous" = "latest"): number | undefined {
-    if (quote === "EUR")
+    if (quote === referenceCurrency.value)
       return 1;
 
     if (date === "previous")
@@ -87,13 +71,13 @@ export const useExchangeStore = defineStore("exchange", () => {
     const rateOfEurToQuote = rateRelativeToEur(quote, date);
     if (rateOfEurToQuote === undefined)
       return undefined;
-    if (base === "EUR")
+    if (base === referenceCurrency.value)
       return rateOfEurToQuote;
 
     const rateOfEurToBase = rateRelativeToEur(base, date);
     if (rateOfEurToBase === undefined)
       return undefined;
-    if (quote === "EUR")
+    if (quote === referenceCurrency.value)
       return Number((1 / rateOfEurToBase).toPrecision(5));
 
     return Number((rateOfEurToQuote / rateOfEurToBase).toPrecision(5));
@@ -165,12 +149,8 @@ export const useExchangeStore = defineStore("exchange", () => {
   return {
     daysInPastToFetch,
     startDate,
-    todaysDate,
-    yesterdaysDate,
     provider,
-    currencies,
-    numCurrencies,
-    fetchCurrencies,
+    referenceCurrency,
     base,
     quote,
     swap,
@@ -179,6 +159,7 @@ export const useExchangeStore = defineStore("exchange", () => {
     availableDates,
     latestDate,
     previousDate,
+    availableCurrencies,
     latestRates,
     previousRates,
     rateRelativeToEur,
