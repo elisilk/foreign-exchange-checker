@@ -12,7 +12,7 @@ const { data: dataFetched, status } = useLazyFetch<Rate[]>(
   },
 );
 
-// Function to count the total number of rates for each date
+// // Function to count the total number of rates for each date
 // const dateCounts = computed(() => exchange.rates
 //   ? exchange.rates.reduce<Record<string, number>>((accumulator, rate) => {
 //       const key = rate.date;

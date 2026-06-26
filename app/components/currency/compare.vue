@@ -4,7 +4,7 @@ const exchange = useExchangeStore();
 const compareRates = computed<Rate[]>(() => {
   // if EUR is base, then return the rates as they are
   // (no need for additional calculations or additions/removals)
-  if (exchange.base === "EUR")
+  if (exchange.base === exchange.referenceCurrency)
     return exchange.latestRates;
 
   // otherwise
@@ -30,7 +30,7 @@ const compareRates = computed<Rate[]>(() => {
   const euroRate: Rate = {
     date: exchange.latestDate || "",
     base: exchange.base as string,
-    quote: "EUR",
+    quote: exchange.referenceCurrency,
     rate: rateEuroToBase ? Number((1 / rateEuroToBase).toPrecision(5)) : undefined,
   };
   transformedRates.push(euroRate);

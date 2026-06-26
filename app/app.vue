@@ -2,7 +2,6 @@
 const exchange = useExchangeStore();
 
 await useAsyncData("initRates", async () => {
-  await exchange.fetchCurrencies();
   await exchange.fetchRates();
   return true;
 });

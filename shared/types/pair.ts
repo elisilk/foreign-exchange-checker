@@ -1,4 +1,4 @@
 export type Pair = {
-  base: string;
-  quote: string;
+  base: CurrencyCode;
+  quote: CurrencyCode;
 };
