@@ -12,9 +12,9 @@ await useAsyncData("initRates", async () => {
     <AppHeader />
 
     <UMain aria-labelledby="main-heading">
-      <!-- <CurrencyTicker :base="exchange.base" /> -->
+      <CurrencyTicker />
 
-      <UContainer class="space-y-4 py-4">
+      <UContainer class="px-4 sm:px-4 md:px-6 py-8 md:py-12 space-y-10">
         <h1 id="main-heading" class="sr-only">
           Foreign Exchange Checker
         </h1>

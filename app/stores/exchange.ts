@@ -93,6 +93,17 @@ export const useExchangeStore = defineStore("exchange", () => {
 
   const amount = ref<number | undefined>();
 
+  /* Ticker */
+
+  const tickerPairs = ref<Pair[]>([
+    { base: "USD", quote: "JPY" },
+    { base: "GBP", quote: "USD" },
+    { base: "USD", quote: "CHF" },
+    { base: "EUR", quote: "GBP" },
+    { base: "AUD", quote: "USD" },
+    { base: "USD", quote: "CAD" },
+  ]);
+
   /* Favorites */
 
   const favorites = ref<Pair[]>([]);
@@ -166,6 +177,7 @@ export const useExchangeStore = defineStore("exchange", () => {
     rateForPair,
     rate,
     amount,
+    tickerPairs,
     favorites,
     doesFavoriteExist,
     addFavorite,
