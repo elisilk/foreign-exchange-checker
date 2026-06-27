@@ -26,6 +26,7 @@
     "@antfu/eslint-config": "^9.0.0",
     "@iconify-json/circle-flags": "^1.2.10",
     "@iconify-json/ion": "^1.2.7",
+    "@iconify-json/lucide": "^1.2.114",
     "@nuxt/eslint": "^1.16.0",
     "eslint": "^10.5.0",
     "eslint-plugin-format": "^2.0.1",
