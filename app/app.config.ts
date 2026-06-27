@@ -4,6 +4,11 @@ export default defineAppConfig({
       primary: "lime",
       neutral: "neutral",
     },
+    header: {
+      slots: {
+        root: "border-none",
+      },
+    },
     empty: {
       slots: {
         root: "py-10 sm:py-10 lg:py-10",
@@ -144,6 +149,12 @@ export default defineAppConfig({
           class: "md:text-lg",
         },
       ],
+    },
+    marquee: {
+      slots: {
+        root: "items-stretch [--duration:40s]",
+        content: "items-stretch",
+      },
     },
   },
 });
