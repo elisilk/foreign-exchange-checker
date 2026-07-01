@@ -13,3 +13,12 @@ export const decimalFormatter = new Intl.NumberFormat(
     maximumFractionDigits: 2,
   },
 );
+
+export const dateFormatter = new Intl.DateTimeFormat(
+  "en-US",
+  {
+    month: "short",
+    day: "2-digit",
+    timeZone: "UTC",
+  },
+);

@@ -1,43 +1,42 @@
 <script setup lang="ts">
+import type { TabsItem } from "@nuxt/ui";
+
 const exchange = useExchangeStore();
 
-const items = computed(() => [
+const items = computed<TabsItem[]>(() => [
   {
     slot: "history",
+    value: "history",
     label: "History",
   },
   {
     slot: "compare",
+    value: "compare",
     label: "Compare",
   },
   {
     slot: "favorites",
+    value: "favorites",
     label: "Favorites",
-    count: exchange.favorites.length,
+    badge: exchange.favorites.length,
   },
   {
     slot: "log",
+    value: "log",
     label: "Log",
-    count: exchange.conversionLog.length,
+    badge: exchange.conversionLog.length,
   },
 ]);
 </script>
 
 <template>
   <UTabs
+    v-model="exchange.activeTab"
     :items
     variant="link"
+    :unmount-on-hide="false"
     class="gap-4 md:gap-5"
   >
-    <template #default="{ item }">
-      <div class="flex items-center gap-2">
-        <span class="uppercase">{{ item.label }}</span>
-        <span v-if="item.count" class="inline-flex rounded-full bg-primary-800 w-5 h-5 items-center justify-center text-xs text-primary">
-          {{ item.count }}
-        </span>
-      </div>
-    </template>
-
     <template #history>
       <CurrencyHistory />
     </template>

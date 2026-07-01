@@ -119,9 +119,18 @@
 :root {
   --ui-radius: 8px;
   --ui-bg: var(--ui-color-neutral-50);
+
+  --vis-font-family: var(--font-mono);
 }
 
 .dark {
   --ui-bg: var(--color-neutral-900);
   --ui-primary: var(--color-lime-500);
+}
+
+.unovis-chart,
+.vis-component,
+.vis-axis,
+text {
+  font-family: var(--vis-font-family) !important;
 }

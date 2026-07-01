@@ -43,6 +43,7 @@ export default withNuxt(
             case: "kebabCase",
             ignore: ["README.md"],
           },
+
         ],
       },
     },

@@ -104,6 +104,14 @@ export const useExchangeStore = defineStore("exchange", () => {
     { base: "USD", quote: "CAD" },
   ]);
 
+  /* History */
+
+  const activeTab = ref("history");
+
+  /* History */
+
+  const historyTimeScale = ref("1M");
+
   /* Favorites */
 
   const favorites = ref<Pair[]>([]);
@@ -178,6 +186,8 @@ export const useExchangeStore = defineStore("exchange", () => {
     rate,
     amount,
     tickerPairs,
+    activeTab,
+    historyTimeScale,
     favorites,
     doesFavoriteExist,
     addFavorite,
@@ -192,10 +202,11 @@ export const useExchangeStore = defineStore("exchange", () => {
   persist: {
     storage: piniaPluginPersistedstate.cookies(),
     pick: [
-      "provider",
       "base",
       "quote",
       "amount",
+      "activeTab",
+      "historyTimeScale",
       "favorites",
       "conversionLog",
     ],
