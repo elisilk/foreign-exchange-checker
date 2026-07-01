@@ -16,8 +16,8 @@ const ratePercentChange = computed<number>(() => (rateLatest.value === undefined
 const ratePercentChangeIsPositive = computed<boolean>(() => ratePercentChange.value >= 0);
 
 function handleItemClick() {
-  exchange.base = pair.base as CurrencyCode;
-  exchange.quote = pair.quote as CurrencyCode;
+  exchange.base = pair.base;
+  exchange.quote = pair.quote;
 }
 </script>
 
@@ -39,8 +39,8 @@ function handleItemClick() {
 
         <!-- percent change -->
         <div class="text-xs flex gap-1 items-center" :class="[ratePercentChangeIsPositive ? 'text-primary' : 'text-red-500']">
-          <UIcon :name="ratePercentChangeIsPositive === true ? 'ion:arrow-up-b' : 'ion:arrow-down-b'" class="size-3" />
-          <span>{{ ratePercentChangeIsPositive === true ? '+' : '' }}{{ ratePercentChange.toFixed(2) }}%</span>
+          <UIcon :name="ratePercentChangeIsPositive ? 'ion:arrow-up-b' : 'ion:arrow-down-b'" class="size-3" />
+          <span>{{ ratePercentChangeIsPositive ? '+' : '' }}{{ ratePercentChange.toFixed(2) }}%</span>
         </div>
       </div>
     </button>

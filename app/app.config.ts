@@ -156,5 +156,16 @@ export default defineAppConfig({
         content: "items-stretch",
       },
     },
+    tabs: {
+      slots: {
+        label: "uppercase",
+        trailingBadge: "ring-0 inline-flex rounded-full bg-primary-800 w-5 h-5 items-center justify-center text-xs text-primary",
+      },
+    },
+    radioGroup: {
+      slots: {
+        item: "items-center",
+      },
+    },
   },
 });

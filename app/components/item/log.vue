@@ -8,8 +8,8 @@ const { log } = defineProps<Props>();
 const exchange = useExchangeStore();
 
 function handleItemClick() {
-  exchange.base = log.base as CurrencyCode;
-  exchange.quote = log.quote as CurrencyCode;
+  exchange.base = log.base;
+  exchange.quote = log.quote;
   exchange.amount = log.send;
 }
 </script>

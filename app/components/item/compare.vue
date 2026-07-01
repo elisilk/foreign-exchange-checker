@@ -21,7 +21,7 @@ function getExchangeAmount(pair: Rate, amount: number): string {
 }
 
 function handleItemClick() {
-  exchange.quote = rate.quote as CurrencyCode;
+  exchange.quote = rate.quote;
 }
 </script>
 
