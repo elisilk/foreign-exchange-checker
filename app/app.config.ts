@@ -2,7 +2,9 @@ export default defineAppConfig({
   ui: {
     colors: {
       primary: "lime",
-      neutral: "neutral",
+      neutral: "custom-gray",
+      success: "green",
+      error: "red",
     },
     header: {
       slots: {
@@ -38,13 +40,13 @@ export default defineAppConfig({
       variants: {
         variant: {
           outline: {
-            root: "bg-neutral-700 divide-y-0 border-neutral-600 rounded-2xl p-4 md:p-5 space-y-4 md:space-y-5",
+            root: "bg-muted divide-y-0 rounded-2xl p-4 md:p-5 space-y-4 md:space-y-5",
             header: "uppercase grid gap-2.5 md:flex md:justify-between md:items-center p-0 sm:p-0 md:p-0",
             body: "p-0 sm:p-0 md:p-0",
             footer: "p-0 sm:p-0 md:p-0",
           },
           subtle: {
-            root: "bg-neutral-700 rounded-3xl border-0 ring-0 shadow-[0_12px_40px_rgba(0,0,0,0.4)] divide-dashed divide-neutral-500",
+            root: "bg-muted rounded-3xl border-0 ring-0 shadow-[0_12px_40px_rgba(0,0,0,0.1)] dark:shadow-[0_12px_40px_rgba(0,0,0,0.4)] divide-dashed divide-muted",
           },
         },
       },
@@ -67,12 +69,12 @@ export default defineAppConfig({
         {
           color: "primary",
           variant: "outline",
-          class: "relative z-10 bg-neutral-600 ring-primary hover:bg-neutral-500 focus-visible:ring-primary focus-visible:outline-offset-1",
+          class: "relative z-10 bg-elevated ring-primary hover:bg-accented focus-visible:ring-primary focus-visible:outline-offset-1",
         },
         {
           color: "neutral",
           variant: "subtle",
-          class: "relative z-10 focus-visible:ring-neutral focus-visible:outline focus-visible:outline-primary focus-visible:outline-offset-1 font-normal text-neutral-200",
+          class: "relative z-10 focus-visible:ring-neutral focus-visible:outline focus-visible:outline-primary focus-visible:outline-offset-1 font-normal",
         },
         {
           size: "sm",
@@ -88,7 +90,7 @@ export default defineAppConfig({
     },
     formField: {
       slots: {
-        label: "text-lg text-neutral-100 uppercase",
+        label: "text-lg text-toned uppercase",
       },
       variants: {
         orientation: {
@@ -139,7 +141,7 @@ export default defineAppConfig({
           },
         },
         variant: {
-          outline: "bg-neutral-500",
+          outline: "bg-accented",
         },
       },
       compoundVariants: [
@@ -158,14 +160,42 @@ export default defineAppConfig({
     },
     tabs: {
       slots: {
+        trigger: ["cursor-pointer data-[state=inactive]:text-highlighted hover:data-[state=inactive]:not-disabled:text-default"],
         label: "uppercase",
-        trailingBadge: "ring-0 inline-flex rounded-full bg-primary-800 w-5 h-5 items-center justify-center text-xs text-primary",
+        trailingBadge: "ring-0 inline-flex rounded-full bg-primary-200  dark:bg-primary-800 w-5 h-5 items-center justify-center text-xs text-primary",
       },
+      compoundVariants: [{
+        color: "primary",
+        variant: "link",
+        class: {
+          trigger: [
+            "data-[state=active]:text-highlighted",
+          ],
+        },
+      }],
     },
     radioGroup: {
       slots: {
-        item: "items-center",
+        fieldset: "inline-flex bg-muted gap-x-0 p-0.5 rounded-md",
+        item: "group cursor-pointer items-center",
       },
+      variants: {
+        variant: {
+          card: {
+            item: "border-0 rounded-md",
+          },
+        },
+      },
+      compoundVariants: [
+        {
+          color: "neutral",
+          variant: "card",
+          class: {
+            item: "has-data-[state=checked]:border-0 has-data-[state=checked]:bg-accented has-data-[state=checked]:text-highlighted hover:bg-elevated has-focus-visible:outline-2 has-focus-visible:outline-inverted",
+            label: "group-has-data-[state=checked]:text-highlighted",
+          },
+        },
+      ],
     },
   },
 });

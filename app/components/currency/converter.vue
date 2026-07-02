@@ -137,7 +137,7 @@ const announcerText = computed(() => `${send.value} ${exchange.base} equals ${re
     aria-labelledby="converter-component-heading"
     @submit.prevent="handleSubmit"
   >
-    <h2 id="converter-component-heading" class="uppercase text-3xl text-neutral-50">
+    <h2 id="converter-component-heading" class="uppercase text-3xl text-highlighted">
       Check the Rate
     </h2>
 
@@ -154,7 +154,7 @@ const announcerText = computed(() => `${send.value} ${exchange.base} equals ${re
       <!-- BODY inner container -->
       <div class="grid gap-4 md:gap-6 md:grid-cols-[minmax(0,1fr)_48px_minmax(0,1fr)]">
         <!-- SEND Input Group -->
-        <div class="bg-neutral-600 rounded-2xl border border-neutral-500 p-4 md:p-5 flex gap-4 items-end justify-between overflow-scroll">
+        <div class="bg-elevated rounded-2xl border border-muted p-4 md:p-5 flex gap-4 items-end justify-between overflow-scroll">
           <UFormField
             label="Send"
             name="send"
@@ -191,7 +191,7 @@ const announcerText = computed(() => `${send.value} ${exchange.base} equals ${re
         <CurrencySwap class="justify-self-center self-center" />
 
         <!-- RECEIVE Input Group -->
-        <div class="bg-neutral-600 rounded-2xl border border-neutral-500 p-4 md:p-5 flex gap-4 items-end justify-between overflow-scroll">
+        <div class="bg-elevated rounded-2xl border border-muted p-4 md:p-5 flex gap-4 items-end justify-between overflow-scroll">
           <UFormField
             label="Receive"
             name="receive"
@@ -227,7 +227,7 @@ const announcerText = computed(() => `${send.value} ${exchange.base} equals ${re
       <template #footer>
         <!-- FOOTER inner container -->
         <div class="flex flex-col items-center gap-4 md:flex-row md:justify-between">
-          <CurrencyRate class="text-neutral-50 text-xs md:text-sm" />
+          <CurrencyRate class="text-highlighted text-xs md:text-sm" />
 
           <!-- Form Actions Group -->
           <div class="form-actions flex gap-2">

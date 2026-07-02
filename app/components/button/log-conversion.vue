@@ -33,7 +33,7 @@ async function handleClick() {
     :variant="isSuccess ? 'solid' : 'outline'"
     :label="isSuccess ? 'Logged' : 'Log Conversion'"
     class="h-8 w-33 justify-center"
-    :class="isSuccess ? 'text-inverted capitalize' : 'text-neutral-50'"
+    :class="isSuccess ? 'text-inverted capitalize' : 'text-highlighted'"
     :disabled="isInvalid"
     @click="handleClick"
   />
