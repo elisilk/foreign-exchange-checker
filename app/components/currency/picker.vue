@@ -41,12 +41,12 @@ const currencyMenuItems = computed<CurrencySelectMenuItem[]>(() => {
   const combinedItems: CurrencySelectMenuItem[] = [
     {
       type: "label",
-      label: "Popular",
+      label: `Popular ${popularItems.length}`,
     },
     ...popularItems,
     {
       type: "label",
-      label: "Other Currencies",
+      label: `Other Currencies ${otherItems.length}`,
     },
     ...otherItems,
   ];
@@ -59,6 +59,7 @@ const currencyMenuItems = computed<CurrencySelectMenuItem[]>(() => {
   <USelectMenu
     :id="elementId"
     v-model="selectedCurrency"
+    trailing-icon="ion:arrow-down-b"
     :icon="selectedFlagIcon"
     value-key="id"
     :items="currencyMenuItems"
@@ -76,17 +77,9 @@ const currencyMenuItems = computed<CurrencySelectMenuItem[]>(() => {
   >
     <template #item-label="{ item }">
       {{ item.label }}
-      <span class="text-muted">
+      <span class="text-default">
         {{ item.name }}
       </span>
     </template>
-    <!--
-    <template #item-label="{ item }">
-      {{ item.label }}
-      <span class="text-muted">
-        {{ item.name }}
-      </span>
-    </template>
-    -->
   </USelectMenu>
 </template>

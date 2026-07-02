@@ -90,7 +90,7 @@ export default defineAppConfig({
     },
     formField: {
       slots: {
-        label: "text-lg text-toned uppercase",
+        label: "text-lg text-default uppercase",
       },
       variants: {
         orientation: {
@@ -133,6 +133,11 @@ export default defineAppConfig({
     selectMenu: {
       slots: {
         label: "uppercase",
+        trailingIcon: "text-highlighted",
+        itemLabel: "text-highlighted",
+        item: [
+          "data-highlighted:not-data-disabled:before:outline-1 data-highlighted:not-data-disabled:before:outline-primary",
+        ],
       },
       variants: {
         size: {
