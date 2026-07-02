@@ -58,7 +58,7 @@ const compareRates = computed<Rate[]>(() => {
       :description="`${exchange.latestRates.length} pairs`"
     >
       <template #title>
-        <span class="text-lg text-neutral-200">Multi-currency</span>
+        <span class="text-lg">Multi-currency</span>
         <span>{{ exchange.amount.toLocaleString('en-US', {
           maximumFractionDigits: 2,
         }) }} from {{ exchange.base }}</span>

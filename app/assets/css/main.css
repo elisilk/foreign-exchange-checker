@@ -64,46 +64,35 @@
 }
 
 @theme static {
-  /* Override colors */
-  --color-neutral-50: #ffffff;
-  --color-neutral-100: #c6c6c6;
-  --color-neutral-200: #9d9d9d;
-  --color-neutral-300: #454547;
-  --color-neutral-400: #3d3d3d;
-  --color-neutral-500: #2e2e2e;
-  --color-neutral-600: #202022;
-  --color-neutral-700: #171719;
-  --color-neutral-900: #0a0a0a;
+  /* default tailwind colors - https://uicolors.app/tailwind-colors */
 
+  /* gray (neutral) */
+  --color-custom-gray-50: #e1e1e1;
+  --color-custom-gray-100: #c6c6c6;
+  --color-custom-gray-200: #9d9d9d;
+  --color-custom-gray-300: #454547;
+  --color-custom-gray-400: #3d3d3d;
+  --color-custom-gray-500: #2e2e2e;
+  --color-custom-gray-600: #202022;
+  --color-custom-gray-700: #171719;
+  --color-custom-gray-900: #0a0a0a;
+  --color-custom-gray-950: #000000;
+
+  /* lime (primary) */
+  --color-lime-100: #f5fdd7;
+  --color-lime-200: #ebfcb0;
+  --color-lime-300: #e2fa88;
+  --color-lime-400: #d8f961;
   --color-lime-500: #cef739;
-  --color-lime-800: #283300;
+  --color-lime-600: #a5c62e;
+  --color-lime-700: #7c9422;
+  --color-lime-800: #526317;
+  --color-lime-900: #29310b;
+  /* --color-lime-800: #283300; */
 
   --color-green-500: #42eb05;
 
   --color-red-500: #ff4141;
-
-  /* default tailwind colors
-  https://uicolors.app/tailwind-colors
-
-  --color-neutral-50: #fafafa;
-  --color-neutral-100: #f5f5f5;
-  --color-neutral-200: #e5e5e5;
-  --color-neutral-300: #d4d4d4;
-  --color-neutral-400: #a1a1a1;
-  --color-neutral-500: #737373;
-  --color-neutral-600: #525252;
-  --color-neutral-700: #404040;
-  --color-neutral-800: #262626;
-  --color-neutral-900: #171717;
-  --color-neutral-950: #0a0a0a;
-
-  --color-lime-500: #7ccf00;
-  --color-lime-800: #3c6300;
-
-  --color-green-500: #00c950;
-
-  --color-red-500: #fb2c36;
-  */
 
   /* Customized border radius values */
   --radius-xs: 4px; /* originally 0.125rem (2px) */
@@ -118,19 +107,54 @@
 
 :root {
   --ui-radius: 8px;
-  --ui-bg: var(--ui-color-neutral-50);
+
+  --ui-primary: var(--ui-color-primary-700);
+  --ui-success: var(--color-green-600);
+  --ui-error: var(--color-red-600);
+
+  --ui-text-dimmed: var(--ui-color-neutral-400);
+  --ui-text-muted: var(--ui-color-neutral-500);
+  --ui-text-toned: var(--ui-color-neutral-600);
+  --ui-text: var(--ui-color-neutral-700);
+  --ui-text-highlighted: var(--ui-color-neutral-900);
+  --ui-text-inverted: white;
+
+  --ui-bg: white;
+  --ui-bg-muted: var(--ui-color-neutral-50);
+  --ui-bg-elevated: var(--ui-color-neutral-100);
+  --ui-bg-accented: var(--ui-color-neutral-200);
+  --ui-bg-inverted: var(--ui-color-neutral-900);
+
+  --ui-border: var(--ui-color-neutral-100);
+  --ui-border-muted: var(--ui-color-neutral-200);
+  --ui-border-accented: var(--ui-color-neutral-600);
+  --ui-border-inverted: var(--ui-color-neutral-900);
 
   --vis-font-family: var(--font-mono);
 }
 
 .dark {
-  --ui-bg: var(--color-neutral-900);
-  --ui-primary: var(--color-lime-500);
-}
+  /* --ui-primary: var(--color-lime-500); */
+  --ui-primary: var(--ui-color-primary-500);
+  --ui-success: var(--color-green-500);
+  --ui-error: var(--color-red-500);
 
-.unovis-chart,
-.vis-component,
-.vis-axis,
-text {
-  font-family: var(--vis-font-family) !important;
+  --ui-text-dimmed: var(--ui-color-neutral-500);
+  --ui-text-muted: var(--ui-color-neutral-400);
+  --ui-text-toned: var(--ui-color-neutral-300);
+  --ui-text: var(--ui-color-neutral-200);
+  --ui-text-highlighted: white;
+  --ui-text-inverted: var(--ui-color-neutral-900);
+
+  /* --ui-bg: var(--color-neutral-900); */
+  --ui-bg: var(--ui-color-neutral-900);
+  --ui-bg-muted: var(--ui-color-neutral-700);
+  --ui-bg-elevated: var(--ui-color-neutral-600);
+  --ui-bg-accented: var(--ui-color-neutral-500);
+  --ui-bg-inverted: white;
+
+  --ui-border: var(--ui-color-neutral-600);
+  --ui-border-muted: var(--ui-color-neutral-500);
+  --ui-border-accented: var(--ui-color-neutral-300);
+  --ui-border-inverted: white;
 }

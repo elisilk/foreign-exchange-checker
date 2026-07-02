@@ -32,7 +32,7 @@ const yDomain = computed<[number, number]>(() => {
 </script>
 
 <template>
-  <div>
+  <div class="h-75">
     <AreaChart
       :data
       :height="300"

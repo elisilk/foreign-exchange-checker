@@ -21,16 +21,16 @@ const ratePercentChangeIsPositive = computed<boolean>(() => ratePercentChange.va
     :aria-label="`Ticker pair: ${pair.base} to ${pair.quote}`"
     class="flex px-4 gap-2.5"
   >
-    <div class="flex items-center text-xs md:text-sm text-neutral-200">
+    <div class="flex items-center text-xs md:text-sm">
       <span>{{ pair.base }}</span>/<span>{{ pair.quote }}</span>
     </div>
 
     <div class="ms-auto flex items-center gap-1.5">
       <!-- latest rate -->
-      <span class="text-neutral-50 text-xs md:text-md">{{ rateLatest }}</span>
+      <span class="text-highlighted text-xs md:text-md">{{ rateLatest }}</span>
 
       <!-- percent change -->
-      <div class="flex gap-1 items-center text-xs md:text-sm" :class="[ratePercentChangeIsPositive ? 'text-primary' : 'text-red-500']">
+      <div class="flex gap-1 items-center text-xs md:text-sm" :class="[ratePercentChangeIsPositive ? 'text-success' : 'text-error']">
         <UIcon :name="ratePercentChangeIsPositive === true ? 'ion:arrow-up-b' : 'ion:arrow-down-b'" class="size-3" />
         <span>{{ ratePercentChangeIsPositive === true ? '+' : '' }}{{ ratePercentChange.toFixed(2) }}%</span>
       </div>

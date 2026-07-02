@@ -24,18 +24,18 @@ function handleItemClick() {
 <template>
   <section
     :aria-label="`Favorited pair: ${pair.base} to ${pair.quote}`"
-    class="relative flex items-center gap-4 py-3 px-4 border border-neutral-500 rounded-lg bg-neutral-600 has-[.item-data:hover]:border-primary focus-within:ring-2 focus-within:ring-primary focus-within:outline-none"
+    class="relative flex items-center gap-4 py-3 px-4 border border-muted rounded-lg bg-elevated has-[.item-data:hover]:border-primary focus-within:ring-2 focus-within:ring-primary focus-within:outline-none"
   >
     <button class="item-data flex-1 min-w-0 bg-transparent border-none cursor-pointer p-0 rounded-lg flex items-center gap-4 focus:outline-none after:absolute after:inset-0" @click="handleItemClick">
-      <div class="flex items-center gap-2 text-lg text-neutral-50">
+      <div class="flex items-center gap-2 text-lg text-highlighted">
         <span>{{ pair.base }}</span>
-        <UIcon name="ion:arrow-forward" class="size-3 text-neutral-200" />
+        <UIcon name="ion:arrow-forward" class="size-3" />
         <span>{{ pair.quote }}</span>
       </div>
 
       <div class="ms-auto grid gap-1.5 justify-items-end">
         <!-- latest rate -->
-        <span class="text-xl text-neutral-50">{{ rateLatest }}</span>
+        <span class="text-xl text-highlighted">{{ rateLatest }}</span>
 
         <!-- percent change -->
         <div class="text-xs flex gap-1 items-center" :class="[ratePercentChangeIsPositive ? 'text-primary' : 'text-red-500']">

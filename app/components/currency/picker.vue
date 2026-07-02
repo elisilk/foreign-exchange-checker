@@ -69,7 +69,7 @@ const currencyMenuItems = computed<CurrencySelectMenuItem[]>(() => {
       icon: 'ion:search',
     }"
     :ui="{
-      input: 'text-neutral-50',
+      input: 'text-highlighted',
       content: 'min-w-max',
       item: 'items-center',
     }"
