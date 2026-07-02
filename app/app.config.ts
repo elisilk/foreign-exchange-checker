@@ -35,7 +35,7 @@ export default defineAppConfig({
         body: "p-4 md:p-5",
         footer: "p-4 md:p-5",
         title: (defaultClasses: string) => `${defaultClasses} text-xl font-medium flex gap-3 items-center`,
-        description: "mt-0 text-sm flex gap-4 items-center justify-between",
+        description: "mt-0 text-sm flex gap-4 items-center justify-between text-default",
       },
       variants: {
         variant: {

@@ -29,7 +29,7 @@ function handleItemClick() {
       </div>
 
       <div class="ms-auto grid gap-1.5 justify-items-end">
-        <span class="text-xl text-toned">{{ decimalFormatter.format(log.send) }}</span>
+        <span class="text-xl text-default">{{ decimalFormatter.format(log.send) }}</span>
         <span class="text-xl text-primary">{{ decimalFormatter.format(log.receive) }}</span>
       </div>
     </button>
