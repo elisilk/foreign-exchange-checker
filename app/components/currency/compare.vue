@@ -26,14 +26,14 @@ const compareRates = computed<Rate[]>(() => {
       });
     });
 
-  const rateEuroToBase = exchange.rateRelativeToEur(exchange.base);
-  const euroRate: Rate = {
-    date: exchange.latestDate || "",
-    base: exchange.base as string,
-    quote: exchange.referenceCurrency,
-    rate: rateEuroToBase ? Number((1 / rateEuroToBase).toPrecision(5)) : undefined,
-  };
-  transformedRates.push(euroRate);
+  // const rateEuroToBase = exchange.rateRelativeToEur(exchange.base);
+  // const euroRate: Rate = {
+  //   date: exchange.latestDate || "",
+  //   base: exchange.base as string,
+  //   quote: exchange.referenceCurrency,
+  //   rate: rateEuroToBase ? Number((1 / rateEuroToBase).toPrecision(5)) : undefined,
+  // };
+  // transformedRates.push(euroRate);
 
   return transformedRates.sort((a, b) => a.quote > b.quote ? 1 : -1);
 });
@@ -67,7 +67,7 @@ const compareRates = computed<Rate[]>(() => {
       <div class="space-y-4">
         <ItemCompare
           v-for="rate in compareRates"
-          :key="`compare-item-${rate.base}-${rate.quote}`"
+          :key="`compare-item-${exchange.amount}-${rate.base}-${rate.quote}`"
           :rate
         />
       </div>

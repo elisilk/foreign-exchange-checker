@@ -25,7 +25,7 @@ export const useExchangeStore = defineStore("exchange", () => {
   async function fetchRates() {
     try {
       const data = await $fetch<Rate[]>(
-        `https://api.frankfurter.dev/v2/rates?base=${referenceCurrency.value}&from=${startDate.value}&providers=${provider.value}`,
+        `https://api.frankfurter.dev/v2/rates?&providers=${provider.value}&base=${referenceCurrency.value}&from=${startDate.value}`,
       );
 
       if (!data || data.length === 0) {
@@ -48,7 +48,8 @@ export const useExchangeStore = defineStore("exchange", () => {
 
   /* Currencies */
 
-  const availableCurrencies = computed<string[]>(() => rates.value ? [...new Set(rates.value.map(rate => rate.quote)), referenceCurrency.value].sort((a, b) => a < b ? -1 : 1) : []);
+  // const availableCurrencies = computed<string[]>(() => rates.value ? [...new Set(rates.value.map(rate => rate.quote)), referenceCurrency.value].sort((a, b) => a < b ? -1 : 1) : []);
+  const availableCurrencies = computed<string[]>(() => rates.value ? [...new Set(rates.value.map(rate => rate.quote))].sort((a, b) => a < b ? -1 : 1) : []);
 
   /* Rates (convenvience filters by date) */
 

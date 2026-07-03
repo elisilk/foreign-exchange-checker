@@ -39,7 +39,7 @@ type CachedPayload<T> = {
   fetchedAt: number;
 };
 
-const { data, status } = useLazyAsyncData<CachedPayload<Rate[]>>(
+const { data, pending, error, refresh } = useLazyAsyncData<CachedPayload<Rate[]>>(
   historyCacheKey,
   async () => {
     const response = await $fetch<Rate[]>(
@@ -67,8 +67,8 @@ const { data, status } = useLazyAsyncData<CachedPayload<Rate[]>>(
       }
 
       // Frankfurter API's standard 16:00 CET release schedule
-      // const TTL = 60 * 60 * 1000; // 1 hour
-      const TTL = 20 * 1000; // 1 hour
+      const TTL = 60 * 60 * 1000; // 1 hour
+      // const TTL = 20 * 1000; // 20 seconds
       const age = Date.now() - cached.fetchedAt;
       const isExpired = age > TTL;
 
@@ -83,7 +83,19 @@ const { data, status } = useLazyAsyncData<CachedPayload<Rate[]>>(
   },
 );
 
+async function forceRetry() {
+  clearNuxtData(historyCacheKey.value);
+  await refresh();
+}
+
 const ratesLastFetched = computed(() => data.value?.fetchedAt && dateTimeFormatter.format(new Date(data.value?.fetchedAt)));
+
+const ratesIsEmpty = computed(() => {
+  if (!data.value?.payload)
+    return false;
+  const rates = data.value.payload;
+  return !rates || Object.keys(rates).length === 0;
+});
 
 const rateHistory = computed(() => data.value?.payload);
 
@@ -105,7 +117,7 @@ const ratePercentChangeIsPositive = computed<boolean>(() => ratePercentChange.va
 <template>
   <section aria-label="History">
     <UEmpty
-      v-if="status === 'error'"
+      v-if="error || ratesIsEmpty"
       title="No chart data available"
     >
       <template #description>
@@ -113,7 +125,7 @@ const ratePercentChangeIsPositive = computed<boolean>(() => ratePercentChange.va
       </template>
     </UEmpty>
 
-    <div v-else-if="status === 'success' && rateHistory" class="space-y-8">
+    <div v-else class="space-y-8">
       <!-- quantitative summary -->
       <div class="grid gap-2.5 md:gap-4 grid-cols-2 md:grid-cols-[repeat(4,140px)]">
         <div class="px-5 py-3 bg-muted border border-default rounded-2xl grid gap-4">
@@ -154,22 +166,41 @@ const ratePercentChangeIsPositive = computed<boolean>(() => ratePercentChange.va
         </div>
       </div>
 
-      <!-- time scale input -->
-      <URadioGroup
-        v-model="exchange.historyTimeScale"
-        orientation="horizontal"
-        color="neutral"
-        variant="card"
-        :items="timeScaleItems"
-        indicator="hidden"
-      />
+      <div class="flex gap-2 items-center">
+        <!-- time scale input -->
+        <URadioGroup
+          v-model="exchange.historyTimeScale"
+          orientation="horizontal"
+          color="neutral"
+          variant="card"
+          :items="timeScaleItems"
+          indicator="hidden"
+          :disabled="pending"
+        />
+
+        <!-- data refetch -->
+        <UButton
+          size="lg"
+          icon="ion:sync"
+          :disabled="pending"
+          @click="forceRetry"
+        >
+          {{ pending ? 'Retrying...' : 'Retry Fetch' }}
+        </UButton>
+      </div>
 
       <!-- chart display -->
       <UCard
         :title="`${exchange.base}/${exchange.quote}`"
         :description="`${rateLast} · ${ratesLastFetched}`"
+        class="h-94.25"
       >
-        <CurrencyChart :data="rateHistory" />
+        <template v-if="!pending && rateHistory">
+          <CurrencyChart :data="rateHistory" />
+        </template>
+        <template v-else>
+          <USkeleton class="h-full w-full" />
+        </template>
       </UCard>
 
       <!--
