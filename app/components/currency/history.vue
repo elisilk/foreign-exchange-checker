@@ -7,7 +7,7 @@ const timeScaleOptions = computed<Record<string, any>>(() => ({
     groupBy: "",
   },
   "1W": {
-    startDate: getRelativeDate(8),
+    startDate: getRelativeDate(7),
     groupBy: "",
   },
   "1M": {
