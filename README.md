@@ -114,6 +114,10 @@ As always, so many cool :sunglasses: things. Here are some of the key resources 
 
 #### Building the App
 
+Data Fetching and Caching Strategy
+
+The [ECB publishes fresh reference rates](https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html) every working day (Monday through Friday) at around 16:00 Central European Time (CET). The API does not update on Saturdays, Sundays, or official ECB holidays (like New Year's Day, Good Friday, Easter Monday, Labor Day, Christmas, and Boxing Day).
+
 #### Testing the App
 
 Hmm 🤔 ... I still have to do this part!
