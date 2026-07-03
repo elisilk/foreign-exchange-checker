@@ -32,24 +32,68 @@ const timeScaleItems = computed(() => Object.keys(timeScaleOptions.value));
 
 const timeScaleStartDate = computed(() => timeScaleOptions.value[exchange.historyTimeScale].startDate);
 
-// const timeScaleGroupBy = computed(() => timeScaleOptions.value[timeScale.value].groupBy);
+const historyCacheKey = computed(() => `history-${exchange.base}-${exchange.quote}-${exchange.historyTimeScale}`);
 
-const { data: rateHistory, status } = useLazyFetch<Rate[]>(
-  () =>
-    `https://api.frankfurter.dev/v2/rates?base=${exchange.base}&quotes=${exchange.quote}&providers=${exchange.provider}&from=${timeScaleStartDate.value}`,
+type CachedPayload<T> = {
+  payload: T;
+  fetchedAt: number;
+};
+
+const { data, status } = useLazyAsyncData<CachedPayload<Rate[]>>(
+  historyCacheKey,
+  async () => {
+    const response = await $fetch<Rate[]>(
+      "https://api.frankfurter.dev/v2/rates",
+      {
+        query: {
+          providers: exchange.provider,
+          base: exchange.base,
+          quotes: exchange.quote,
+          from: timeScaleStartDate.value,
+        },
+      },
+    );
+    return {
+      payload: response,
+      fetchedAt: Date.now(),
+    };
+  },
+  {
+    getCachedData(key, nuxtApp) {
+      const cached = (nuxtApp.payload.data[key] || nuxtApp.static.data[key]) as CachedPayload<any> | undefined;
+      if (!cached) {
+        // console.log(`📦 [Cache Miss] No data found for key: ${key}`);
+        return;
+      }
+
+      // Frankfurter API's standard 16:00 CET release schedule
+      // const TTL = 60 * 60 * 1000; // 1 hour
+      const TTL = 20 * 1000; // 1 hour
+      const age = Date.now() - cached.fetchedAt;
+      const isExpired = age > TTL;
+
+      if (isExpired) {
+        // console.log(`⏰ [Cache Expired] Cache is ${Math.round(age / 1000)}s old. Re-fetching!`);
+        return;
+      }
+
+      // console.log(`✅ [Cache Hit] Serving cached data. Age: ${Math.round(age / 1000)}s`);
+      return cached;
+    },
+  },
 );
+
+const ratesLastFetched = computed(() => data.value?.fetchedAt && dateTimeFormatter.format(new Date(data.value?.fetchedAt)));
+
+const rateHistory = computed(() => data.value?.payload);
 
 const rateOpen = computed(() => rateHistory.value?.[0]?.rate);
 
-// const rateOpenDate = computed(() => rateHistory.value?.at(0)?.date);
-
-// const rateOpenDateFormatted = computed(() => rateOpenDate.value && dateFormatter.format(new Date(rateOpenDate.value)));
-
 const rateLast = computed(() => rateHistory.value?.at(-1)?.rate);
 
-const rateLastDate = computed(() => rateHistory.value?.at(-1)?.date);
+// const rateLastDate = computed(() => rateHistory.value?.at(-1)?.date);
 
-const rateLastDateFormatted = computed(() => rateLastDate.value && dateFormatter.format(new Date(rateLastDate.value)));
+// const rateLastDateFormatted = computed(() => rateLastDate.value && dateFormatter.format(new Date(rateLastDate.value)));
 
 const rateChange = computed(() => rateOpen.value && rateLast.value ? Number((rateLast.value - rateOpen.value).toPrecision(4)) : undefined);
 
@@ -123,7 +167,7 @@ const ratePercentChangeIsPositive = computed<boolean>(() => ratePercentChange.va
       <!-- chart display -->
       <UCard
         :title="`${exchange.base}/${exchange.quote}`"
-        :description="`${rateLast} · ${rateLastDateFormatted}`"
+        :description="`${rateLast} · ${ratesLastFetched}`"
       >
         <CurrencyChart :data="rateHistory" />
       </UCard>
