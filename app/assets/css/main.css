@@ -106,6 +106,9 @@
 }
 
 :root {
+  /* --vis-font-family: var(--font-mono); */
+  /* --vis-font-family: var(--font-mono) !important; */
+
   --ui-radius: 8px;
 
   --ui-primary: var(--ui-color-primary-700);
@@ -129,8 +132,6 @@
   --ui-border-muted: var(--ui-color-neutral-200);
   --ui-border-accented: var(--ui-color-neutral-600);
   --ui-border-inverted: var(--ui-color-neutral-900);
-
-  --vis-font-family: var(--font-mono);
 }
 
 .dark {
@@ -157,4 +158,15 @@
   --ui-border-muted: var(--ui-color-neutral-500);
   --ui-border-accented: var(--ui-color-neutral-300);
   --ui-border-inverted: white;
+}
+
+/* Nuxt Charts / Unovis style variables */
+html body {
+  --vis-font-family: var(--font-sans);
+  --vis-axis-grid-color: var(--ui-border-muted);
+  --vis-axis-grid-line-dasharray: 4 4;
+  --vis-area-cursor: crosshair;
+
+  --vis-tooltip-background-color: var(--ui-bg-muted);
+  --vis-tooltip-text-color: var(--ui-text);
 }
