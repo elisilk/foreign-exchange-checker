@@ -22,3 +22,11 @@ export const dateFormatter = new Intl.DateTimeFormat(
     timeZone: "UTC",
   },
 );
+
+export const dateTimeFormatter = new Intl.DateTimeFormat(
+  "en-US",
+  {
+    dateStyle: "medium",
+    timeStyle: "long",
+  },
+);
