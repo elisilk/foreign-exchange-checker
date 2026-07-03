@@ -7,7 +7,7 @@ const timeScaleOptions = computed<Record<string, any>>(() => ({
     groupBy: "",
   },
   "1W": {
-    startDate: getRelativeDate(7),
+    startDate: getRelativeDate(8),
     groupBy: "",
   },
   "1M": {
@@ -59,6 +59,16 @@ const { data, pending, error, refresh } = useLazyAsyncData<CachedPayload<Rate[]>
     };
   },
   {
+    transform: (response) => {
+      if (exchange.historyTimeScale !== "1D")
+        return response;
+
+      const { payload, fetchedAt } = response;
+      return {
+        payload: payload.slice(-2),
+        fetchedAt,
+      };
+    },
     getCachedData(key, nuxtApp) {
       const cached = (nuxtApp.payload.data[key] || nuxtApp.static.data[key]) as CachedPayload<any> | undefined;
       if (!cached) {
@@ -166,7 +176,7 @@ const ratePercentChangeIsPositive = computed<boolean>(() => ratePercentChange.va
         </div>
       </div>
 
-      <div class="flex gap-2 items-center">
+      <div class="flex gap-2 items-center flex-wrap">
         <!-- time scale input -->
         <URadioGroup
           v-model="exchange.historyTimeScale"
