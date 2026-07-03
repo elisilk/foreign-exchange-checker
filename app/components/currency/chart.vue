@@ -10,8 +10,11 @@ const categories: Record<string, BulletLegendItemInterface> = {
 };
 
 function xFormatter(tick: number, _i?: number, _ticks?: number[]): string {
-  return `${data[tick]?.date ?? ""}`;
+  return `${(data[tick]?.date && dateFormatter.format(new Date(data[tick]?.date))) ?? ""}`;
 }
+
+// const yFormatter = (value: number): string => decimalFormatter.format(value);
+const yFormatter = (value: number): string => Number(value).toPrecision(4);
 
 const yMinValue = computed(() => data.reduce((minVal, rate) => (rate.rate !== undefined && rate.rate < minVal) ? rate.rate : minVal, Infinity));
 
@@ -39,7 +42,16 @@ const yDomain = computed<[number, number]>(() => {
       :categories="categories"
       :hide-legend="true"
       :x-formatter="xFormatter"
+      :y-formatter="yFormatter"
       :y-domain="yDomain"
-    />
+      :y-grid-line="true"
+    >
+      <template #tooltip="{ values }">
+        <div class="grid justify-items-center">
+          <span>{{ (values?.date && dateFormatter.format(new Date(values.date))) ?? '' }}</span>
+          <span>{{ values?.rate ?? '' }}</span>
+        </div>
+      </template>
+    </AreaChart>
   </div>
 </template>
