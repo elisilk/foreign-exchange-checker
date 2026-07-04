@@ -182,13 +182,13 @@ const announcerText = computed(() => `${send.value} ${exchange.base} equals ${re
 
           <span v-if="isSendInvalid" class="error-msg">Please enter a valid positive number</span>
 
-          <CurrencyPicker
+          <SectionConverterCurrencyPicker
             id="base"
             v-model="exchange.base"
           />
         </div>
 
-        <CurrencySwap class="justify-self-center self-center" />
+        <ButtonSwapCurrencies class="justify-self-center self-center" />
 
         <!-- RECEIVE Input Group -->
         <div class="bg-elevated rounded-2xl border border-muted p-4 md:p-5 flex gap-4 items-end justify-between overflow-scroll">
@@ -217,7 +217,7 @@ const announcerText = computed(() => `${send.value} ${exchange.base} equals ${re
             />
           </UFormField>
 
-          <CurrencyPicker
+          <SectionConverterCurrencyPicker
             id="quote"
             v-model="exchange.quote"
           />
@@ -227,28 +227,11 @@ const announcerText = computed(() => `${send.value} ${exchange.base} equals ${re
       <template #footer>
         <!-- FOOTER inner container -->
         <div class="flex flex-col items-center gap-4 md:flex-row md:justify-between">
-          <CurrencyRate class="text-highlighted text-xs md:text-sm" />
+          <SectionConverterExchangeRate class="text-highlighted text-xs md:text-sm" />
 
           <!-- Form Actions Group -->
           <div class="form-actions flex gap-2">
-            <UButton
-              v-if="exchange.doesFavoriteExist(exchange.base, exchange.quote)"
-              label="Favorited"
-              class="h-8 w-29.25"
-              icon="ion:star"
-              @click="exchange.deleteFavorite(exchange.base, exchange.quote)"
-            />
-
-            <UButton
-              v-else
-              label="Favorite"
-              class="h-8 w-29.25"
-              icon="ion:star-outline"
-              variant="subtle"
-              color="neutral"
-              @click="exchange.addFavorite(exchange.base, exchange.quote)"
-            />
-
+            <ButtonToggleFavorite :pair="{ base: exchange.base, quote: exchange.quote }" variant="icon-plus-label" />
             <ButtonLogConversion :receive />
           </div>
         </div>

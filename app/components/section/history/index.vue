@@ -206,7 +206,7 @@ const ratePercentChangeIsPositive = computed<boolean>(() => ratePercentChange.va
         class="h-94.25"
       >
         <template v-if="!pending && rateHistory">
-          <CurrencyChart :data="rateHistory" />
+          <SectionHistoryChart :data="rateHistory" />
         </template>
         <template v-else>
           <USkeleton class="h-full w-full" />

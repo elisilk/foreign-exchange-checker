@@ -18,17 +18,11 @@ const conversionLogSorted = computed<Conversion[]>(() => [...exchange.conversion
     >
       <template #description>
         <span>{{ exchange.conversionLog.length }} logged</span>
-        <UButton
-          label="Clear All"
-          color="neutral"
-          variant="subtle"
-          class="h-7.5 w-23.25"
-          @click="exchange.deleteAllConversionLogs"
-        />
+        <ButtonClearAllLogs />
       </template>
 
       <div class="space-y-4">
-        <ItemLog
+        <SectionLogItem
           v-for="log in conversionLogSorted"
           :key="`log-item-${log.base}-${log.quote}`"
           :log

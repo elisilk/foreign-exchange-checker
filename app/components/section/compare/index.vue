@@ -65,7 +65,7 @@ const compareRates = computed<Rate[]>(() => {
       </template>
 
       <div class="space-y-4">
-        <ItemCompare
+        <SectionCompareItem
           v-for="rate in compareRates"
           :key="`compare-item-${exchange.amount}-${rate.base}-${rate.quote}`"
           :rate

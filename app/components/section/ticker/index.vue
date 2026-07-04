@@ -22,7 +22,7 @@ const pairs = computed<Pair[]>(() => [...exchange.tickerPairs, ...exchange.favor
         No ticker pairs selected
       </div>
       <div v-else class="flex divide-x divide-accented border-r border-accented">
-        <ItemTicker
+        <SectionTickerItem
           v-for="pair in pairs"
           :key="`ticker-item-${pair.base}-${pair.quote}`"
           :pair

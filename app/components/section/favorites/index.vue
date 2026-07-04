@@ -16,7 +16,7 @@ const exchange = useExchangeStore();
       :description="`${exchange.favorites.length} favorite${exchange.favorites.length === 1 ? '' : 's'}`"
     >
       <div class="space-y-4">
-        <ItemFavorite
+        <SectionFavoritesItem
           v-for="pair in exchange.favorites"
           :key="`favorite-item-${pair.base}-${pair.quote}`"
           :pair

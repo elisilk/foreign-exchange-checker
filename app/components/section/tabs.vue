@@ -38,19 +38,19 @@ const items = computed<TabsItem[]>(() => [
     class="gap-4 md:gap-5"
   >
     <template #history>
-      <CurrencyHistory />
+      <SectionHistory />
     </template>
 
     <template #compare>
-      <CurrencyCompare />
+      <SectionCompare />
     </template>
 
     <template #favorites>
-      <CurrencyFavorites />
+      <SectionFavorites />
     </template>
 
     <template #log>
-      <CurrencyLog />
+      <SectionLog />
     </template>
   </UTabs>
 </template>
