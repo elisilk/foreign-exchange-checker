@@ -36,6 +36,7 @@ const currencyMenuItems = computed<CurrencySelectMenuItem[]>(() => {
   });
 
   const popularItems = items.filter((item: CurrencySelectMenuItem) => item.popular);
+
   const otherItems = items.filter((item: CurrencySelectMenuItem) => !item.popular);
 
   const combinedItems: CurrencySelectMenuItem[] = [
@@ -69,10 +70,10 @@ const currencyMenuItems = computed<CurrencySelectMenuItem[]>(() => {
       placeholder: 'Search currencies ...',
       icon: 'ion:search',
     }"
-    :ui="{
-      input: 'text-highlighted',
-      content: 'min-w-max',
-      item: 'items-center',
+    :content="{
+      align: 'end',
+      side: 'bottom',
+      sideOffset: 8,
     }"
   >
     <template #item-label="{ item }">

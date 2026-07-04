@@ -132,11 +132,12 @@ export default defineAppConfig({
     },
     selectMenu: {
       slots: {
+        content: "min-w-max",
         label: "uppercase",
         trailingIcon: "text-highlighted",
         itemLabel: "text-highlighted",
         item: [
-          "data-highlighted:not-data-disabled:before:outline-1 data-highlighted:not-data-disabled:before:outline-primary",
+          "items-center data-highlighted:not-data-disabled:before:outline-1 data-highlighted:not-data-disabled:before:outline-primary",
         ],
       },
       variants: {
