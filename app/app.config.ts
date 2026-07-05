@@ -132,13 +132,17 @@ export default defineAppConfig({
     },
     selectMenu: {
       slots: {
-        content: "min-w-max",
-        label: "uppercase",
+        base: ["w-26 h-10"],
+        content: ["w-[min(376px,100vw-64px)] bg-elevated border border-accented shadow-[0_20px_60px_rgba(10,10,10,0.5)] dark:shadow-[0_20px_60px_rgba(10,10,10,0.5)] p-2"],
         trailingIcon: "text-highlighted",
         itemLabel: "text-highlighted",
         item: [
           "items-center data-highlighted:not-data-disabled:before:outline-1 data-highlighted:not-data-disabled:before:outline-primary",
         ],
+        input: "rounded-xs border border-accented",
+        group: "p-0",
+        viewport: "pt-2.5",
+        label: "uppercase",
       },
       variants: {
         size: {

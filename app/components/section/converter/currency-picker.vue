@@ -22,7 +22,11 @@ const elementId = computed(() => `currency-select-${id}`);
 
 const selectedFlagIcon = computed(() => selectedCurrency.value ? currencyMeta[selectedCurrency.value]?.flagIcon : "");
 
-const currencyMenuItems = computed<CurrencySelectMenuItem[]>(() => {
+const searchTerm = ref("");
+
+const dynamicGroupedCurrencyItems = computed<CurrencySelectMenuItem[][]>(() => {
+  const query = searchTerm.value.toLowerCase().trim();
+
   const items = [...exchange.availableCurrencies].map((item: string): CurrencySelectMenuItem => {
     const currency: CurrencyMeta | undefined = currencyMeta[item];
     return {
@@ -39,20 +43,35 @@ const currencyMenuItems = computed<CurrencySelectMenuItem[]>(() => {
 
   const otherItems = items.filter((item: CurrencySelectMenuItem) => !item.popular);
 
-  const combinedItems: CurrencySelectMenuItem[] = [
-    {
-      type: "label",
-      label: `Popular ${popularItems.length}`,
-    },
-    ...popularItems,
-    {
-      type: "label",
-      label: `Other Currencies ${otherItems.length}`,
-    },
-    ...otherItems,
-  ];
+  // Match against either the 'label' OR the 'name' field
+  const filterFn = (item: any) => {
+    return item.label?.toLowerCase().includes(query)
+      || item.name?.toLowerCase().includes(query);
+  };
 
-  return combinedItems;
+  const filteredPopular = popularItems.filter(filterFn);
+  const filteredOther = otherItems.filter(filterFn);
+
+  return [
+    [
+      {
+        type: "label",
+        label: `Popular ${filteredPopular.length}`,
+        // label: "Popular",
+        // count: filteredPopular.length,
+      },
+      ...filteredPopular,
+    ],
+    [
+      {
+        type: "label",
+        label: `Other Currencies ${filteredOther.length}`,
+        // label: "Other Currencies",
+        // count: filteredOther.length,
+      },
+      ...filteredOther,
+    ],
+  ];
 });
 </script>
 
@@ -60,20 +79,25 @@ const currencyMenuItems = computed<CurrencySelectMenuItem[]>(() => {
   <USelectMenu
     :id="elementId"
     v-model="selectedCurrency"
+    v-model:search-term="searchTerm"
+    value-key="id"
+    :items="dynamicGroupedCurrencyItems"
+    ignore-filter
     trailing-icon="ion:arrow-down-b"
     :icon="selectedFlagIcon"
-    value-key="id"
-    :items="currencyMenuItems"
-    class="w-26 h-10"
-    :filter-fields="['label', 'name']"
     :search-input="{
       placeholder: 'Search currencies ...',
       icon: 'ion:search',
+      ui: {
+        base: 'ps-9 pe-3 py-3',
+        leadingIcon: 'text-highlighted',
+      },
     }"
     :content="{
       align: 'end',
       side: 'bottom',
       sideOffset: 8,
+      collisionPadding: 32,
     }"
   >
     <template #item-label="{ item }">
@@ -81,6 +105,9 @@ const currencyMenuItems = computed<CurrencySelectMenuItem[]>(() => {
       <span class="text-default">
         {{ item.name }}
       </span>
+    </template>
+    <template #empty>
+      No matching currencies
     </template>
   </USelectMenu>
 </template>
