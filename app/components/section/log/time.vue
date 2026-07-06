@@ -59,7 +59,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   if (timerTimeout) {
-    clearInterval(timerTimeout);
+    clearTimeout(timerTimeout);
   }
 });
 </script>
