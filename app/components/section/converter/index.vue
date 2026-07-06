@@ -43,12 +43,8 @@ const receive = computed<string>({
 });
 
 // Validation States
-const isSendInvalid = computed(() => exchange.amount !== undefined && exchange.amount !== null && exchange.amount < 0);
-const isReceiveInvalid = computed(() => {
-  if (!exchange.rate || exchange.amount === undefined || exchange.amount === null)
-    return false;
-  return (exchange.amount * exchange.rate) < 0;
-});
+const isSendInvalid = computed(() => exchange.amount === undefined || exchange.amount === null || exchange.amount < 0);
+const isReceiveInvalid = computed(() => exchange.amount === undefined || exchange.amount === null || !exchange.rate || ((exchange.amount * exchange.rate) < 0));
 
 function handleSubmit() { }
 
@@ -135,6 +131,7 @@ const announcerText = computed(() => `${send.value} ${exchange.base} equals ${re
   <UForm
     class="space-y-4"
     aria-labelledby="converter-component-heading"
+    novalidate
     @submit.prevent="handleSubmit"
   >
     <h2 id="converter-component-heading" class="uppercase text-3xl text-highlighted">
@@ -158,7 +155,6 @@ const announcerText = computed(() => `${send.value} ${exchange.base} equals ${re
           <UFormField
             label="Send"
             name="send"
-            :class="{ 'is-invalid': isSendInvalid }"
           >
             <UInput
               v-model="send"
@@ -181,8 +177,6 @@ const announcerText = computed(() => `${send.value} ${exchange.base} equals ${re
             />
           </UFormField>
 
-          <span v-if="isSendInvalid" class="error-msg">Must be a valid positive number</span>
-
           <SectionConverterCurrencyPicker
             id="base"
             v-model="exchange.base"
@@ -196,7 +190,6 @@ const announcerText = computed(() => `${send.value} ${exchange.base} equals ${re
           <UFormField
             label="Receive"
             name="receive"
-            :class="{ 'is-invalid': isReceiveInvalid }"
           >
             <UInput
               v-model="receive"
@@ -241,16 +234,3 @@ const announcerText = computed(() => `${send.value} ${exchange.base} equals ${re
     </UCard>
   </UForm>
 </template>
-
-<style scoped>
-.is-invalid input {
-  border-color: #dc3545;
-  background-color: #fff8f8;
-}
-
-.error-msg {
-  color: #dc3545;
-  font-size: 0.85rem;
-  margin-top: 0.25rem;
-}
-</style>

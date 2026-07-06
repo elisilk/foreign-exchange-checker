@@ -21,11 +21,6 @@ await useAsyncData("initRates", async () => {
 
         <SectionConverter />
 
-        <!--
-        <UtilRateVerifier />
-        <UtilIconViewer />
-        -->
-
         <SectionTabs />
       </UContainer>
     </UMain>
