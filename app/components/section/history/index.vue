@@ -3,7 +3,7 @@ const exchange = useExchangeStore();
 
 const timeScaleOptions = computed<Record<string, any>>(() => ({
   "1D": {
-    startDate: getRelativeDate(3),
+    startDate: getRelativeDate(5),
     groupBy: "",
   },
   "1W": {
@@ -39,7 +39,7 @@ type CachedPayload<T> = {
   fetchedAt: number;
 };
 
-const { data, pending, error, refresh } = useLazyAsyncData<CachedPayload<Rate[]>>(
+const { data, pending, error } = useLazyAsyncData<CachedPayload<Rate[]>>(
   historyCacheKey,
   async () => {
     const response = await $fetch<Rate[]>(
@@ -93,10 +93,10 @@ const { data, pending, error, refresh } = useLazyAsyncData<CachedPayload<Rate[]>
   },
 );
 
-async function forceRetry() {
-  clearNuxtData(historyCacheKey.value);
-  await refresh();
-}
+// async function forceRetry() {
+//   clearNuxtData(historyCacheKey.value);
+//   await refresh();
+// }
 
 const ratesLastFetched = computed(() => data.value?.fetchedAt && dateTimeFormatter.format(new Date(data.value?.fetchedAt)));
 
@@ -189,6 +189,7 @@ const ratePercentChangeIsPositive = computed<boolean>(() => ratePercentChange.va
         />
 
         <!-- data refetch -->
+        <!--
         <UButton
           size="lg"
           icon="ion:sync"
@@ -197,6 +198,7 @@ const ratePercentChangeIsPositive = computed<boolean>(() => ratePercentChange.va
         >
           {{ pending ? 'Retrying...' : 'Retry Fetch' }}
         </UButton>
+        -->
       </div>
 
       <!-- chart display -->
