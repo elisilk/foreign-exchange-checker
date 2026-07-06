@@ -11,6 +11,7 @@ const exchange = useExchangeStore();
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 139 26"
           class="w-auto h-5 md:h-6.5 fill-primary text-highlighted"
+          aria-hidden="true"
         >
           <title>FX Checker Logo</title>
           <path

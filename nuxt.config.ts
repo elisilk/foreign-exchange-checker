@@ -34,7 +34,6 @@ export default defineNuxtConfig({
   /* app config */
   app: {
     head: {
-      titleTemplate: "Foreign Exchange Checker - %s",
       title: "Foreign Exchange Checker",
       htmlAttrs: {
         lang: "en",
