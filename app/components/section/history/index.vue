@@ -72,7 +72,6 @@ const { data, pending, error } = useLazyAsyncData<CachedPayload<Rate[]>>(
     getCachedData(key, nuxtApp) {
       const cached = (nuxtApp.payload.data[key] || nuxtApp.static.data[key]) as CachedPayload<any> | undefined;
       if (!cached) {
-        // console.log(`📦 [Cache Miss] No data found for key: ${key}`);
         return;
       }
 
@@ -83,20 +82,13 @@ const { data, pending, error } = useLazyAsyncData<CachedPayload<Rate[]>>(
       const isExpired = age > TTL;
 
       if (isExpired) {
-        // console.log(`⏰ [Cache Expired] Cache is ${Math.round(age / 1000)}s old. Re-fetching!`);
         return;
       }
 
-      // console.log(`✅ [Cache Hit] Serving cached data. Age: ${Math.round(age / 1000)}s`);
       return cached;
     },
   },
 );
-
-// async function forceRetry() {
-//   clearNuxtData(historyCacheKey.value);
-//   await refresh();
-// }
 
 const ratesLastFetched = computed(() => data.value?.fetchedAt && dateTimeFormatter.format(new Date(data.value?.fetchedAt)));
 
@@ -112,10 +104,6 @@ const rateHistory = computed(() => data.value?.payload);
 const rateOpen = computed(() => rateHistory.value?.[0]?.rate);
 
 const rateLast = computed(() => rateHistory.value?.at(-1)?.rate);
-
-// const rateLastDate = computed(() => rateHistory.value?.at(-1)?.date);
-
-// const rateLastDateFormatted = computed(() => rateLastDate.value && dateFormatter.format(new Date(rateLastDate.value)));
 
 const rateChange = computed(() => rateOpen.value && rateLast.value ? Number((rateLast.value - rateOpen.value).toPrecision(4)) : undefined);
 
@@ -187,18 +175,6 @@ const ratePercentChangeIsPositive = computed<boolean>(() => ratePercentChange.va
           indicator="hidden"
           :disabled="pending"
         />
-
-        <!-- data refetch -->
-        <!--
-        <UButton
-          size="lg"
-          icon="ion:sync"
-          :disabled="pending"
-          @click="forceRetry"
-        >
-          {{ pending ? 'Retrying...' : 'Retry Fetch' }}
-        </UButton>
-        -->
       </div>
 
       <!-- chart display -->
@@ -214,13 +190,6 @@ const ratePercentChangeIsPositive = computed<boolean>(() => ratePercentChange.va
           <USkeleton class="h-full w-full" />
         </template>
       </UCard>
-
-      <!--
-      <pre>
-{{ rateHistory.length }}
-{{ rateHistory }}
-      </pre>
-      -->
     </div>
   </section>
 </template>

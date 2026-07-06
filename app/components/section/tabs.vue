@@ -51,7 +51,7 @@ const activeItemBadge = computed(() => {
       {{ modelValue }}
       <UBadge
         v-if="activeItemBadge"
-        class="ring-0 inline-flex rounded-full bg-primary-200 dark:bg-primary-800 w-5 h-5 items-center justify-center text-xs text-primary"
+        class="ring-0 inline-flex rounded-full bg-primary-200 dark:bg-primary-800 w-5 h-5 px-0 py-0 items-center justify-center text-xs text-primary"
       >
         {{ activeItemBadge }}
       </UBadge>
@@ -60,7 +60,7 @@ const activeItemBadge = computed(() => {
       {{ item.label }}
       <UBadge
         v-if="item.badge"
-        class="ring-0 inline-flex rounded-full bg-primary-200 dark:bg-primary-800 w-5 h-5 items-center justify-center text-xs text-primary"
+        class="ring-0 inline-flex rounded-full bg-primary-200 dark:bg-primary-800 w-5 h-5 px-0 py-0 items-center justify-center text-xs text-primary"
       >
         {{ item.badge }}
       </UBadge>
