@@ -172,7 +172,7 @@ export default defineAppConfig({
       slots: {
         trigger: ["cursor-pointer data-[state=inactive]:text-highlighted hover:data-[state=inactive]:not-disabled:text-default"],
         label: "uppercase",
-        trailingBadge: "ring-0 inline-flex rounded-full bg-primary-200  dark:bg-primary-800 w-5 h-5 items-center justify-center text-xs text-primary",
+        trailingBadge: "ring-0 inline-flex rounded-full bg-primary-200 dark:bg-primary-800 w-5 h-5 items-center justify-center text-xs text-primary",
       },
       compoundVariants: [{
         color: "primary",
