@@ -72,9 +72,9 @@ Your users should be able to:
 
 ### Screenshots
 
-|                 Mobile designed at 375px:                 |                Tablet designed at 1440px:                 | Desktop designed at 1440px:                                 |
-| :-------------------------------------------------------: | :-------------------------------------------------------: | ----------------------------------------------------------- |
-| ![Screenshot mobile](./screenshots/screenshot-mobile.png) | ![Screenshot tablet](./screenshots/screenshot-tablet.png) | ![Screenshot desktop](./screenshots/screenshot-desktop.png) |
+|                     Mobile designed at 375px:                     |                    Tablet designed at 1440px:                     | Desktop designed at 1440px:                                         |
+| :---------------------------------------------------------------: | :---------------------------------------------------------------: | ------------------------------------------------------------------- |
+| ![Screenshot mobile](./screenshots/screenshot-mobile-history.png) | ![Screenshot tablet](./screenshots/screenshot-tablet-history.png) | ![Screenshot desktop](./screenshots/screenshot-desktop-history.png) |
 
 ### Links
 

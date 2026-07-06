@@ -22,6 +22,7 @@ function getExchangeAmount(pair: Rate, amount: number): string {
 
 function handleItemClick() {
   exchange.quote = rate.quote;
+  scrollToTop();
 }
 </script>
 

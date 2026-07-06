@@ -18,6 +18,7 @@ const ratePercentChangeIsPositive = computed<boolean>(() => ratePercentChange.va
 function handleItemClick() {
   exchange.base = pair.base;
   exchange.quote = pair.quote;
+  scrollToTop();
 }
 </script>
 

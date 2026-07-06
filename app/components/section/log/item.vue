@@ -11,6 +11,7 @@ function handleItemClick() {
   exchange.base = log.base;
   exchange.quote = log.quote;
   exchange.amount = log.send;
+  scrollToTop();
 }
 </script>
 
