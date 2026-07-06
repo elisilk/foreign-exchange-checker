@@ -171,6 +171,7 @@ const announcerText = computed(() => `${send.value} ${exchange.base} equals ${re
               step="0.01"
               min="0"
               placeholder="0"
+              :aria-invalid="isSendInvalid"
               :disabled="!exchange.rate"
               @focus="handleFocus($event, 'send')"
               @blur="handleBlur"
@@ -180,7 +181,7 @@ const announcerText = computed(() => `${send.value} ${exchange.base} equals ${re
             />
           </UFormField>
 
-          <span v-if="isSendInvalid" class="error-msg">Please enter a valid positive number</span>
+          <span v-if="isSendInvalid" class="error-msg">Must be a valid positive number</span>
 
           <SectionConverterCurrencyPicker
             id="base"
@@ -207,6 +208,7 @@ const announcerText = computed(() => `${send.value} ${exchange.base} equals ${re
               inputmode="decimal"
               step="0.01"
               min="0"
+              :aria-invalid="isReceiveInvalid"
               :placeholder="exchange.rate ? '0' : 'Loading rate...'"
               :disabled="!exchange.rate"
               @focus="handleFocus($event, 'receive')"
@@ -241,7 +243,7 @@ const announcerText = computed(() => `${send.value} ${exchange.base} equals ${re
 </template>
 
 <style scoped>
-.input-group.is-invalid input {
+.is-invalid input {
   border-color: #dc3545;
   background-color: #fff8f8;
 }
