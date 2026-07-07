@@ -1,6 +1,6 @@
 # Frontend Mentor - FX Checker solution
 
-FX Checker is a currency app built around live exchange rates from the [Frankfurter API](https://frankfurter.dev/). It'ss a solution to the [FX Checker challenge on Frontend Mentor](https://www.frontendmentor.io/challenges/foreign-exchange-currency-converter). In addition, the solution was built as part of the [Frontend Mentor #FM30Hackathon to build a currency converter app](https://www.frontendmentor.io/articles/fm30-hackathon-currency-converter).
+FX Checker is a currency app built around live exchange rates from the [Frankfurter API](https://frankfurter.dev/). It's a solution to the [FX Checker challenge on Frontend Mentor](https://www.frontendmentor.io/challenges/foreign-exchange-currency-converter). In addition, the solution was built as part of the [Frontend Mentor #FM30Hackathon to build a currency converter app](https://www.frontendmentor.io/articles/fm30-hackathon-currency-converter).
 
 ## Solution Links
 
@@ -157,10 +157,10 @@ Specific additional features or enhancements I'd like to make in the future:
 - [ ] Persist the active currency pair in the URL so a conversion can be bookmarked or shared
 - [ ] Add keyboard shortcuts so power users can focus the search, swap currencies, and switch the chart range without the mouse
 - [ ] Let users export their conversion log as a CSV file
-- [ ] Cache the last successful rates and and fall back to them with an out-of-date notice when the API is unreachable
+- [ ] Cache the last successful rates and fall back to them with an out-of-date notice when the API is unreachable
 - [ ] Build as a full-stack app with accounts so a user's favorites and conversion log sync across devices
 - [ ] Include bitcoin (or other digital currencies) as a comparison currency
-- [ ] Add animations, including for the history graph (so the actual data is zooming in and and out at different time scales), and for the adding/deleting of favorites and logs
+- [ ] Add animations, including for the history graph (so the actual data is zooming in and out at different time scales), and for the adding/deleting of favorites and logs
 
 ## Process
 
