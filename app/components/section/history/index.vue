@@ -92,7 +92,7 @@ const ratesLastFetched = computed(() => data.value?.fetchedAt && dateTimeFormatt
 
 const ratesIsEmpty = computed(() => {
   if (!data.value?.payload)
-    return false;
+    return true;
   const rates = data.value.payload;
   return !rates || Object.keys(rates).length === 0;
 });
