@@ -91,10 +91,10 @@ const { data, pending, error } = useLazyAsyncData<CachedPayload<Rate[]>>(
 const ratesLastFetched = computed(() => data.value?.fetchedAt && dateTimeFormatter.format(new Date(data.value?.fetchedAt)));
 
 const ratesIsEmpty = computed(() => {
-  if (!data.value?.payload)
+  if (!data.value || !data.value.payload)
     return true;
   const rates = data.value.payload;
-  return !rates || Object.keys(rates).length === 0;
+  return Object.keys(rates).length === 0;
 });
 
 const rateHistory = computed(() => data.value?.payload);
