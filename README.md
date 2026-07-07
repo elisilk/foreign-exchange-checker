@@ -1,73 +1,50 @@
 # Frontend Mentor - FX Checker solution
 
-This is a solution to the [FX Checker challenge on Frontend Mentor](https://www.frontendmentor.io/challenges/foreign-exchange-currency-converter). Frontend Mentor challenges help you improve your coding skills by building realistic projects.
+FX Checker is a currency app built around live exchange rates from the [Frankfurter API](https://frankfurter.dev/). It'ss a solution to the [FX Checker challenge on Frontend Mentor](https://www.frontendmentor.io/challenges/foreign-exchange-currency-converter). In addition, the solution was built as part of the [Frontend Mentor #FM30Hackathon to build a currency converter app](https://www.frontendmentor.io/articles/fm30-hackathon-currency-converter).
+
+## Solution Links
+
+- Solution URL: [https://github.com/elisilk/foreign-exchange-checker](https://github.com/elisilk/foreign-exchange-checker)
+- Live Site URL: [https://foreign-exchange-checker-seven.vercel.app/](https://foreign-exchange-checker-seven.vercel.app/)
 
 ## Table of contents
 
 - [Overview](#overview)
-  - [The challenge](#the-challenge)
+  - [Features](#features)
   - [Screenshots](#screenshots)
-  - [Links](#links)
-- [My process](#my-process)
-  - [Built with](#built-with)
-  - [What I learned](#what-i-learned)
-  - [Continued development](#continued-development)
-  - [Useful resources](#useful-resources)
+- [Details](#details)
+  - [Built With](#built-with)
+  - [Full Feature List](#full-feature-list)
+  - [Continued Development](#continued-development)
+- [Process](#process)
+  - [What I Learned](#what-i-learned)
+  - [Useful Resources](#useful-resources)
   - [AI Collaboration](#ai-collaboration)
 - [Author](#author)
 
 ## Overview
 
-### The challenge
+### Features
 
-Your users should be able to:
+#### :sparkles: Core Features
 
-#### Converter
+All of the specified features in the basic challenge have been implemented. In particular, users are able to:
 
-- Enter an amount to send and see it convert in real time as they type
-- Pick the "send" and "receive" currencies from a searchable currency picker
-- See the live exchange rate for the active pair (for example, `1 USD = 0.8530 EUR`)
-- Swap the send and receive currencies with the swap button
-- Favorite the active pair, and log a conversion to their history
+- [x] Convert between currencies in real time using live rates
+- [x] Search the full list of currencies and switch the send and receive pair
+- [x] Follow a live market ticker showing pairs and their 24-hour change
+- [x] View a rate-history chart with ranges from one day to five years
+- [x] Compare one amount across several currencies at once
+- [x] Favorite the pairs they care about and keep a log of their conversions
+- [x] Use it comfortably on any screen size, with proper hover and focus states
 
-#### Currency picker
+#### :tada: Bonus Features
 
-- Search the full list of available currencies by code or name
-- See currencies grouped into "Popular" and "Other currencies", each row showing the flag, code, and name
-- See a check against the currency that's currently selected
+In addition, the solution includes the following bonus features. Users are able to:
 
-#### Live markets ticker
-
-- See a ticker of currency pairs, each with its current rate and 24-hour change (up or down)
-
-#### Rate history
-
-- View a line and area chart of the active pair's rate over time
-- Switch the chart range between 1D, 1W, 1M, 3M, 1Y, and 5Y
-- See the open, last, absolute change, and percentage change for the selected range
-
-#### Compare
-
-- See their send amount converted into a range of other currencies at once, each with its reference rate
-- Pin or unpin any comparison row to their favorites
-
-#### Favorites
-
-- See their pinned pairs, each with its live rate and 24-hour change
-- Load a pinned pair back into the converter by selecting its row
-- Unpin a pair they no longer want to track
-
-#### Conversion log
-
-- See a log of conversions they've made, each showing the relative time, the pair, and the send and receive amounts
-- Clear the whole log
-- Delete an individual entry
-
-#### UI & accessibility
-
-- View the optimal layout for the interface depending on their device's screen size
-- See hover and focus states for all interactive elements on the page
-- Navigate the entire app using only their keyboard
+- [x] Have their data and app state persist across browser sessions
+- [x] Switch between the dark-first design and a light alternative theme
+- [x] Hover on the rate chart to view the exact date and rate under the cursor
 
 ### Screenshots
 
@@ -75,14 +52,9 @@ Your users should be able to:
 | :---------------------------------------------------------------: | :---------------------------------------------------------------: | ------------------------------------------------------------------- |
 | ![Screenshot mobile](./screenshots/screenshot-mobile-history.png) | ![Screenshot tablet](./screenshots/screenshot-tablet-history.png) | ![Screenshot desktop](./screenshots/screenshot-desktop-history.png) |
 
-### Links
+## Details
 
-- Solution URL: [https://github.com/elisilk/foreign-exchange-checker](https://github.com/elisilk/foreign-exchange-checker)
-- Live Site URL: [https://foreign-exchange-checker-seven.vercel.app/](https://foreign-exchange-checker-seven.vercel.app/)
-
-## My process
-
-### Built with
+### Built With
 
 - [GitHub](https://github.com/) - code repository
 - [Nuxt](https://nuxt.com/) - full-stack web framework (built on Vue, Vite, and Nitro)
@@ -102,11 +74,86 @@ For the workflow setup:
   - [Nuxt ESLint](https://eslint.nuxt.com/)
   - [Anthony Fu's ESLint config preset](https://github.com/antfu/eslint-config)
 
-### What I learned
+### Full Feature List
+
+#### :sparkles: Core Features
+
+Users are able to:
+
+- Converter
+  - [x] Enter an amount to send and see it convert in real time as they type
+  - [x] Pick the "send" and "receive" currencies from a searchable currency picker
+  - [x] See the live exchange rate for the active pair (for example, `1 USD = 0.8530 EUR`)
+  - [x] Swap the send and receive currencies with the swap button
+  - [x] Favorite the active pair, and log a conversion to their history
+- Currency picker
+  - [x] Search the full list of available currencies by code or name
+  - [x] See currencies grouped into "Popular" and "Other currencies", each row showing the flag, code, and name
+  - [x] See a check against the currency that's currently selected
+- Live markets ticker
+  - [x] See a ticker of currency pairs, each with its current rate and 24-hour change (up or down)
+- Rate history
+  - [x] View a line and area chart of the active pair's rate over time
+  - [x] Switch the chart range between 1D, 1W, 1M, 3M, 1Y, and 5Y
+  - [x] See the open, last, absolute change, and percentage change for the selected range
+- Compare
+  - [x] See their send amount converted into a range of other currencies at once, each with its reference rate
+  - [x] Pin or unpin any comparison row to their favorites
+- Favorites
+  - [x] See their pinned pairs, each with its live rate and 24-hour change
+  - [x] Load a pinned pair back into the converter by selecting its row
+  - [x] Unpin a pair they no longer want to track
+- Conversion log
+  - [x] See a log of conversions they've made, each showing the relative time, the pair, and the send and receive amounts
+  - [x] Clear the whole log
+  - [x] Delete an individual entry
+- UI & accessibility
+  - [x] View the optimal layout for the interface depending on their device's screen size
+  - [x] See hover and focus states for all interactive elements on the page
+  - [x] Navigate the entire app using only their keyboard
+
+#### :tada: Bonus Features
+
+Users are able to:
+
+- [x] Have their data and app state persist across browser sessions
+- [x] Switch between the dark-first design and a light alternative theme
+- [x] Hover on the rate chart to view the exact date and rate under the cursor
+
+### Continued Development
+
+#### :construction: Known Issues
+
+Specific known areas where I know the solution should be improved:
+
+- [ ] Input error/invalid states and messages in the main converter component
+- [ ] Currency select menu label styling - Figure out how to target the styling of the category labels (e.g., "Popular") so that the badge (the count) is aligned to the end of the container.
+- [ ] Hydration mismatch error - There is a "Hydration completed but contains mismatches" error that shows up in production, but I can't see it in the development environment, so will need to investigate further.
+- [ ] Log items styling - The inline size of the log timestamp should be consistent across the item rows. And, the send and receive amounts should be on one line when in larger viewports.
+- [ ] Improve light theme - The light theme colors (text + background) could be improved to (a) keep the primary yellow brand color, (b) make sure all text is readable, and (c) look better.
+- [ ] Convert from using cookies to using local storage to persist the app state across browser sessions.
+
+#### :rocket: Feature Requests
+
+Specific additional features or enhancements I'd like to make in the future:
+
+- [x] Add a light theme so users can switch between the dark-first design and a light alternative
+- [x] Add a hover crosshair to the rate chart that shows the exact date and rate under the cursor
+- [ ] Persist the active currency pair in the URL so a conversion can be bookmarked or shared
+- [ ] Add keyboard shortcuts so power users can focus the search, swap currencies, and switch the chart range without the mouse
+- [ ] Let users export their conversion log as a CSV file
+- [ ] Cache the last successful rates and and fall back to them with an out-of-date notice when the API is unreachable
+- [ ] Build as a full-stack app with accounts so a user's favorites and conversion log sync across devices
+- [ ] Include bitcoin (or other digital currencies) as a comparison currency
+- [ ] Add animations, including for the history graph (so the actual data is zooming in and and out at different time scales), and for the adding/deleting of favorites and logs
+
+## Process
+
+### What I Learned
 
 As always, so many cool :sunglasses: things.
 
-#### API Data Fetching and Caching Strategy
+#### :satellite: API Data Fetching and Caching Strategy
 
 Because of the way the [Frankfurter API](https://frankfurter.dev/) works, I thought carefully about how best to query the API for the data needs of the application. I landed on a strategy that, in large part, relies on one "single source of truth" API request for much of the app's functionality -- the latest rates using the ECB provider for the past 5 days with EUR as the base currency and for all quote comparison currencies. That single API request is then used to derive:
 
@@ -125,7 +172,7 @@ In the history component, I have set it up so that each base-quote comparison an
 
 Note: The [ECB publishes fresh reference rates](https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html) every working day (Monday through Friday) at around 16:00 Central European Time (CET). The API does not update on Saturdays, Sundays, or official ECB holidays (like New Year's Day, Good Friday, Easter Monday, Labor Day, Christmas, and Boxing Day).
 
-#### Framework and Module/Library Choices
+#### :building_construction: Framework and Module/Library Choices
 
 Nuxt/Vue is the framework I am most comfortable developing in right now, and so Nuxt was a natural choice for this project as well. But Nuxt also feels well-suited for this single-page application, as I can rely on:
 
@@ -137,36 +184,14 @@ Nuxt/Vue is the framework I am most comfortable developing in right now, and so 
 
 I did probably spend the bulk of my time trying to wrangle the Nuxt UI components into matching the design. But in doing so, I learned a lot about how things work in Nuxt UI in terms of both the design system and CSS variables and the component props, slots, and variants.
 
-### Continued development
-
-Known issues - specific areas that the solution should be improved:
-
-- [ ] Input error/invalid states and messages in the main converter component
-- [ ] Currency select menu label styling - Figure out how to target the styling of the category labels (e.g., "Popular") so that the badget (the count) is aligned to the end of the container.
-- [ ] Hydration mismatch error - There is a "Hydration completed but contains mismatches" error that shows up in production, but I can't see it in the development environment, so will need to investigate further.
-- [ ] Log items styling - The inline size of the log timestamp should be consistent across the item rows. And, the send and receive amounts should be on one line when in larger viewports.
-- [ ] Improve light theme - The light theme colors (text + background) could be improved to (a) keep the primary yellow brand color, (b) make sure all text is readable, and (c) look better.
-- [ ] Convert from using cookies to usig local storage to persist the app state across browser sessions.
-
-Feature requests - specific enhancements to make:
-
-- [x] Add a light theme so users can switch between the dark-first design and a light alternative
-- [ ] Persist the active currency pair in the URL so a conversion can be bookmarked or shared
-- [ ] Add keyboard shortcuts so power users can focus the search, swap currencies, and switch the chart range without the mouse
-- [ ] Let users export their conversion log as a CSV file
-- [x] Add a hover crosshair to the rate chart that shows the exact date and rate under the cursor
-- [ ] Cache the last successful rates and and fall back to them with an out-of-date notice when the API is unreachable
-- [ ] Build as a full-stack app with accounts so a user's favorites and conversion log sync across devices
-- [ ] Include bitcoin (or other digital currencies) as a comparison currency
-- [ ] Add animations, including for the history graph (so the actual data is zooming in and and out at different time scales), and for the adding/deleting of favorites and logs
-
-### Useful resources
+### Useful Resources
 
 - [Nuxt UI components documentation](https://ui.nuxt.com/docs/components) - This site helped me so much as I worked to customize each component to match the design and provide the UX functionality that was needed for an effective solution.
 - [Tailwind CSS documentation](https://tailwindcss.com/docs/installation/using-vite) - Super helpful for looking up each of the different utility classes.
 - [Icônes](https://icones.js.org/) - The best place to view and search for icons.
 - [Favicon Generator](https://favicon.io/) - So easy to use and does exactly what's needed, including [starting with the SVG code](https://favicon.io/svg-favicon/).
 - [OpenGraph checker](https://opengraph.dev/panel?url=https%3A%2F%2Fforeign-exchange-checker-seven.vercel.app%2F) - Preview all meta tags in one place.
+- The finalists from past FM30 Hackathons have been incredibly inspirational as models for my own solution, including from the [Weather App Hackathon](https://discord.com/channels/824970620529279006/1098208633092837496/1425137841444229331) and the [Typing Speed Test Hackathon](https://discord.com/channels/824970620529279006/1098208633092837496/1463536666580090923)
 
 ### AI Collaboration
 
