@@ -43,7 +43,17 @@ export default withNuxt(
             case: "kebabCase",
             ignore: ["README.md"],
           },
-
+        ],
+      },
+    },
+    {
+      files: ["app/components/**/*.vue"],
+      rules: {
+        "unicorn/filename-case": [
+          "error",
+          {
+            case: "pascalCase",
+          },
         ],
       },
     },

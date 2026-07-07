@@ -23,6 +23,12 @@ function isCurrencyMenuItem(item: unknown): item is ValidCurrencyMenuItem {
   );
 }
 
+// Match against either the 'label' OR the 'name' field
+function currencyMenuFilterFn(item: ValidCurrencyMenuItem, query: string) {
+  return item.label.toLowerCase().includes(query)
+    || item.name.toLowerCase().includes(query);
+}
+
 const exchange = useExchangeStore();
 
 const selectedCurrency = defineModel<string>();
@@ -59,14 +65,9 @@ const dynamicGroupedCurrencyItems = computed<SelectMenuItem[][]>(() => {
     }
   }
 
-  // Match against either the 'label' OR the 'name' field
-  const filterFn = (item: any) => {
-    return item.label?.toLowerCase().includes(query)
-      || item.name?.toLowerCase().includes(query);
-  };
+  const filteredPopular = popularItems.filter(item => currencyMenuFilterFn(item, query));
 
-  const filteredPopular = popularItems.filter(filterFn);
-  const filteredOther = otherItems.filter(filterFn);
+  const filteredOther = otherItems.filter(item => currencyMenuFilterFn(item, query));
 
   return [
     [
