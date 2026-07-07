@@ -80,37 +80,52 @@ For the workflow setup:
 
 Users are able to:
 
-- :white_check_mark: Converter
-  - [x] Enter an amount to send and see it convert in real time as they type
-  - [x] Pick the "send" and "receive" currencies from a searchable currency picker
-  - [x] See the live exchange rate for the active pair (for example, `1 USD = 0.8530 EUR`)
-  - [x] Swap the send and receive currencies with the swap button
-  - [x] Favorite the active pair, and log a conversion to their history
-- :white_check_mark: Currency Picker
-  - [x] Search the full list of available currencies by code or name
-  - [x] See currencies grouped into "Popular" and "Other currencies", each row showing the flag, code, and name
-  - [x] See a check against the currency that's currently selected
-- :white_check_mark: Live markets ticker
-  - [x] See a ticker of currency pairs, each with its current rate and 24-hour change (up or down)
-- :white_check_mark: Rate History
-  - [x] View a line and area chart of the active pair's rate over time
-  - [x] Switch the chart range between 1D, 1W, 1M, 3M, 1Y, and 5Y
-  - [x] See the open, last, absolute change, and percentage change for the selected range
-- :white_check_mark: Compare
-  - [x] See their send amount converted into a range of other currencies at once, each with its reference rate
-  - [x] Pin or unpin any comparison row to their favorites
-- :white_check_mark: Favorites
-  - [x] See their pinned pairs, each with its live rate and 24-hour change
-  - [x] Load a pinned pair back into the converter by selecting its row
-  - [x] Unpin a pair they no longer want to track
-- :white_check_mark: Conversion Log
-  - [x] See a log of conversions they've made, each showing the relative time, the pair, and the send and receive amounts
-  - [x] Clear the whole log
-  - [x] Delete an individual entry
-- :white_check_mark: UI & Accessibility
-  - [x] View the optimal layout for the interface depending on their device's screen size
-  - [x] See hover and focus states for all interactive elements on the page
-  - [x] Navigate the entire app using only their keyboard
+:white_check_mark: Converter
+
+- [x] Enter an amount to send and see it convert in real time as they type
+- [x] Pick the "send" and "receive" currencies from a searchable currency picker
+- [x] See the live exchange rate for the active pair (for example, `1 USD = 0.8530 EUR`)
+- [x] Swap the send and receive currencies with the swap button
+- [x] Favorite the active pair, and log a conversion to their history
+
+:white_check_mark: Currency Picker
+
+- [x] Search the full list of available currencies by code or name
+- [x] See currencies grouped into "Popular" and "Other currencies", each row showing the flag, code, and name
+- [x] See a check against the currency that's currently selected
+
+:white_check_mark: Live markets ticker
+
+- [x] See a ticker of currency pairs, each with its current rate and 24-hour change (up or down)
+
+:white_check_mark: Rate History
+
+- [x] View a line and area chart of the active pair's rate over time
+- [x] Switch the chart range between 1D, 1W, 1M, 3M, 1Y, and 5Y
+- [x] See the open, last, absolute change, and percentage change for the selected range
+
+:white_check_mark: Compare
+
+- [x] See their send amount converted into a range of other currencies at once, each with its reference rate
+- [x] Pin or unpin any comparison row to their favorites
+
+:white_check_mark: Favorites
+
+- [x] See their pinned pairs, each with its live rate and 24-hour change
+- [x] Load a pinned pair back into the converter by selecting its row
+- [x] Unpin a pair they no longer want to track
+
+:white_check_mark: Conversion Log
+
+- [x] See a log of conversions they've made, each showing the relative time, the pair, and the send and receive amounts
+- [x] Clear the whole log
+- [x] Delete an individual entry
+
+:white_check_mark: UI & Accessibility
+
+- [x] View the optimal layout for the interface depending on their device's screen size
+- [x] See hover and focus states for all interactive elements on the page
+- [x] Navigate the entire app using only their keyboard
 
 #### :tada: Bonus Features
 
