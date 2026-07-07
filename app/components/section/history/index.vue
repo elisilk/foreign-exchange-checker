@@ -1,36 +1,34 @@
 <script setup lang="ts">
 const exchange = useExchangeStore();
 
-const timeScaleOptions = computed<Record<string, any>>(() => ({
+type TimeScaleOption = {
+  startDate: string;
+};
+
+const timeScaleOptions = computed<Record<string, TimeScaleOption>>(() => ({
   "1D": {
     startDate: getRelativeDate(5),
-    groupBy: "",
   },
   "1W": {
     startDate: getRelativeDate(7),
-    groupBy: "",
   },
   "1M": {
     startDate: getRelativeDate(30),
-    groupBy: "",
   },
   "3M": {
     startDate: getRelativeDate(30 * 3),
-    groupBy: "",
   },
   "1Y": {
     startDate: getRelativeDate(365),
-    groupBy: "week",
   },
   "5Y": {
     startDate: getRelativeDate(365 * 5),
-    groupBy: "month",
   },
 }));
 
 const timeScaleItems = computed(() => Object.keys(timeScaleOptions.value));
 
-const timeScaleStartDate = computed(() => timeScaleOptions.value[exchange.historyTimeScale].startDate);
+const timeScaleStartDate = computed(() => timeScaleOptions.value[exchange.historyTimeScale]?.startDate);
 
 const historyCacheKey = computed(() => `history-${exchange.base}-${exchange.quote}-${exchange.historyTimeScale}`);
 

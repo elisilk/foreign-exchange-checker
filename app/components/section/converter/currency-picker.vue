@@ -1,18 +1,27 @@
 <script setup lang="ts">
 import type { SelectMenuItem } from "@nuxt/ui";
 
-type CurrencySelectMenuItemMetaData = {
-  id?: string;
-  popular?: boolean;
-};
-
-type CurrencySelectMenuItem = Extract<SelectMenuItem, Record<string, any>> & CurrencySelectMenuItemMetaData;
+const { id } = defineProps<Props>();
 
 type Props = {
   id: string;
 };
 
-const { id } = defineProps<Props>();
+type ValidCurrencyMenuItem = SelectMenuItem & {
+  label: string;
+  name: string;
+};
+
+function isCurrencyMenuItem(item: unknown): item is ValidCurrencyMenuItem {
+  return (
+    typeof item === "object"
+    && item !== null
+    && "label" in item
+    && typeof (item as any).label === "string"
+    && "name" in item
+    && typeof (item as any).name === "string"
+  );
+}
 
 const exchange = useExchangeStore();
 
@@ -24,24 +33,31 @@ const selectedFlagIcon = computed(() => selectedCurrency.value ? currencyMeta[se
 
 const searchTerm = ref("");
 
-const dynamicGroupedCurrencyItems = computed<CurrencySelectMenuItem[][]>(() => {
+const dynamicGroupedCurrencyItems = computed<SelectMenuItem[][]>(() => {
+  const popularItems = [];
+  const otherItems = [];
+
   const query = searchTerm.value.toLowerCase().trim();
 
-  const items = [...exchange.availableCurrencies].map((item: string): CurrencySelectMenuItem => {
-    const currency: CurrencyMeta | undefined = currencyMeta[item];
-    return {
-      type: "item",
-      id: item,
-      label: item,
-      name: currency?.name,
-      icon: currency?.flagIcon,
-      popular: currency?.popular || false,
+  for (const code of exchange.availableCurrencies) {
+    const meta = currencyMeta[code];
+    if (!meta)
+      continue;
+
+    const menuItem = {
+      id: code,
+      label: code,
+      name: meta.name,
+      icon: meta.flagIcon,
     };
-  });
 
-  const popularItems = items.filter((item: CurrencySelectMenuItem) => item.popular);
-
-  const otherItems = items.filter((item: CurrencySelectMenuItem) => !item.popular);
+    if (meta.popular) {
+      popularItems.push(menuItem);
+    }
+    else {
+      otherItems.push(menuItem);
+    }
+  }
 
   // Match against either the 'label' OR the 'name' field
   const filterFn = (item: any) => {
@@ -101,11 +117,22 @@ const dynamicGroupedCurrencyItems = computed<CurrencySelectMenuItem[][]>(() => {
     }"
   >
     <template #item-label="{ item }">
-      {{ item.label }}
-      <span class="text-default">
-        {{ item.name }}
-      </span>
+      <template v-if="isCurrencyMenuItem(item)">
+        {{ item.label }}
+        <span class="text-default">
+          {{ item.name }}
+        </span>
+      </template>
+
+      <template v-else-if="item && typeof item === 'object' && 'label' in item">
+        {{ item.label }}
+      </template>
+
+      <template v-else>
+        {{ item }}
+      </template>
     </template>
+
     <template #empty>
       No matching currencies
     </template>
