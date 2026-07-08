@@ -40,19 +40,11 @@ export default withNuxt(
         "unicorn/filename-case": [
           "error",
           {
-            case: "kebabCase",
+            cases: {
+              kebabCase: true,
+              pascalCase: true,
+            },
             ignore: ["README.md"],
-          },
-        ],
-      },
-    },
-    {
-      files: ["app/components/**/*.vue"],
-      rules: {
-        "unicorn/filename-case": [
-          "error",
-          {
-            case: "pascalCase",
           },
         ],
       },

@@ -9,7 +9,7 @@ await useAsyncData("initRates", async () => {
 
 <template>
   <UApp class="font-sans antialiased">
-    <SectionAppHeader />
+    <AppHeader />
 
     <UMain aria-labelledby="main-heading">
       <SectionTicker />
@@ -21,7 +21,7 @@ await useAsyncData("initRates", async () => {
 
         <SectionConverter />
 
-        <SectionTabs />
+        <AppTabs />
       </UContainer>
     </UMain>
   </UApp>
