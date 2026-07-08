@@ -13,6 +13,11 @@ export default defineNuxtConfig({
   /* Nuxt UI */
   css: ["~/assets/css/main.css"],
 
+  /* Color Mode */
+  colorMode: {
+    preference: "dark",
+  },
+
   /* Fonts */
   fonts: {
     families: [
