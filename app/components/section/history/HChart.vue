@@ -45,6 +45,7 @@ const yDomain = computed<[number, number]>(() => {
       :y-formatter="yFormatter"
       :y-domain="yDomain"
       :y-grid-line="true"
+      :curve-type="CurveType.Linear"
     >
       <template #tooltip="{ values }">
         <div class="grid justify-items-center">
