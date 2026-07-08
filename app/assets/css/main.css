@@ -109,6 +109,7 @@
   /* --vis-font-family: var(--font-mono); */
   /* --vis-font-family: var(--font-mono) !important; */
 
+  --ui-container: 68.75rem;
   --ui-radius: 8px;
 
   --ui-primary: var(--ui-color-primary-700);

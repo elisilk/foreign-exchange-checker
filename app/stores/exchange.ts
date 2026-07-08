@@ -1,225 +1,227 @@
-export const useExchangeStore = defineStore("exchange", () => {
+export const useExchangeStore = defineStore(
+  "exchange",
+  () => {
   /* Dates (config) */
 
-  const daysInPastToFetch = ref(5);
-  const startDate = computed(() => getRelativeDate(daysInPastToFetch.value));
+    const daysInPastToFetch = ref(5);
+    const startDate = computed(() => getRelativeDate(daysInPastToFetch.value));
 
-  /* Currency + Provider (config) */
+    /* Currency + Provider (config) */
 
-  const provider = ref("ECB");
-  const referenceCurrency = ref("EUR");
+    const provider = ref("ECB");
+    const referenceCurrency = ref("EUR");
 
-  /* Base/Quote Pair */
+    /* Base/Quote Pair */
 
-  const base = ref<CurrencyCode>("USD");
-  const quote = ref<CurrencyCode>("EUR");
+    const base = ref<CurrencyCode>("USD");
+    const quote = ref<CurrencyCode>("EUR");
 
-  function swap() {
-    [base.value, quote.value] = [quote.value, base.value];
-  }
+    function swap() {
+      [base.value, quote.value] = [quote.value, base.value];
+    }
 
-  /* Rates as Time Series (today through 5 days ago) */
+    /* Rates as Time Series (today through 5 days ago) */
 
-  const rates = ref<Rate[]>([]);
+    const rates = ref<Rate[]>([]);
 
-  async function fetchRates() {
-    try {
-      const data = await $fetch<Rate[]>(
-        `https://api.frankfurter.dev/v2/rates?&providers=${provider.value}&base=${referenceCurrency.value}&from=${startDate.value}`,
-      );
+    async function fetchRates() {
+      try {
+        const data = await $fetch<Rate[]>(
+          `https://api.frankfurter.dev/v2/rates?&providers=${provider.value}&base=${referenceCurrency.value}&from=${startDate.value}`,
+        );
 
-      if (!data || data.length === 0) {
-        console.error(`No rates found for ${base.value} with provider ${provider.value}`);
+        if (!data || data.length === 0) {
+          console.error(`No rates found for ${base.value} with provider ${provider.value}`);
         // rates.value = [];
+        }
+
+        rates.value = data;
       }
-
-      rates.value = data;
+      catch (error) {
+        console.error("Fetch rates failed:", error);
+      }
     }
-    catch (error) {
-      console.error("Fetch rates failed:", error);
+
+    /* Dates (derived) */
+
+    const availableDates = computed<string[]>(() => rates.value ? [...new Set(rates.value.map(rate => rate.date))].sort((a, b) => a < b ? 1 : -1) : []);
+    const latestDate = computed<string | undefined>(() => availableDates.value.length > 0 ? availableDates.value[0] : undefined);
+    const previousDate = computed<string | undefined>(() => availableDates.value.length > 1 ? availableDates.value[1] : undefined);
+
+    /* Currencies */
+
+    const availableCurrencies = computed<string[]>(() => {
+      if (!rates.value)
+        return [];
+
+      const uniqueCurrencies
+        = [...new Set(rates.value.map(rate => rate.quote))];
+
+      if (!uniqueCurrencies.includes(referenceCurrency.value))
+        uniqueCurrencies.push(referenceCurrency.value);
+
+      return uniqueCurrencies.sort((a, b) => a < b ? -1 : 1);
+    });
+
+    /* Rates (convenvience filters by date) */
+
+    const latestRates = computed<Rate[]>(() => rates.value.filter(rate => rate.date === latestDate.value));
+    const previousRates = computed<Rate[]>(() => rates.value.filter(rate => rate.date === previousDate.value));
+
+    /* Rate actions */
+
+    function rateRelativeToEur(quote: string, date: "latest" | "previous" = "latest"): number | undefined {
+      if (quote === referenceCurrency.value)
+        return 1;
+
+      if (date === "previous")
+        return rates.value.find(item => item.quote === quote && item.date === previousDate.value)?.rate;
+
+      return rates.value.find(item => item.quote === quote && item.date === latestDate.value)?.rate;
     }
-  }
 
-  /* Dates (derived) */
+    function rateForPair(base: string, quote: string, date: "latest" | "previous" = "latest"): number | undefined {
+      const rateOfEurToQuote = rateRelativeToEur(quote, date);
+      if (rateOfEurToQuote === undefined)
+        return undefined;
+      if (base === referenceCurrency.value)
+        return rateOfEurToQuote;
 
-  const availableDates = computed<string[]>(() => rates.value ? [...new Set(rates.value.map(rate => rate.date))].sort((a, b) => a < b ? 1 : -1) : []);
-  const latestDate = computed<string | undefined>(() => availableDates.value.length > 0 ? availableDates.value[0] : undefined);
-  const previousDate = computed<string | undefined>(() => availableDates.value.length > 1 ? availableDates.value[1] : undefined);
+      const rateOfEurToBase = rateRelativeToEur(base, date);
+      if (rateOfEurToBase === undefined)
+        return undefined;
+      if (quote === referenceCurrency.value)
+        return Number((1 / rateOfEurToBase).toPrecision(5));
 
-  /* Currencies */
+      return Number((rateOfEurToQuote / rateOfEurToBase).toPrecision(5));
+    }
 
-  const availableCurrencies = computed<string[]>(() => {
-    if (!rates.value)
-      return [];
+    /* Rate */
 
-    const uniqueCurrencies
-      = [...new Set(rates.value.map(rate => rate.quote))];
+    const rate = computed<number | undefined>(() => {
+      return rateForPair(base.value, quote.value);
+    });
 
-    if (!uniqueCurrencies.includes(referenceCurrency.value))
-      uniqueCurrencies.push(referenceCurrency.value);
+    /* Amount */
 
-    return uniqueCurrencies.sort((a, b) => a < b ? -1 : 1);
-  });
+    const amount = ref<number | undefined>();
 
-  /* Rates (convenvience filters by date) */
+    /* Ticker */
 
-  const latestRates = computed<Rate[]>(() => rates.value.filter(rate => rate.date === latestDate.value));
-  const previousRates = computed<Rate[]>(() => rates.value.filter(rate => rate.date === previousDate.value));
+    const tickerPairs = ref<Pair[]>([
+      { base: "USD", quote: "JPY" },
+      { base: "GBP", quote: "USD" },
+      { base: "USD", quote: "CHF" },
+      { base: "EUR", quote: "GBP" },
+      { base: "AUD", quote: "USD" },
+      { base: "USD", quote: "CAD" },
+    ]);
 
-  /* Rate actions */
+    /* History */
 
-  function rateRelativeToEur(quote: string, date: "latest" | "previous" = "latest"): number | undefined {
-    if (quote === referenceCurrency.value)
-      return 1;
+    const activeTab = ref("history");
 
-    if (date === "previous")
-      return rates.value.find(item => item.quote === quote && item.date === previousDate.value)?.rate;
+    /* History */
 
-    return rates.value.find(item => item.quote === quote && item.date === latestDate.value)?.rate;
-  }
+    const historyTimeScale = ref("1M");
 
-  function rateForPair(base: string, quote: string, date: "latest" | "previous" = "latest"): number | undefined {
-    const rateOfEurToQuote = rateRelativeToEur(quote, date);
-    if (rateOfEurToQuote === undefined)
-      return undefined;
-    if (base === referenceCurrency.value)
-      return rateOfEurToQuote;
+    /* Favorites */
 
-    const rateOfEurToBase = rateRelativeToEur(base, date);
-    if (rateOfEurToBase === undefined)
-      return undefined;
-    if (quote === referenceCurrency.value)
-      return Number((1 / rateOfEurToBase).toPrecision(5));
+    const favorites = ref<Pair[]>([]);
 
-    return Number((rateOfEurToQuote / rateOfEurToBase).toPrecision(5));
-  }
+    function doesFavoriteExist(base: string, quote: string) {
+      return favorites.value.some(favorite => favorite.base === base && favorite.quote === quote);
+    }
 
-  /* Rate */
+    function addFavorite(base: string, quote: string) {
+      if (doesFavoriteExist(base, quote))
+        return;
+      favorites.value.push({ base, quote });
+    }
 
-  const rate = computed<number | undefined>(() => {
-    return rateForPair(base.value, quote.value);
-  });
+    function deleteFavorite(base: string, quote: string) {
+      const index = favorites.value.findIndex(favorite => favorite.base === base && favorite.quote === quote);
+      if (index === -1)
+        return;
+      favorites.value.splice(index, 1);
+    }
 
-  /* Amount */
+    /* Conversion Log */
 
-  const amount = ref<number | undefined>();
+    const conversionLog = ref<Conversion[]>([]);
 
-  /* Ticker */
+    function doesConversionLogExist(datetime: string | number | Date) {
+      return conversionLog.value.some(log => log.datetime === datetime);
+    }
 
-  const tickerPairs = ref<Pair[]>([
-    { base: "USD", quote: "JPY" },
-    { base: "GBP", quote: "USD" },
-    { base: "USD", quote: "CHF" },
-    { base: "EUR", quote: "GBP" },
-    { base: "AUD", quote: "USD" },
-    { base: "USD", quote: "CAD" },
-  ]);
+    function addConversionLog(base: string, quote: string, rate: number | undefined, send: number | undefined, receive: number | "" | undefined) {
+      if (rate === undefined || send === undefined || receive === "" || receive === undefined)
+        return;
 
-  /* History */
+      const datetime = new Date().toISOString();
 
-  const activeTab = ref("history");
+      if (doesConversionLogExist(datetime))
+        return;
+      conversionLog.value.unshift({ datetime, base, quote, rate, send, receive });
+    }
 
-  /* History */
+    function deleteConversionLog(datetime: string | number | Date) {
+      const index = conversionLog.value.findIndex(log => log.datetime === datetime);
+      if (index === -1)
+        return;
+      conversionLog.value.splice(index, 1);
+    }
 
-  const historyTimeScale = ref("1M");
+    function deleteAllConversionLogs() {
+      conversionLog.value.length = 0;
+    }
 
-  /* Favorites */
-
-  const favorites = ref<Pair[]>([]);
-
-  function doesFavoriteExist(base: string, quote: string) {
-    return favorites.value.some(favorite => favorite.base === base && favorite.quote === quote);
-  }
-
-  function addFavorite(base: string, quote: string) {
-    if (doesFavoriteExist(base, quote))
-      return;
-    favorites.value.push({ base, quote });
-  }
-
-  function deleteFavorite(base: string, quote: string) {
-    const index = favorites.value.findIndex(favorite => favorite.base === base && favorite.quote === quote);
-    if (index === -1)
-      return;
-    favorites.value.splice(index, 1);
-  }
-
-  /* Conversion Log */
-
-  const conversionLog = ref<Conversion[]>([]);
-
-  function doesConversionLogExist(datetime: string | number | Date) {
-    return conversionLog.value.some(log => log.datetime === datetime);
-  }
-
-  function addConversionLog(base: string, quote: string, rate: number | undefined, send: number | undefined, receive: number | "" | undefined) {
-    if (rate === undefined || send === undefined || receive === "" || receive === undefined)
-      return;
-
-    // for testing purposes:
-    // const datetime = "2026-06-18T10:10:00.000Z";
-    const datetime = new Date().toISOString();
-
-    if (doesConversionLogExist(datetime))
-      return;
-    conversionLog.value.unshift({ datetime, base, quote, rate, send, receive });
-  }
-
-  function deleteConversionLog(datetime: string | number | Date) {
-    const index = conversionLog.value.findIndex(log => log.datetime === datetime);
-    if (index === -1)
-      return;
-    conversionLog.value.splice(index, 1);
-  }
-
-  function deleteAllConversionLogs() {
-    conversionLog.value.length = 0;
-  }
-
-  return {
-    daysInPastToFetch,
-    startDate,
-    provider,
-    referenceCurrency,
-    base,
-    quote,
-    swap,
-    rates,
-    fetchRates,
-    availableDates,
-    latestDate,
-    previousDate,
-    availableCurrencies,
-    latestRates,
-    previousRates,
-    rateRelativeToEur,
-    rateForPair,
-    rate,
-    amount,
-    tickerPairs,
-    activeTab,
-    historyTimeScale,
-    favorites,
-    doesFavoriteExist,
-    addFavorite,
-    deleteFavorite,
-    conversionLog,
-    doesConversionLogExist,
-    addConversionLog,
-    deleteConversionLog,
-    deleteAllConversionLogs,
-  };
-}, {
-  persist: {
-    storage: piniaPluginPersistedstate.cookies(),
-    pick: [
-      "base",
-      "quote",
-      "amount",
-      "activeTab",
-      "historyTimeScale",
-      "favorites",
-      "conversionLog",
-    ],
+    return {
+      daysInPastToFetch,
+      startDate,
+      provider,
+      referenceCurrency,
+      base,
+      quote,
+      swap,
+      rates,
+      fetchRates,
+      availableDates,
+      latestDate,
+      previousDate,
+      availableCurrencies,
+      latestRates,
+      previousRates,
+      rateRelativeToEur,
+      rateForPair,
+      rate,
+      amount,
+      tickerPairs,
+      activeTab,
+      historyTimeScale,
+      favorites,
+      doesFavoriteExist,
+      addFavorite,
+      deleteFavorite,
+      conversionLog,
+      doesConversionLogExist,
+      addConversionLog,
+      deleteConversionLog,
+      deleteAllConversionLogs,
+    };
   },
-});
+  {
+    persist: {
+      storage: piniaPluginPersistedstate.cookies(),
+      pick: [
+        "base",
+        "quote",
+        "amount",
+        "activeTab",
+        "historyTimeScale",
+        "favorites",
+        "conversionLog",
+      ],
+    },
+  },
+);

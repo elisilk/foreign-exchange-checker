@@ -9,6 +9,7 @@ export default defineAppConfig({
     header: {
       slots: {
         root: "border-none",
+        container: "max-w-360 lg:px-6",
       },
     },
     empty: {
