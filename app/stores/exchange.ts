@@ -48,8 +48,18 @@ export const useExchangeStore = defineStore("exchange", () => {
 
   /* Currencies */
 
-  // const availableCurrencies = computed<string[]>(() => rates.value ? [...new Set(rates.value.map(rate => rate.quote)), referenceCurrency.value].sort((a, b) => a < b ? -1 : 1) : []);
-  const availableCurrencies = computed<string[]>(() => rates.value ? [...new Set(rates.value.map(rate => rate.quote))].sort((a, b) => a < b ? -1 : 1) : []);
+  const availableCurrencies = computed<string[]>(() => {
+    if (!rates.value)
+      return [];
+
+    const uniqueCurrencies
+      = [...new Set(rates.value.map(rate => rate.quote))];
+
+    if (!uniqueCurrencies.includes(referenceCurrency.value))
+      uniqueCurrencies.push(referenceCurrency.value);
+
+    return uniqueCurrencies.sort((a, b) => a < b ? -1 : 1);
+  });
 
   /* Rates (convenvience filters by date) */
 
