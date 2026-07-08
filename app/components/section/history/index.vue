@@ -122,47 +122,47 @@ const ratePercentChangeIsPositive = computed<boolean>(() => ratePercentChange.va
     </UEmpty>
 
     <div v-else class="space-y-8">
-      <!-- quantitative summary -->
-      <div class="grid gap-2.5 md:gap-4 grid-cols-2 md:grid-cols-[repeat(4,140px)]">
-        <div class="px-5 py-3 bg-muted border border-default rounded-2xl grid gap-4">
-          <div class="text-lg text-highlighted/70 uppercase">
-            Open
+      <div class="flex gap-5 justify-between items-center flex-wrap">
+        <!-- quantitative summary -->
+        <div class="w-full grid gap-2.5 grid-cols-2 md:w-auto md:gap-4 md:grid-cols-[repeat(4,140px)]">
+          <div class="px-5 py-3 bg-muted border border-default rounded-2xl grid gap-4">
+            <div class="text-lg text-highlighted/70 uppercase">
+              Open
+            </div>
+            <div class="text-3xl text-highlighted">
+              {{ rateOpen || 'Error' }}
+            </div>
           </div>
-          <div class="text-3xl text-highlighted">
-            {{ rateOpen || 'Error' }}
+
+          <div class="px-5 py-3 bg-muted border border-default rounded-2xl grid gap-4">
+            <div class="text-lg text-highlighted/70 uppercase">
+              Last
+            </div>
+            <div class="text-3xl text-highlighted">
+              {{ rateLast || 'Error' }}
+            </div>
+          </div>
+
+          <div class="px-5 py-3 bg-muted border border-default rounded-2xl grid gap-4">
+            <div class="text-lg text-highlighted/70 uppercase">
+              Change
+            </div>
+            <div class="text-3xl flex gap-1 items-center" :class="[ratePercentChangeIsPositive ? 'text-success' : 'text-error']">
+              <span>{{ ratePercentChangeIsPositive ? '+' : '' }}{{ rateChange }}</span>
+            </div>
+          </div>
+
+          <div class="px-5 py-3 bg-muted border border-default rounded-2xl grid gap-4">
+            <div class="text-lg text-highlighted/70 uppercase">
+              % Change
+            </div>
+            <div class="text-3xl flex gap-1 items-center" :class="[ratePercentChangeIsPositive ? 'text-success' : 'text-error']">
+              <UIcon :name="ratePercentChangeIsPositive ? 'ion:arrow-up-b' : 'ion:arrow-down-b'" class="size-5" />
+              <span>{{ ratePercentChangeIsPositive ? '+' : '' }}{{ ratePercentChange.toFixed(2) }}%</span>
+            </div>
           </div>
         </div>
 
-        <div class="px-5 py-3 bg-muted border border-default rounded-2xl grid gap-4">
-          <div class="text-lg text-highlighted/70 uppercase">
-            Last
-          </div>
-          <div class="text-3xl text-highlighted">
-            {{ rateLast || 'Error' }}
-          </div>
-        </div>
-
-        <div class="px-5 py-3 bg-muted border border-default rounded-2xl grid gap-4">
-          <div class="text-lg text-highlighted/70 uppercase">
-            Change
-          </div>
-          <div class="text-3xl flex gap-1 items-center" :class="[ratePercentChangeIsPositive ? 'text-success' : 'text-error']">
-            <span>{{ ratePercentChangeIsPositive ? '+' : '' }}{{ rateChange }}</span>
-          </div>
-        </div>
-
-        <div class="px-5 py-3 bg-muted border border-default rounded-2xl grid gap-4">
-          <div class="text-lg text-highlighted/70 uppercase">
-            % Change
-          </div>
-          <div class="text-3xl flex gap-1 items-center" :class="[ratePercentChangeIsPositive ? 'text-success' : 'text-error']">
-            <UIcon :name="ratePercentChangeIsPositive ? 'ion:arrow-up-b' : 'ion:arrow-down-b'" class="size-5" />
-            <span>{{ ratePercentChangeIsPositive ? '+' : '' }}{{ ratePercentChange.toFixed(2) }}%</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="flex gap-2 items-center flex-wrap">
         <!-- time scale input -->
         <URadioGroup
           v-model="exchange.historyTimeScale"
