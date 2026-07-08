@@ -50,7 +50,7 @@ const dynamicGroupedCurrencyItems = computed<SelectMenuItem[][]>(() => {
     if (!meta)
       continue;
 
-    const menuItem = {
+    const menuItem: ValidCurrencyMenuItem = {
       id: code,
       label: code,
       name: meta.name,
