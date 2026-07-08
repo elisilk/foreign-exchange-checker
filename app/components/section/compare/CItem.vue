@@ -27,7 +27,7 @@ function handleItemClick() {
 </script>
 
 <template>
-  <section
+  <li
     :aria-label="`Comparison rate for pair: ${rate.base} to ${rate.quote}`"
     class="relative flex items-center gap-4 py-3 px-4 border border-muted rounded-lg bg-elevated has-[.item-data:hover]:border-primary focus-within:ring-2 focus-within:ring-primary focus-within:outline-none"
   >
@@ -54,5 +54,5 @@ function handleItemClick() {
         quote: rate.quote,
       }"
     />
-  </section>
+  </li>
 </template>

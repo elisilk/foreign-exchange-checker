@@ -15,13 +15,35 @@ const exchange = useExchangeStore();
       title="Pinned Pairs"
       :description="`${exchange.favorites.length} favorite${exchange.favorites.length === 1 ? '' : 's'}`"
     >
-      <div class="space-y-4">
+      <TransitionGroup
+        name="list"
+        tag="ul"
+        class="space-y-4"
+      >
         <SectionFavoritesItem
           v-for="pair in exchange.favorites"
           :key="`favorite-item-${pair.base}-${pair.quote}`"
           :pair
         />
-      </div>
+      </TransitionGroup>
     </UCard>
   </section>
 </template>
+
+<style scoped>
+.list-move,
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.5s ease;
+}
+
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+.list-leave-active {
+  position: absolute;
+}
+</style>

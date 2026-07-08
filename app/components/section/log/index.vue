@@ -21,13 +21,35 @@ const conversionLogSorted = computed<Conversion[]>(() => [...exchange.conversion
         <ButtonClearAllLogs />
       </template>
 
-      <div class="space-y-4">
+      <TransitionGroup
+        name="list"
+        tag="ul"
+        class="space-y-4"
+      >
         <SectionLogItem
           v-for="log in conversionLogSorted"
           :key="`log-item-${log.base}-${log.quote}`"
           :log
         />
-      </div>
+      </TransitionGroup>
     </UCard>
   </section>
 </template>
+
+<style scoped>
+.list-move,
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.5s ease;
+}
+
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+.list-leave-active {
+  position: absolute;
+}
+</style>

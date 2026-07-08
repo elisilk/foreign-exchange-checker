@@ -64,13 +64,17 @@ const compareRates = computed<Rate[]>(() => {
         }) }} from {{ exchange.base }}</span>
       </template>
 
-      <div class="space-y-4">
+      <TransitionGroup
+        name="list"
+        tag="ul"
+        class="space-y-4"
+      >
         <SectionCompareItem
           v-for="rate in compareRates"
           :key="`compare-item-${exchange.amount}-${rate.base}-${rate.quote}`"
           :rate
         />
-      </div>
+      </TransitionGroup>
     </UCard>
   </section>
 </template>

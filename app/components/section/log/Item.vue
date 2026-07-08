@@ -16,7 +16,7 @@ function handleItemClick() {
 </script>
 
 <template>
-  <section
+  <li
     :aria-label="`Conversion log for pair: ${log.base} to ${log.quote} at ${log.datetime}`"
     class="relative flex items-center gap-4 py-3 px-4 border border-muted rounded-lg bg-elevated has-[.item-data:hover]:border-primary focus-within:ring-2 focus-within:ring-primary focus-within:outline-none"
   >
@@ -38,5 +38,5 @@ function handleItemClick() {
     </button>
 
     <ButtonDeleteLog :log />
-  </section>
+  </li>
 </template>
