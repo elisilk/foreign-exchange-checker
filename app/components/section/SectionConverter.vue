@@ -125,6 +125,22 @@ function handleBlur(): void {
 }
 
 const announcerText = computed(() => `${send.value} ${exchange.base} equals ${receive.value} ${exchange.quote}.`);
+
+const sendInputComponentRef = useTemplateRef("send-input");
+const receiveInputComponentRef = useTemplateRef("receive-input");
+
+onMounted(() => {
+  if (sendInputComponentRef.value) {
+    const nativeInput = sendInputComponentRef.value.inputRef;
+    if (nativeInput)
+      exchange.registerSendInput(nativeInput);
+  }
+  if (receiveInputComponentRef.value) {
+    const nativeInput = receiveInputComponentRef.value.inputRef;
+    if (nativeInput)
+      exchange.registerReceiveInput(nativeInput);
+  }
+});
 </script>
 
 <template>
@@ -157,6 +173,7 @@ const announcerText = computed(() => `${send.value} ${exchange.base} equals ${re
             name="send"
           >
             <UInput
+              ref="send-input"
               v-model="send"
               name="send"
               size="xl"
@@ -192,6 +209,7 @@ const announcerText = computed(() => `${send.value} ${exchange.base} equals ${re
             name="receive"
           >
             <UInput
+              ref="receive-input"
               v-model="receive"
               name="receive"
               size="xl"

@@ -208,5 +208,18 @@ export default defineAppConfig({
         },
       ],
     },
+    kbd: {
+      base: "normal-case",
+      variants: {
+        size: {
+          lg: "h-8 min-w-8 text-xl",
+        },
+      },
+    },
+    tooltip: {
+      slots: {
+        kbds: "md:inline-flex",
+      },
+    },
   },
 });

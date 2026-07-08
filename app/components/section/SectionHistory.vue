@@ -1,34 +1,9 @@
 <script setup lang="ts">
 const exchange = useExchangeStore();
 
-type TimeScaleOption = {
-  startDate: string;
-};
+const timeScaleItems = computed(() => Object.keys(timeScaleOptions));
 
-const timeScaleOptions = computed<Record<string, TimeScaleOption>>(() => ({
-  "1D": {
-    startDate: getRelativeDate(5),
-  },
-  "1W": {
-    startDate: getRelativeDate(7),
-  },
-  "1M": {
-    startDate: getRelativeDate(30),
-  },
-  "3M": {
-    startDate: getRelativeDate(30 * 3),
-  },
-  "1Y": {
-    startDate: getRelativeDate(365),
-  },
-  "5Y": {
-    startDate: getRelativeDate(365 * 5),
-  },
-}));
-
-const timeScaleItems = computed(() => Object.keys(timeScaleOptions.value));
-
-const timeScaleStartDate = computed(() => timeScaleOptions.value[exchange.historyTimeScale]?.startDate);
+const timeScaleStartDate = computed(() => timeScaleOptions[exchange.historyTimeScale]?.startDate);
 
 const historyCacheKey = computed(() => `history-${exchange.base}-${exchange.quote}-${exchange.historyTimeScale}`);
 
@@ -164,15 +139,20 @@ const ratePercentChangeIsPositive = computed<boolean>(() => ratePercentChange.va
         </div>
 
         <!-- time scale input -->
-        <URadioGroup
-          v-model="exchange.historyTimeScale"
-          orientation="horizontal"
-          color="neutral"
-          variant="card"
-          :items="timeScaleItems"
-          indicator="hidden"
-          :disabled="pending"
-        />
+        <UTooltip
+          text="Cycle through Time Scales"
+          :kbds="['shift', 'T', 'or', 'T']"
+        >
+          <URadioGroup
+            v-model="exchange.historyTimeScale"
+            orientation="horizontal"
+            color="neutral"
+            variant="card"
+            :items="timeScaleItems"
+            indicator="hidden"
+            :disabled="pending"
+          />
+        </UTooltip>
       </div>
 
       <!-- chart display -->

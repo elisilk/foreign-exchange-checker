@@ -30,7 +30,9 @@ const exchange = useExchangeStore();
       <div class="uppercase text-right text-balance text-xs md:text-lg">
         {{ exchange.availableCurrencies.length }} Currencies · EOD · {{ exchange.provider }} data
       </div>
-      <UColorModeButton size="sm" />
+
+      <!-- app actions -->
+      <AppControls />
     </template>
   </UHeader>
 </template>

@@ -1,7 +1,7 @@
 export const useExchangeStore = defineStore(
   "exchange",
   () => {
-  /* Dates (config) */
+    /* Dates (config) */
 
     const daysInPastToFetch = ref(5);
     const startDate = computed(() => getRelativeDate(daysInPastToFetch.value));
@@ -129,21 +129,33 @@ export const useExchangeStore = defineStore(
 
     const favorites = ref<Pair[]>([]);
 
-    function doesFavoriteExist(base: string, quote: string) {
-      return favorites.value.some(favorite => favorite.base === base && favorite.quote === quote);
+    function doesFavoriteExist(baseCurrency: string, quoteCurrency: string) {
+      return favorites.value.some(favorite => favorite.base === baseCurrency && favorite.quote === quoteCurrency);
     }
 
-    function addFavorite(base: string, quote: string) {
-      if (doesFavoriteExist(base, quote))
+    function addFavorite(baseCurrency: string, quoteCurrency: string) {
+      if (doesFavoriteExist(baseCurrency, quoteCurrency))
         return;
-      favorites.value.push({ base, quote });
+      favorites.value.push({
+        base: baseCurrency,
+        quote: quoteCurrency,
+      });
     }
 
-    function deleteFavorite(base: string, quote: string) {
-      const index = favorites.value.findIndex(favorite => favorite.base === base && favorite.quote === quote);
+    function deleteFavorite(baseCurrency: string, quoteCurrency: string) {
+      const index = favorites.value.findIndex(favorite => favorite.base === baseCurrency && favorite.quote === quoteCurrency);
       if (index === -1)
         return;
       favorites.value.splice(index, 1);
+    }
+
+    function toggleFavorite(baseCurrency: string = base.value, quoteCurrency: string = quote.value) {
+      if (doesFavoriteExist(baseCurrency, quoteCurrency)) {
+        deleteFavorite(baseCurrency, quoteCurrency);
+      }
+      else {
+        addFavorite(baseCurrency, quoteCurrency);
+      }
     }
 
     /* Conversion Log */
@@ -176,6 +188,31 @@ export const useExchangeStore = defineStore(
       conversionLog.value.length = 0;
     }
 
+    /* Input Fields */
+
+    const sendInputRef = ref<HTMLInputElement | null>(null);
+    const receiveInputRef = ref<HTMLInputElement | null>(null);
+
+    function registerSendInput(element: HTMLInputElement) {
+      sendInputRef.value = markRaw(element);
+    }
+
+    function registerReceiveInput(element: HTMLInputElement) {
+      receiveInputRef.value = markRaw(element);
+    }
+
+    function focusSendInput() {
+      if (sendInputRef.value) {
+        sendInputRef.value.focus();
+      }
+    }
+
+    function focusReceiveInput() {
+      if (receiveInputRef.value) {
+        receiveInputRef.value.focus();
+      }
+    }
+
     return {
       daysInPastToFetch,
       startDate,
@@ -203,11 +240,18 @@ export const useExchangeStore = defineStore(
       doesFavoriteExist,
       addFavorite,
       deleteFavorite,
+      toggleFavorite,
       conversionLog,
       doesConversionLogExist,
       addConversionLog,
       deleteConversionLog,
       deleteAllConversionLogs,
+      sendInputRef,
+      receiveInputRef,
+      registerSendInput,
+      registerReceiveInput,
+      focusSendInput,
+      focusReceiveInput,
     };
   },
   {
