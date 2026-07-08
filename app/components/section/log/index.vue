@@ -22,7 +22,7 @@ const conversionLogSorted = computed<Conversion[]>(() => [...exchange.conversion
       </template>
 
       <div class="space-y-4">
-        <SectionLogItem
+        <SectionLogLItem
           v-for="log in conversionLogSorted"
           :key="`log-item-${log.base}-${log.quote}`"
           :log

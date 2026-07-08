@@ -141,10 +141,10 @@ Users are able to:
 
 Specific known areas where I know the solution should be improved:
 
+- [x] Log items styling - The inline size of the log timestamp should be consistent across the item rows. And, the send and receive amounts should be on one line when in larger viewports.
 - [ ] Input error/invalid states and messages in the main converter component
 - [ ] Currency select menu label styling - Figure out how to target the styling of the category labels (e.g., "Popular") so that the badge (the count) is aligned to the end of the container.
 - [ ] Hydration mismatch error - There is a "Hydration completed but contains mismatches" error that shows up in production, but I can't see it in the development environment, so will need to investigate further.
-- [ ] Log items styling - The inline size of the log timestamp should be consistent across the item rows. And, the send and receive amounts should be on one line when in larger viewports.
 - [ ] Improve light theme - The light theme colors (text + background) could be improved to (a) keep the primary yellow brand color, (b) make sure all text is readable, and (c) look better.
 - [ ] Convert from using cookies to using local storage to persist the app state across browser sessions.
 

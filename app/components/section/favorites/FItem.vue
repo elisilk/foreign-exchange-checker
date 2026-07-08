@@ -27,14 +27,14 @@ function handleItemClick() {
     :aria-label="`Favorited pair: ${pair.base} to ${pair.quote}`"
     class="relative flex items-center gap-4 py-3 px-4 border border-muted rounded-lg bg-elevated has-[.item-data:hover]:border-primary focus-within:ring-2 focus-within:ring-primary focus-within:outline-none"
   >
-    <button class="item-data flex-1 min-w-0 bg-transparent border-none cursor-pointer p-0 rounded-lg flex items-center gap-4 focus:outline-none after:absolute after:inset-0" @click="handleItemClick">
+    <button class="item-data flex-1 min-w-0 bg-transparent border-none cursor-pointer p-0 rounded-lg flex items-center justify-between gap-4 focus:outline-none after:absolute after:inset-0" @click="handleItemClick">
       <div class="flex items-center gap-2 text-lg text-highlighted">
         <span>{{ pair.base }}</span>
-        <UIcon name="ion:arrow-forward" class="size-3" />
+        <UIcon name="ion:arrow-forward" class="size-3 text-default" />
         <span>{{ pair.quote }}</span>
       </div>
 
-      <div class="ms-auto grid gap-1.5 justify-items-end">
+      <div class="grid gap-1.5 justify-items-end">
         <!-- latest rate -->
         <span class="text-xl text-highlighted">{{ rateLatest }}</span>
 
