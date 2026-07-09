@@ -5,25 +5,25 @@ const activeField = ref<"send" | "receive" | null>(null);
 
 const send = computed<string>({
   get: () => {
-    if (exchange.amount === undefined || exchange.amount === null)
+    if (exchange.send === undefined || exchange.send === null)
       return "";
     if (activeField.value === "send") {
-      return Number.isInteger(exchange.amount)
-        ? exchange.amount.toString()
-        : exchange.amount.toFixed(2);
+      return Number.isInteger(exchange.send)
+        ? exchange.send.toString()
+        : exchange.send.toFixed(2);
     }
-    return formatWithCommas(exchange.amount);
+    return formatWithCommas(exchange.send);
   },
   set: (val) => {
-    exchange.amount = val === "" ? undefined : parseCleanFloat(val);
+    exchange.send = val === "" ? undefined : parseCleanFloat(val);
   },
 });
 
 const receive = computed<string>({
   get: () => {
-    if (!exchange.rate || exchange.amount === null || exchange.amount === undefined)
+    if (!exchange.rate || exchange.send === null || exchange.send === undefined)
       return "";
-    const rawReceive = exchange.amount * exchange.rate;
+    const rawReceive = exchange.send * exchange.rate;
 
     if (activeField.value === "receive") {
       return Number.isInteger(rawReceive)
@@ -34,17 +34,17 @@ const receive = computed<string>({
   },
   set: (val) => {
     if (val === "" || !exchange.rate || exchange.rate === 0) {
-      exchange.amount = undefined;
+      exchange.send = undefined;
       return;
     }
     const cleanNum = parseCleanFloat(val);
-    exchange.amount = cleanNum !== undefined ? cleanNum / exchange.rate : undefined;
+    exchange.send = cleanNum !== undefined ? cleanNum / exchange.rate : undefined;
   },
 });
 
 // Validation States
-const isSendInvalid = computed(() => exchange.amount === undefined || exchange.amount === null || exchange.amount < 0);
-const isReceiveInvalid = computed(() => exchange.amount === undefined || exchange.amount === null || !exchange.rate || ((exchange.amount * exchange.rate) < 0));
+const isSendInvalid = computed(() => exchange.send === undefined || exchange.send === null || exchange.send < 0);
+const isReceiveInvalid = computed(() => exchange.send === undefined || exchange.send === null || !exchange.rate || ((exchange.send * exchange.rate) < 0));
 
 function handleSubmit() { }
 
@@ -64,7 +64,7 @@ function parseCleanFloat(str: string): number | undefined {
 function checkClearance(event: Event): void {
   const target = event.target as HTMLInputElement;
   if (target.value === "") {
-    exchange.amount = undefined;
+    exchange.send = undefined;
   }
 }
 
@@ -103,7 +103,7 @@ function handlePaste(event: ClipboardEvent): void {
   }
   else if (cleanNumbers === "") {
     target.value = "";
-    exchange.amount = undefined;
+    exchange.send = undefined;
     target.dispatchEvent(new Event("input"));
   }
 }
@@ -246,6 +246,7 @@ onMounted(() => {
           <div class="form-actions flex gap-2">
             <ButtonToggleFavorite :pair="{ base: exchange.base, quote: exchange.quote }" variant="icon-plus-label" />
             <ButtonLogConversion :receive />
+            <ButtonShareLink />
           </div>
         </div>
       </template>

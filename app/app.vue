@@ -5,6 +5,19 @@ await useAsyncData("initRates", async () => {
   await exchange.fetchRates();
   return true;
 });
+
+onMounted(() => {
+  exchange.syncFromHash();
+});
+
+const route = useRoute();
+
+watch(
+  () => route.hash,
+  () => {
+    exchange.syncFromHash();
+  },
+);
 </script>
 
 <template>

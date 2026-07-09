@@ -87,6 +87,11 @@ export default defineAppConfig({
           square: true,
           class: "h-12 w-12",
         },
+        {
+          size: "lg",
+          square: true,
+          class: "p-1.5",
+        },
       ],
     },
     formField: {
@@ -209,7 +214,6 @@ export default defineAppConfig({
       ],
     },
     kbd: {
-      base: "normal-case",
       variants: {
         size: {
           lg: "h-8 min-w-8 text-xl",

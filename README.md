@@ -46,6 +46,7 @@ In addition, the solution includes the following bonus features. Users are able 
 - [x] Switch between the dark-first design and a light alternative theme
 - [x] Hover on the rate chart to view the exact date and rate under the cursor
 - [x] Use keyboard shortcuts to focus the send and receive inputs, swap the send and receive currencies, and switch the chart time scale without the mouse
+- [x] Persist the active currency pair in the URL so a conversion can be shared
 
 ### Screenshots
 
@@ -136,6 +137,7 @@ Users are able to:
 - [x] Switch between the dark-first design and a light alternative theme
 - [x] Hover on the rate chart to view the exact date and rate under the cursor
 - [x] Use keyboard shortcuts to focus the send and receive inputs, swap the send and receive currencies, and switch the chart time scale without the mouse
+- [x] Persist the active currency pair in the URL so a conversion can be shared
 
 ### Continued Development
 
@@ -158,7 +160,7 @@ Specific additional features or enhancements I'd like to make in the future:
 - [x] Add a light theme so users can switch between the dark-first design and a light alternative
 - [x] Add a hover crosshair to the rate chart that shows the exact date and rate under the cursor
 - [x] Add keyboard shortcuts so power users can focus the search, swap currencies, and switch the chart range without the mouse
-- [ ] Persist the active currency pair in the URL so a conversion can be bookmarked or shared
+- [x] Persist the active currency pair in the URL so a conversion can be bookmarked or shared
 - [ ] Let users export their conversion log as a CSV file
 - [ ] Cache the last successful rates and fall back to them with an out-of-date notice when the API is unreachable
 - [ ] Build as a full-stack app with accounts so a user's favorites and conversion log sync across devices

@@ -12,12 +12,12 @@ const isSuccess = ref(false);
 
 const successTimeoutMs = 2000;
 
-const isInvalid = computed(() => isLoading.value || exchange.rate === undefined || exchange.amount === undefined || receive === "");
+const isInvalid = computed(() => exchange.rate === undefined || exchange.send === undefined || receive === "");
 
 async function handleClick() {
   isLoading.value = true;
 
-  exchange.addConversionLog(exchange.base, exchange.quote, exchange.rate, exchange.amount, Number(Number.parseFloat(receive.replace(/,/g, "")).toFixed(2)));
+  exchange.addConversionLog(exchange.base, exchange.quote, exchange.rate, exchange.send, Number(Number.parseFloat(receive.replace(/,/g, "")).toFixed(2)));
 
   isSuccess.value = true;
   setTimeout(() => {
@@ -29,12 +29,12 @@ async function handleClick() {
 
 <template>
   <UButton
-    :icon="isSuccess ? 'ion:checkmark' : undefined"
     :variant="isSuccess ? 'solid' : 'outline'"
     :label="isSuccess ? 'Logged' : 'Log Conversion'"
+    :icon="isSuccess ? 'ion:checkmark' : undefined"
     class="h-8 w-33 justify-center"
     :class="isSuccess ? 'text-inverted capitalize' : 'text-highlighted'"
-    :disabled="isInvalid"
+    :disabled="isInvalid || isLoading"
     @click="handleClick"
   />
 </template>

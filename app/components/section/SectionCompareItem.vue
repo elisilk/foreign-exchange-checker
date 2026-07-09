@@ -43,7 +43,7 @@ function handleItemClick() {
       </div>
 
       <div class="ms-auto grid gap-1.5 justify-items-end min-w-0">
-        <span class="text-xl text-highlighted truncate">{{ exchange.amount ? getExchangeAmount(rate, exchange.amount) : 'Error' }}</span>
+        <span class="text-xl text-highlighted truncate">{{ exchange.send ? getExchangeAmount(rate, exchange.send) : 'Error' }}</span>
         <span class="text-xs">@ {{ rate.rate }}</span>
       </div>
     </button>

@@ -42,7 +42,7 @@ const compareRates = computed<Rate[]>(() => {
 <template>
   <section class="compare-component" aria-label="Compare">
     <UEmpty
-      v-if="!exchange.amount"
+      v-if="!exchange.send"
       title="No comparison available"
       description="Enter an amount in SEND above to see what your money is worth in other currencies."
     />
@@ -59,7 +59,7 @@ const compareRates = computed<Rate[]>(() => {
     >
       <template #title>
         <span class="text-lg">Multi-currency</span>
-        <span>{{ exchange.amount.toLocaleString('en-US', {
+        <span>{{ exchange.send.toLocaleString('en-US', {
           maximumFractionDigits: 2,
         }) }} from {{ exchange.base }}</span>
       </template>
@@ -71,7 +71,7 @@ const compareRates = computed<Rate[]>(() => {
       >
         <SectionCompareItem
           v-for="rate in compareRates"
-          :key="`compare-item-${exchange.amount}-${rate.base}-${rate.quote}`"
+          :key="`compare-item-${exchange.send}-${rate.base}-${rate.quote}`"
           :rate
         />
       </TransitionGroup>

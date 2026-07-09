@@ -117,7 +117,7 @@ const displayKey = (k: string) => keyMap[k] || k;
     <UTooltip text="Color Mode" :kbds="['c']">
       <UColorModeButton
         square
-        size="sm"
+        size="lg"
         color="neutral"
         variant="ghost"
       />
@@ -130,7 +130,7 @@ const displayKey = (k: string) => keyMap[k] || k;
       <UTooltip text="Help" :kbds="['h']">
         <UButton
           square
-          size="sm"
+          size="lg"
           color="neutral"
           variant="ghost"
           icon="ion:help"

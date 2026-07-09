@@ -102,9 +102,9 @@ export const useExchangeStore = defineStore(
       return rateForPair(base.value, quote.value);
     });
 
-    /* Amount */
+    /* Amounts (send & receive) */
 
-    const amount = ref<number | undefined>();
+    const send = ref<number | undefined>();
 
     /* Ticker */
 
@@ -121,9 +121,13 @@ export const useExchangeStore = defineStore(
 
     const activeTab = ref("history");
 
+    const allowedTabs = new Set(["history", "compare", "favorites", "log"]);
+
     /* History */
 
     const historyTimeScale = ref("1M");
+
+    const allowedTimeScales = new Set(["1D", "1W", "1M", "3M", "1Y", "5Y"]);
 
     /* Favorites */
 
@@ -213,6 +217,133 @@ export const useExchangeStore = defineStore(
       }
     }
 
+    /* URL hash state  */
+
+    const activeUrlParams = ref<Set<string>>(new Set());
+
+    function normalizeAmountValue(amount: number, currency: string): number {
+      const zeroDecimalCurrencies = new Set(["JPY", "KRW", "ISK", "HUF", "IDR"]);
+
+      if (zeroDecimalCurrencies.has(currency)) {
+        return Math.round(amount);
+      }
+
+      return Number.parseFloat(amount.toFixed(2));
+    }
+
+    function formatAmountForUrl(amount: number, currency: string): string {
+      const zeroDecimalCurrencies = new Set(["JPY", "KRW", "ISK", "HUF", "IDR"]);
+
+      if (zeroDecimalCurrencies.has(currency)) {
+        return Math.round(amount).toString();
+      }
+
+      return amount.toFixed(2);
+    }
+
+    function syncFromHash() {
+      if (!import.meta.client)
+        return;
+
+      const { $router } = useNuxtApp();
+      const hashString = $router.currentRoute.value.hash.replace("#", "");
+
+      activeUrlParams.value.clear();
+
+      if (hashString) {
+        const params = new URLSearchParams(hashString);
+
+        for (const key of params.keys()) {
+          activeUrlParams.value.add(key.toLowerCase());
+        }
+
+        /* sync base currency */
+        const baseParam = params.get("base")?.toUpperCase();
+        if (baseParam && baseParam.length === 3 && availableCurrencies.value.includes(baseParam))
+          base.value = baseParam;
+
+        /* sync quote currency */
+        const quoteParam = params.get("quote")?.toUpperCase();
+        if (quoteParam && quoteParam.length === 3 && availableCurrencies.value.includes(quoteParam))
+          quote.value = quoteParam;
+
+        /* sync send amount */
+        const sendParam = params.get("send");
+        if (sendParam) {
+          const parsedSend = Number.parseFloat(sendParam);
+          // Ensure it is a valid number and greater than zero
+          if (!Number.isNaN(parsedSend) && parsedSend > 0)
+            send.value = normalizeAmountValue(parsedSend, base.value);
+        }
+
+        /* sync active tab */
+        const tabParam = params.get("tab")?.toLowerCase();
+        if (tabParam && allowedTabs.has(tabParam))
+          activeTab.value = tabParam;
+
+        /* sync history time scale */
+        const timeScaleParam = params.get("time")?.toUpperCase();
+        if (timeScaleParam && allowedTimeScales.has(timeScaleParam))
+          historyTimeScale.value = timeScaleParam;
+      }
+    }
+
+    if (import.meta.client) {
+      watch(
+        [base, quote, send, activeTab, historyTimeScale],
+        ([newBase, newQuote, newSend, newActiveTab, newHistoryTimeScale]) => {
+          const params = new URLSearchParams();
+
+          if (activeUrlParams.value.has("base")) {
+            params.set("base", newBase);
+          }
+          if (activeUrlParams.value.has("quote")) {
+            params.set("quote", newQuote);
+          }
+          if (activeUrlParams.value.has("send") && newSend !== undefined && newSend !== null && !Number.isNaN(newSend)) {
+            params.set("amount", formatAmountForUrl(newSend, newBase));
+          }
+          if (activeUrlParams.value.has("tab")) {
+            params.set("tab", newActiveTab);
+          }
+          if (activeUrlParams.value.has("time")) {
+            params.set("time", newHistoryTimeScale);
+          }
+
+          const newHash = params.toString() ? `#${params.toString()}` : "";
+
+          navigateTo(
+            { hash: newHash },
+            { replace: true },
+          );
+        },
+        { immediate: false },
+      );
+    }
+
+    function generateShareLink(): string {
+      if (!import.meta.client)
+        return "";
+
+      const baseUrl = window.location.origin + window.location.pathname;
+      const params = new URLSearchParams();
+
+      params.set("base", base.value);
+      params.set("quote", quote.value);
+
+      if (send.value !== undefined && send.value !== null && !Number.isNaN(send.value)) {
+        params.set("send", formatAmountForUrl(send.value, base.value));
+      }
+
+      params.set("tab", activeTab.value);
+
+      if (activeTab.value === "history") {
+        params.set("time", historyTimeScale.value);
+      }
+
+      return `${baseUrl}#${params.toString()}`;
+    }
+
     return {
       daysInPastToFetch,
       startDate,
@@ -232,7 +363,7 @@ export const useExchangeStore = defineStore(
       rateRelativeToEur,
       rateForPair,
       rate,
-      amount,
+      send,
       tickerPairs,
       activeTab,
       historyTimeScale,
@@ -252,6 +383,8 @@ export const useExchangeStore = defineStore(
       registerReceiveInput,
       focusSendInput,
       focusReceiveInput,
+      syncFromHash,
+      generateShareLink,
     };
   },
   {
@@ -260,7 +393,7 @@ export const useExchangeStore = defineStore(
       pick: [
         "base",
         "quote",
-        "amount",
+        "send",
         "activeTab",
         "historyTimeScale",
         "favorites",
