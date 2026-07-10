@@ -1,4 +1,5 @@
 <script setup lang="ts">
+const exchange = useExchangeStore();
 const colorMode = useColorMode();
 
 const isDark = computed({
@@ -10,111 +11,80 @@ const isDark = computed({
   },
 });
 
-const exchange = useExchangeStore();
-
-const timeScaleItems = computed(() => Object.keys(timeScaleOptions));
-const numTimeScaleItems = computed(() => timeScaleItems.value.length);
-
-function cycleHistoryTimeScale(direction: "forward" | "backward" = "forward") {
-  const currentTimeScaleIndex = timeScaleItems.value.findIndex(item => item === exchange.historyTimeScale);
-
-  let nextTimeScaleIndex = currentTimeScaleIndex + (direction === "forward" ? 1 : -1);
-
-  if (nextTimeScaleIndex >= numTimeScaleItems.value)
-    nextTimeScaleIndex = nextTimeScaleIndex % numTimeScaleItems.value;
-
-  if (nextTimeScaleIndex < 0)
-    nextTimeScaleIndex = numTimeScaleItems.value - 1;
-
-  exchange.historyTimeScale = timeScaleItems.value[nextTimeScaleIndex] || "";
-}
-
 const isHelpModalOpen = ref(false);
 const guardShortcut = (cb: () => void) => () => !isHelpModalOpen.value && cb();
 
-const shortcutItems = ref([
-  {
-    key: "s",
-    label: "Focus the send input",
+const shortcutItems = ref({
+  [joinKeys(APP_SHORTCUTS.focusSendInput.kbds)]: {
     handler: guardShortcut(() => exchange.focusSendInput()),
     usingInput: true,
   },
-  {
-    key: "r",
-    label: "Focus the receive input",
+  [joinKeys(APP_SHORTCUTS.focusReceiveInput.kbds)]: {
     handler: guardShortcut(() => exchange.focusReceiveInput()),
     usingInput: true,
   },
-  {
-    key: "x",
-    label: "Swap current currency pair",
+  [joinKeys(APP_SHORTCUTS.swapCurrencyPair.kbds)]: {
     handler: guardShortcut(() => exchange.swap()),
     usingInput: true,
   },
-  {
-    key: "f",
-    label: "Favorite/unfavorite current currency pair",
+  [joinKeys(APP_SHORTCUTS.toggleFavorite.kbds)]: {
     handler: guardShortcut(() => exchange.toggleFavorite()),
     usingInput: true,
   },
-  {
-    key: "t",
-    label: "Cycle through history time scales (forward)",
-    handler: guardShortcut(() => cycleHistoryTimeScale()),
+  [joinKeys(APP_SHORTCUTS.logConversion.kbds)]: {
+    handler: guardShortcut(() => exchange.logCurrentConversion()),
     usingInput: true,
   },
-  {
-    key: "shift_t",
-    label: "Cycle through history time scales (backward)",
-    handler: guardShortcut(() => cycleHistoryTimeScale("backward")),
+  [joinKeys(APP_SHORTCUTS.copyLink.kbds)]: {
+    handler: guardShortcut(() => exchange.copyShareLink()),
     usingInput: true,
   },
-  {
-    key: "c",
-    label: "Switch color modes",
+  [joinKeys(APP_SHORTCUTS.cycleTabsForward.kbds)]: {
+    handler: guardShortcut(() => exchange.cycleTabs()),
+    usingInput: true,
+  },
+  [joinKeys(APP_SHORTCUTS.cycleTabsBackward.kbds)]: {
+    handler: guardShortcut(() => exchange.cycleTabs("backward")),
+    usingInput: true,
+  },
+  [joinKeys(APP_SHORTCUTS.cycleHistoryTimeScaleForward.kbds)]: {
+    handler: guardShortcut(() => exchange.cycleHistoryTimeScale()),
+    usingInput: true,
+  },
+  [joinKeys(APP_SHORTCUTS.cycleHistoryTimeScaleBackward.kbds)]: {
+    handler: guardShortcut(() => exchange.cycleHistoryTimeScale("backward")),
+    usingInput: true,
+  },
+  [joinKeys(APP_SHORTCUTS.toggleColorMode.kbds)]: {
     handler: () => isDark.value = !isDark.value,
     usingInput: true,
   },
-  {
-    key: "h",
-    label: "Open/close this help window",
+  [joinKeys(APP_SHORTCUTS.toggleHelpModal.kbds)]: {
     handler: () => isHelpModalOpen.value = !isHelpModalOpen.value,
     usingInput: true,
   },
-]);
-
-type ShortcutItem
-  = {
-    handler: () => void;
-    usingInput?: boolean | string;
-  };
-
-const shortcutMap: Record<string, ShortcutItem> = {};
-
-shortcutItems.value.forEach((item) => {
-  shortcutMap[item.key] = {
-    handler: item.handler,
-    usingInput: item.usingInput,
-  };
 });
 
-defineShortcuts(shortcutMap);
+defineShortcuts(shortcutItems);
 
-const parseKeys = (shortcutString: string) => shortcutString.split("_");
-
-const keyMap: Record<string, string> = {
-  meta: "⌘",
-  ctrl: "Ctrl",
-  shift: "Shift",
-  alt: "Alt",
-};
-
-const displayKey = (k: string) => keyMap[k] || k;
+const shortcutItemsArray = computed(
+  () =>
+    Object.entries(APP_SHORTCUTS).map(
+      ([key, values]) =>
+        ({
+          key,
+          ...values,
+        }),
+    ),
+);
 </script>
 
 <template>
   <div class="flex items-center">
-    <UTooltip text="Color Mode" :kbds="['c']">
+    <UTooltip
+      :text="`${APP_SHORTCUTS.toggleColorMode.label}`"
+      :kbds="APP_SHORTCUTS.toggleColorMode.kbds"
+    >
       <UColorModeButton
         square
         size="lg"
@@ -127,13 +97,16 @@ const displayKey = (k: string) => keyMap[k] || k;
       v-model:open="isHelpModalOpen"
       title="FX Checker Help"
     >
-      <UTooltip text="Help" :kbds="['h']">
+      <UTooltip
+        :text="`${APP_SHORTCUTS.toggleHelpModal.label}`"
+        :kbds="APP_SHORTCUTS.toggleHelpModal.kbds"
+      >
         <UButton
           square
           size="lg"
           color="neutral"
           variant="ghost"
-          icon="ion:help"
+          icon="ion:help-circle-outline"
         />
       </UTooltip>
 
@@ -154,16 +127,16 @@ const displayKey = (k: string) => keyMap[k] || k;
             </h3>
             <ul class="space-y-2">
               <li
-                v-for="item in shortcutItems"
+                v-for="item in shortcutItemsArray"
                 :key="item.key"
-                class="flex items-center justify-between gap-4 py-2 px-2 border border-muted rounded-lg bg-elevated"
+                class="flex items-center justify-between gap-4 py-2 px-2 border border-muted rounded-lg bg-muted"
               >
                 <div class="text-pretty text-xs">
-                  {{ item.label }}
+                  {{ item.description }}
                 </div>
 
                 <div class="flex items-center gap-2">
-                  <template v-for="(singleKey, index) in parseKeys(item.key)" :key="index">
+                  <template v-for="(singleKey, index) in item.kbds" :key="index">
                     <span v-if="index > 0">+</span>
                     <UKbd
                       size="md"

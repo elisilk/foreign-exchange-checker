@@ -1,6 +1,8 @@
 export const useExchangeStore = defineStore(
   "exchange",
   () => {
+    const actionTimeoutMs = 2000;
+
     /* Dates (config) */
 
     const daysInPastToFetch = ref(5);
@@ -32,7 +34,7 @@ export const useExchangeStore = defineStore(
 
         if (!data || data.length === 0) {
           console.error(`No rates found for ${base.value} with provider ${provider.value}`);
-        // rates.value = [];
+          // rates.value = [];
         }
 
         rates.value = data;
@@ -106,6 +108,10 @@ export const useExchangeStore = defineStore(
 
     const send = ref<number | undefined>();
 
+    const isConversionValid = computed(() => rate.value !== undefined && Number.isFinite(rate.value) && send.value !== undefined && Number.isFinite(send.value));
+
+    const receive = computed<number | undefined>(() => isConversionValid.value ? rate.value! * send.value! : undefined);
+
     /* Ticker */
 
     const tickerPairs = ref<Pair[]>([
@@ -123,11 +129,51 @@ export const useExchangeStore = defineStore(
 
     const allowedTabs = new Set(["history", "compare", "favorites", "log"]);
 
+    const allowedTabsArray = Array.from(allowedTabs);
+    const numTabItems = allowedTabsArray.length;
+
+    function cycleTabs(direction: "forward" | "backward" = "forward") {
+      if (numTabItems === 0)
+        return;
+
+      const currentTabIndex = allowedTabsArray.findIndex(item => item === activeTab.value);
+
+      let nextTabIndex = currentTabIndex + (direction === "forward" ? 1 : -1);
+
+      if (nextTabIndex >= numTabItems)
+        nextTabIndex = nextTabIndex % numTabItems;
+
+      if (nextTabIndex < 0)
+        nextTabIndex = numTabItems - 1;
+
+      activeTab.value = allowedTabsArray[nextTabIndex] || "";
+    }
+
     /* History */
 
     const historyTimeScale = ref("1M");
 
     const allowedTimeScales = new Set(["1D", "1W", "1M", "3M", "1Y", "5Y"]);
+
+    const allowedTimeScalesArray = Array.from(allowedTimeScales);
+    const numTimeScaleItems = allowedTimeScalesArray.length;
+
+    function cycleHistoryTimeScale(direction: "forward" | "backward" = "forward") {
+      if (numTimeScaleItems === 0)
+        return;
+
+      const currentTimeScaleIndex = allowedTimeScalesArray.findIndex(item => item === historyTimeScale.value);
+
+      let nextTimeScaleIndex = currentTimeScaleIndex + (direction === "forward" ? 1 : -1);
+
+      if (nextTimeScaleIndex >= numTimeScaleItems)
+        nextTimeScaleIndex = nextTimeScaleIndex % numTimeScaleItems;
+
+      if (nextTimeScaleIndex < 0)
+        nextTimeScaleIndex = numTimeScaleItems - 1;
+
+      historyTimeScale.value = allowedTimeScalesArray[nextTimeScaleIndex] || "";
+    }
 
     /* Favorites */
 
@@ -190,6 +236,38 @@ export const useExchangeStore = defineStore(
 
     function deleteAllConversionLogs() {
       conversionLog.value.length = 0;
+    }
+
+    const isCurrentConversionLogging = ref(false);
+    let currentConversionLoggingTimeout: ReturnType<typeof setTimeout> | null = null;
+
+    function logCurrentConversion() {
+      if (isCurrentConversionLogging.value
+        || currentConversionLoggingTimeout
+        || receive.value === undefined) {
+        return;
+      }
+
+      isCurrentConversionLogging.value = true;
+
+      addConversionLog(
+        base.value,
+        quote.value,
+        rate.value,
+        send.value,
+        receive.value,
+      );
+
+      if (currentConversionLoggingTimeout)
+        clearTimeout(currentConversionLoggingTimeout);
+
+      currentConversionLoggingTimeout = setTimeout(
+        () => {
+          isCurrentConversionLogging.value = false;
+          currentConversionLoggingTimeout = null;
+        },
+        actionTimeoutMs,
+      );
     }
 
     /* Input Fields */
@@ -321,6 +399,8 @@ export const useExchangeStore = defineStore(
       );
     }
 
+    /* Share Links */
+
     function generateShareLink(): string {
       if (!import.meta.client)
         return "";
@@ -344,6 +424,34 @@ export const useExchangeStore = defineStore(
       return `${baseUrl}#${params.toString()}`;
     }
 
+    const isShareLinkCopied = ref(false);
+    let shareLinkCopyTimeout: ReturnType<typeof setTimeout> | null = null;
+
+    async function copyShareLink() {
+      if (!import.meta.client)
+        return;
+
+      const fullShareUrl = generateShareLink();
+
+      try {
+        await navigator.clipboard.writeText(fullShareUrl);
+        isShareLinkCopied.value = true;
+
+        if (shareLinkCopyTimeout)
+          clearTimeout(shareLinkCopyTimeout);
+
+        shareLinkCopyTimeout = setTimeout(
+          () => {
+            isShareLinkCopied.value = false;
+          },
+          actionTimeoutMs,
+        );
+      }
+      catch (err) {
+        console.error("Failed to copy share link: ", err);
+      }
+    }
+
     return {
       daysInPastToFetch,
       startDate,
@@ -364,9 +472,13 @@ export const useExchangeStore = defineStore(
       rateForPair,
       rate,
       send,
+      isConversionValid,
+      receive,
       tickerPairs,
       activeTab,
+      cycleTabs,
       historyTimeScale,
+      cycleHistoryTimeScale,
       favorites,
       doesFavoriteExist,
       addFavorite,
@@ -377,6 +489,8 @@ export const useExchangeStore = defineStore(
       addConversionLog,
       deleteConversionLog,
       deleteAllConversionLogs,
+      isCurrentConversionLogging,
+      logCurrentConversion,
       sendInputRef,
       receiveInputRef,
       registerSendInput,
@@ -384,7 +498,9 @@ export const useExchangeStore = defineStore(
       focusSendInput,
       focusReceiveInput,
       syncFromHash,
+      isShareLinkCopied,
       generateShareLink,
+      copyShareLink,
     };
   },
   {

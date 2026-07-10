@@ -140,8 +140,8 @@ const ratePercentChangeIsPositive = computed<boolean>(() => ratePercentChange.va
 
         <!-- time scale input -->
         <UTooltip
-          text="Cycle through Time Scales"
-          :kbds="['shift', 'T', 'or', 'T']"
+          :text="`${APP_SHORTCUTS.cycleHistoryTimeScaleForward.label}`"
+          :kbds="APP_SHORTCUTS.cycleHistoryTimeScaleForward.kbds"
         >
           <URadioGroup
             v-model="exchange.historyTimeScale"

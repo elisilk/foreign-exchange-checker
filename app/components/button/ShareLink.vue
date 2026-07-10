@@ -1,32 +1,23 @@
 <script setup lang="ts">
 const exchange = useExchangeStore();
-const isCopied = ref(false);
-
-async function handleShareLinkCopy() {
-  const fullShareUrl = exchange.generateShareLink();
-
-  try {
-    await navigator.clipboard.writeText(fullShareUrl);
-    isCopied.value = true;
-
-    setTimeout(() => {
-      isCopied.value = false;
-    }, 2000);
-  }
-  catch (err) {
-    console.error("Failed to copy share link: ", err);
-  }
-}
 </script>
 
 <template>
-  <UButton
-    :variant="isCopied ? 'solid' : 'outline'"
-    :label="isCopied ? 'Link Copied!' : 'Share View'"
-    :icon="isCopied ? 'ion:checkmark' : 'ion:share-outline'"
-    class="h-8 w-33 justify-center"
-    :class="isCopied ? 'text-inverted capitalize' : 'text-highlighted'"
-    :disabled="isCopied"
-    @click="handleShareLinkCopy"
-  />
+  <UTooltip
+    :text="`${APP_SHORTCUTS.copyLink.label}`"
+    :kbds="APP_SHORTCUTS.copyLink.kbds"
+  >
+    <UButton
+      :variant="exchange.isShareLinkCopied ? 'solid' : 'outline'"
+      :label="exchange.isShareLinkCopied ? 'Link Copied!' : 'Copy Link'"
+      :icon="exchange.isShareLinkCopied ? 'ion:checkmark' : 'ion:copy-outline'"
+      :class="exchange.isShareLinkCopied ? 'text-inverted capitalize' : 'text-highlighted'"
+      :disabled="exchange.isShareLinkCopied"
+      :ui="{
+        base: 'h-8 justify-center sm:w-34',
+        label: 'hidden sm:inline-block',
+      }"
+      @click="exchange.copyShareLink"
+    />
+  </UTooltip>
 </template>

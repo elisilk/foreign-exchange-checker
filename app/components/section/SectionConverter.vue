@@ -21,9 +21,10 @@ const send = computed<string>({
 
 const receive = computed<string>({
   get: () => {
-    if (!exchange.rate || exchange.send === null || exchange.send === undefined)
+    if (!exchange.isConversionValid || exchange.receive === undefined)
       return "";
-    const rawReceive = exchange.send * exchange.rate;
+
+    const rawReceive = exchange.receive;
 
     if (activeField.value === "receive") {
       return Number.isInteger(rawReceive)
@@ -168,31 +169,36 @@ onMounted(() => {
       <div class="grid gap-4 md:gap-6 md:grid-cols-[minmax(0,1fr)_48px_minmax(0,1fr)]">
         <!-- SEND Input Group -->
         <div class="bg-elevated rounded-2xl border border-muted p-4 md:p-5 flex gap-4 items-end justify-between overflow-scroll">
-          <UFormField
-            label="Send"
-            name="send"
+          <UTooltip
+            :text="`${APP_SHORTCUTS.focusSendInput.label}`"
+            :kbds="APP_SHORTCUTS.focusSendInput.kbds"
           >
-            <UInput
-              ref="send-input"
-              v-model="send"
+            <UFormField
+              label="Send"
               name="send"
-              size="xl"
-              variant="ghost"
-              color="neutral"
-              type="text"
-              inputmode="decimal"
-              step="0.01"
-              min="0"
-              placeholder="0"
-              :aria-invalid="isSendInvalid"
-              :disabled="!exchange.rate"
-              @focus="handleFocus($event, 'send')"
-              @blur="handleBlur"
-              @beforeinput="validateKey"
-              @paste="handlePaste"
-              @input="checkClearance"
-            />
-          </UFormField>
+            >
+              <UInput
+                ref="send-input"
+                v-model="send"
+                name="send"
+                size="xl"
+                variant="ghost"
+                color="neutral"
+                type="text"
+                inputmode="decimal"
+                step="0.01"
+                min="0"
+                placeholder="0"
+                :aria-invalid="isSendInvalid"
+                :disabled="!exchange.rate"
+                @focus="handleFocus($event, 'send')"
+                @blur="handleBlur"
+                @beforeinput="validateKey"
+                @paste="handlePaste"
+                @input="checkClearance"
+              />
+            </UFormField>
+          </UTooltip>
 
           <SectionConverterCurrencyPicker
             id="base"
@@ -204,31 +210,36 @@ onMounted(() => {
 
         <!-- RECEIVE Input Group -->
         <div class="bg-elevated rounded-2xl border border-muted p-4 md:p-5 flex gap-4 items-end justify-between overflow-scroll">
-          <UFormField
-            label="Receive"
-            name="receive"
+          <UTooltip
+            :text="`${APP_SHORTCUTS.focusReceiveInput.label}`"
+            :kbds="APP_SHORTCUTS.focusReceiveInput.kbds"
           >
-            <UInput
-              ref="receive-input"
-              v-model="receive"
+            <UFormField
+              label="Receive"
               name="receive"
-              size="xl"
-              variant="ghost"
-              color="primary"
-              type="text"
-              inputmode="decimal"
-              step="0.01"
-              min="0"
-              :aria-invalid="isReceiveInvalid"
-              :placeholder="exchange.rate ? '0' : 'Loading rate...'"
-              :disabled="!exchange.rate"
-              @focus="handleFocus($event, 'receive')"
-              @blur="handleBlur"
-              @beforeinput="validateKey"
-              @paste="handlePaste"
-              @input="checkClearance"
-            />
-          </UFormField>
+            >
+              <UInput
+                ref="receive-input"
+                v-model="receive"
+                name="receive"
+                size="xl"
+                variant="ghost"
+                color="primary"
+                type="text"
+                inputmode="decimal"
+                step="0.01"
+                min="0"
+                :aria-invalid="isReceiveInvalid"
+                :placeholder="exchange.rate ? '0' : 'Loading rate...'"
+                :disabled="!exchange.rate"
+                @focus="handleFocus($event, 'receive')"
+                @blur="handleBlur"
+                @beforeinput="validateKey"
+                @paste="handlePaste"
+                @input="checkClearance"
+              />
+            </UFormField>
+          </UTooltip>
 
           <SectionConverterCurrencyPicker
             id="quote"
@@ -245,7 +256,7 @@ onMounted(() => {
           <!-- Form Actions Group -->
           <div class="form-actions flex gap-2">
             <ButtonToggleFavorite :pair="{ base: exchange.base, quote: exchange.quote }" variant="icon-plus-label" />
-            <ButtonLogConversion :receive />
+            <ButtonLogConversion />
             <ButtonShareLink />
           </div>
         </div>

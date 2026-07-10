@@ -19,8 +19,8 @@ function toggleFavorite() {
 
 <template>
   <UTooltip
-    :text="`${isFavorited ? 'Unfavorite' : 'Favorite'} this Pair`"
-    :kbds="['f']"
+    :text="`${isFavorited ? 'Unfavorite' : 'Favorite'} this pair`"
+    :kbds="APP_SHORTCUTS.toggleFavorite.kbds"
   >
     <UButton
       :class="[includeLabel ? 'h-8 w-29.25' : '']"
