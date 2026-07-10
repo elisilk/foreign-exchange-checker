@@ -270,6 +270,55 @@ export const useExchangeStore = defineStore(
       );
     }
 
+    const csvHeaders: (keyof Conversion)[] = [
+      "datetime",
+      "base",
+      "quote",
+      "rate",
+      "send",
+      "receive",
+    ];
+
+    function downloadConversionLog() {
+      if (conversionLog.value.length === 0)
+        return;
+
+      const headerRow = csvHeaders.join(",");
+
+      const rows = conversionLog.value.map(row =>
+        csvHeaders
+          .map((key) => {
+            const val = row[key];
+
+            if (val instanceof Date) {
+              return `"${val.toISOString()}"`;
+            }
+
+            if (typeof val === "string") {
+              return `"${val.replace(/"/g, "\"\"")}"`;
+            }
+
+            return val;
+          })
+          .join(","),
+      );
+
+      const csvContent = [headerRow, ...rows].join("\n");
+
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", "exported-data.csv");
+      link.style.visibility = "hidden";
+
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url); // Clean up memory
+    }
+
     /* Input Fields */
 
     const sendInputRef = ref<HTMLInputElement | null>(null);
@@ -491,6 +540,7 @@ export const useExchangeStore = defineStore(
       deleteAllConversionLogs,
       isCurrentConversionLogging,
       logCurrentConversion,
+      downloadConversionLog,
       sendInputRef,
       receiveInputRef,
       registerSendInput,

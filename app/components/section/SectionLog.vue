@@ -18,6 +18,7 @@ const conversionLogSorted = computed<Conversion[]>(() => [...exchange.conversion
     >
       <template #description>
         <span>{{ exchange.conversionLog.length }} logged</span>
+        <ButtonDownloadLog />
         <ButtonClearAllLogs />
       </template>
 
