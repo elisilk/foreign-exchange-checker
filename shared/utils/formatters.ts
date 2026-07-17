@@ -15,7 +15,7 @@ export function formatExchangeRate(rateBig: Big, locale = "en-US"): string {
   ).format(rateFloat);
 }
 
-export function formatCurrency(amount: string | number, currencyCode: CurrencyCode, locale = "en-US"): string {
+export function formatCurrency(amount: string | number, currencyCode: CurrencyCode = "EUR", locale = "en-US"): string {
   const numericValue = typeof amount === "string" ? Number.parseFloat(amount) : amount;
   if (Number.isNaN(numericValue))
     return "";
