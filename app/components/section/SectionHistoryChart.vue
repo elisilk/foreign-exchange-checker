@@ -1,6 +1,6 @@
 <script setup lang="ts">
 type Props = {
-  data: Rate[];
+  data: ApiResponseRate[];
 };
 
 const { data } = defineProps<Props>();

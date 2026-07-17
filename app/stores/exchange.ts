@@ -455,13 +455,25 @@ export const useExchangeStore = defineStore(
     }
 
     function focusSendInput() {
-      if (sendInputRef.value) {
+      if (!sendInputRef.value)
+        return;
+
+      if (document.activeElement === sendInputRef.value) {
+        sendInputRef.value.blur();
+      }
+      else {
         sendInputRef.value.focus();
       }
     }
 
     function focusReceiveInput() {
-      if (receiveInputRef.value) {
+      if (!receiveInputRef.value)
+        return;
+
+      if (document.activeElement === receiveInputRef.value) {
+        receiveInputRef.value.blur();
+      }
+      else {
         receiveInputRef.value.focus();
       }
     }
