@@ -126,7 +126,7 @@ function handleBlur(): void {
   activeField.value = null;
 }
 
-const announcerText = computed(() => `${exchange.sendAmount} ${exchange.sendCurrency} equals ${exchange.receiveAmount} ${exchange.receiveCurrency}.`);
+const announcerText = computed(() => `${exchange.sendAmount} ${exchange.sendCurrency} can be exchanged for ${exchange.receiveAmount} ${exchange.receiveCurrency}.`);
 
 const sendInputComponentRef = useTemplateRef("send-input");
 const receiveInputComponentRef = useTemplateRef("receive-input");

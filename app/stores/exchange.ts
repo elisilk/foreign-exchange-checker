@@ -708,7 +708,6 @@ export const useExchangeStore = defineStore(
         "sendCurrency",
         "receiveCurrency",
         "sendAmount",
-        "receiveAmount",
         "activeTab",
         "historyTimeScale",
         "favorites",
