@@ -48,6 +48,7 @@ export const useExchangeStore = defineStore(
         console.error("Fetch rates failed:", error);
       }
       finally {
+        triggerExchangeCalculation();
         isLoadingRates.value = false;
       }
     }
@@ -141,7 +142,7 @@ export const useExchangeStore = defineStore(
     /* Amounts (send & receive) */
 
     const sendAmount = ref("1000");
-    const receiveAmount = ref("853.02");
+    const receiveAmount = ref("");
 
     const lastModified = ref<"send" | "receive">("send");
 
