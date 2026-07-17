@@ -1,53 +1,63 @@
+import Big from "big.js";
+
 export const useExchangeStore = defineStore(
   "exchange",
   () => {
+    /* Timeout (config) */
+
     const actionTimeoutMs = 2000;
-
-    /* Dates (config) */
-
-    const daysInPastToFetch = ref(5);
-    const startDate = computed(() => getRelativeDate(daysInPastToFetch.value));
 
     /* Currency + Provider (config) */
 
+    const locale = ref("en-US");
     const provider = ref("ECB");
-    const referenceCurrency = ref("EUR");
+    const referenceCurrency = ref<CurrencyCode>("EUR");
 
-    /* Base/Quote Pair */
+    /* Dates (config) */
 
-    const base = ref<CurrencyCode>("USD");
-    const quote = ref<CurrencyCode>("EUR");
-
-    function swap() {
-      [base.value, quote.value] = [quote.value, base.value];
-    }
+    const daysInPastToFetch = 5;
+    const startDate = computed(() => getRelativeDate(daysInPastToFetch));
 
     /* Rates as Time Series (today through 5 days ago) */
 
-    const rates = ref<Rate[]>([]);
+    const rates = ref<SanitizedRate[]>([]);
+    const isLoadingRates = ref(false);
 
     async function fetchRates() {
+      isLoadingRates.value = true;
+
       try {
-        const data = await $fetch<Rate[]>(
+        const response = await $fetch<ApiResponseRate[]>(
           `https://api.frankfurter.dev/v2/rates?&providers=${provider.value}&base=${referenceCurrency.value}&from=${startDate.value}`,
         );
 
-        if (!data || data.length === 0) {
-          console.error(`No rates found for ${base.value} with provider ${provider.value}`);
-          // rates.value = [];
+        if (!response || response.length === 0) {
+          console.error(`No rates found for ${referenceCurrency.value} with provider ${provider.value}`);
         }
 
-        rates.value = data;
+        rates.value = response.map(
+          rate => ({
+            date: rate.date,
+            base: rate.base,
+            quote: rate.quote,
+            rate: rate.rate.toString(),
+          }),
+        );
       }
       catch (error) {
         console.error("Fetch rates failed:", error);
+      }
+      finally {
+        isLoadingRates.value = false;
       }
     }
 
     /* Dates (derived) */
 
     const availableDates = computed<string[]>(() => rates.value ? [...new Set(rates.value.map(rate => rate.date))].sort((a, b) => a < b ? 1 : -1) : []);
+
     const latestDate = computed<string | undefined>(() => availableDates.value.length > 0 ? availableDates.value[0] : undefined);
+
     const previousDate = computed<string | undefined>(() => availableDates.value.length > 1 ? availableDates.value[1] : undefined);
 
     /* Currencies */
@@ -65,52 +75,156 @@ export const useExchangeStore = defineStore(
       return uniqueCurrencies.sort((a, b) => a < b ? -1 : 1);
     });
 
+    /* Currencies (send & receive) */
+
+    const sendCurrency = ref<CurrencyCode>("USD");
+    const receiveCurrency = ref<CurrencyCode>("EUR");
+
     /* Rates (convenvience filters by date) */
 
-    const latestRates = computed<Rate[]>(() => rates.value.filter(rate => rate.date === latestDate.value));
-    const previousRates = computed<Rate[]>(() => rates.value.filter(rate => rate.date === previousDate.value));
+    const latestRates = computed<SanitizedRate[]>(() => rates.value.filter(rate => rate.date === latestDate.value));
+
+    const previousRates = computed<SanitizedRate[]>(() => rates.value.filter(rate => rate.date === previousDate.value));
 
     /* Rate actions */
 
-    function rateRelativeToEur(quote: string, date: "latest" | "previous" = "latest"): number | undefined {
+    function getRateRelativeToReference(quote: string, date: "latest" | "previous" = "latest"): Big {
       if (quote === referenceCurrency.value)
-        return 1;
+        return new Big(1);
 
-      if (date === "previous")
-        return rates.value.find(item => item.quote === quote && item.date === previousDate.value)?.rate;
+      let relativeRate;
 
-      return rates.value.find(item => item.quote === quote && item.date === latestDate.value)?.rate;
+      if (date === "previous") {
+        relativeRate = previousRates.value.find(item => item.quote === quote);
+      }
+      else {
+        relativeRate = latestRates.value.find(item => item.quote === quote);
+      }
+
+      if (!relativeRate)
+        return new Big(1);
+
+      return new Big(relativeRate.rate);
     }
 
-    function rateForPair(base: string, quote: string, date: "latest" | "previous" = "latest"): number | undefined {
-      const rateOfEurToQuote = rateRelativeToEur(quote, date);
-      if (rateOfEurToQuote === undefined)
-        return undefined;
-      if (base === referenceCurrency.value)
-        return rateOfEurToQuote;
-
-      const rateOfEurToBase = rateRelativeToEur(base, date);
-      if (rateOfEurToBase === undefined)
-        return undefined;
-      if (quote === referenceCurrency.value)
-        return Number((1 / rateOfEurToBase).toPrecision(5));
-
-      return Number((rateOfEurToQuote / rateOfEurToBase).toPrecision(5));
+    function getPairRate(base: string, quote: string, date: "latest" | "previous" = "latest"): Big {
+      return getRateRelativeToReference(quote, date)
+        .div(getRateRelativeToReference(base, date));
     }
 
-    /* Rate */
+    function getPairRateAsString(base: string, quote: string, date: "latest" | "previous" = "latest"): string {
+      return formatExchangeRate(getPairRate(base, quote, date));
+    }
 
-    const rate = computed<number | undefined>(() => {
-      return rateForPair(base.value, quote.value);
+    function getPairRatePercentChange(base: string, quote: string) {
+      const latest = new Big(getPairRate(base, quote));
+      const previous = new Big(getPairRate(base, quote, "previous"));
+
+      const delta = latest.minus(previous);
+      const change = delta.div(previous).times(100);
+      const isPositive = change.gte(0);
+
+      const formattedPercent = `${(isPositive ? "+" : "") + change.toFixed(2)}%`;
+
+      return {
+        percentChange: formattedPercent,
+        isPositive,
+      };
+    }
+
+    /* Rate (for the current send/receive pair) */
+
+    const rate = computed(() => {
+      return getPairRate(sendCurrency.value, receiveCurrency.value);
     });
 
     /* Amounts (send & receive) */
 
-    const send = ref<number | undefined>();
+    const sendAmount = ref("1000");
+    const receiveAmount = ref("853.02");
 
-    const isConversionValid = computed(() => rate.value !== undefined && Number.isFinite(rate.value) && send.value !== undefined && Number.isFinite(send.value));
+    const lastModified = ref<"send" | "receive">("send");
 
-    const receive = computed<number | undefined>(() => isConversionValid.value ? rate.value! * send.value! : undefined);
+    function calculateExchangeAmount(rate: string | Big, sendAmount: string, receiveCurrency: CurrencyCode): string {
+      const sendAmountClean = new Big(sanitizeNumericString(sendAmount));
+
+      const rateClean = typeof rate === "string" ? new Big(sanitizeNumericString(rate)) : rate;
+
+      const calculated = sendAmountClean.times(rateClean);
+
+      return formatCurrency(calculated.toFixed(getCurrencyPrecision(receiveCurrency, locale.value)), receiveCurrency, locale.value);
+    }
+
+    function triggerExchangeCalculation() {
+      if (rates.value.length === 0)
+        return;
+
+      try {
+        if (lastModified.value === "send") {
+          if (sendAmount.value === undefined || sendAmount.value === "") {
+            receiveAmount.value = "";
+            return;
+          }
+
+          if (Number.isNaN(Number(sendAmount.value)))
+            return;
+
+          const cleanSend = sanitizeNumericString(sendAmount.value);
+
+          const sendBig = new Big(cleanSend);
+          const calculated = sendBig.times(rate.value);
+
+          receiveAmount.value = calculated.toFixed(getCurrencyPrecision(receiveCurrency.value, locale.value));
+        }
+        else {
+          if (receiveAmount.value === undefined || receiveAmount.value === "") {
+            sendAmount.value = "";
+            return;
+          }
+
+          if (Number.isNaN(Number(receiveAmount.value)))
+            return;
+
+          const cleanReceive = sanitizeNumericString(receiveAmount.value);
+
+          const receiveBig = new Big(cleanReceive);
+          const calculated = receiveBig.div(rate.value);
+
+          sendAmount.value = calculated.toFixed(getCurrencyPrecision(sendCurrency.value, locale.value));
+        }
+      }
+      catch (error) {
+        console.warn("Calculation error handled gracefully", error);
+      }
+    }
+
+    watch(
+      [sendCurrency, receiveCurrency],
+      () => {
+        triggerExchangeCalculation();
+      },
+    );
+
+    function setSendAmount(val: string) {
+      sendAmount.value = val;
+      lastModified.value = "send";
+      triggerExchangeCalculation();
+    }
+
+    function setReceiveAmount(val: string) {
+      receiveAmount.value = val;
+      lastModified.value = "receive";
+      triggerExchangeCalculation();
+    }
+
+    /* Swap Currencies */
+
+    function swapCurrencies() {
+      const tempCurrency = sendCurrency.value;
+      sendCurrency.value = receiveCurrency.value;
+      receiveCurrency.value = tempCurrency;
+      triggerExchangeCalculation();
+    }
 
     /* Ticker */
 
@@ -199,7 +313,7 @@ export const useExchangeStore = defineStore(
       favorites.value.splice(index, 1);
     }
 
-    function toggleFavorite(baseCurrency: string = base.value, quoteCurrency: string = quote.value) {
+    function toggleFavorite(baseCurrency: string = sendCurrency.value, quoteCurrency: string = receiveCurrency.value) {
       if (doesFavoriteExist(baseCurrency, quoteCurrency)) {
         deleteFavorite(baseCurrency, quoteCurrency);
       }
@@ -212,19 +326,30 @@ export const useExchangeStore = defineStore(
 
     const conversionLog = ref<Conversion[]>([]);
 
+    const isConversionValid = computed(() =>
+      sendAmount.value && !Number.isNaN(Number(sendAmount.value)) && receiveAmount.value && !Number.isNaN(Number(receiveAmount.value)));
+
     function doesConversionLogExist(datetime: string | number | Date) {
       return conversionLog.value.some(log => log.datetime === datetime);
     }
 
-    function addConversionLog(base: string, quote: string, rate: number | undefined, send: number | undefined, receive: number | "" | undefined) {
-      if (rate === undefined || send === undefined || receive === "" || receive === undefined)
-        return;
-
+    function addConversionLog(sendCurrency: string, receiveCurrency: string, sendAmount: string, receiveAmount: string, exchangeRate: string) {
       const datetime = new Date().toISOString();
 
       if (doesConversionLogExist(datetime))
         return;
-      conversionLog.value.unshift({ datetime, base, quote, rate, send, receive });
+
+      conversionLog.value.unshift(
+        {
+          id: crypto.randomUUID(),
+          datetime,
+          sendCurrency,
+          receiveCurrency,
+          sendAmount,
+          receiveAmount,
+          exchangeRate,
+        },
+      );
     }
 
     function deleteConversionLog(datetime: string | number | Date) {
@@ -242,20 +367,17 @@ export const useExchangeStore = defineStore(
     let currentConversionLoggingTimeout: ReturnType<typeof setTimeout> | null = null;
 
     function logCurrentConversion() {
-      if (isCurrentConversionLogging.value
-        || currentConversionLoggingTimeout
-        || receive.value === undefined) {
+      if (isCurrentConversionLogging.value || currentConversionLoggingTimeout)
         return;
-      }
 
       isCurrentConversionLogging.value = true;
 
       addConversionLog(
-        base.value,
-        quote.value,
-        rate.value,
-        send.value,
-        receive.value,
+        sendCurrency.value,
+        receiveCurrency.value,
+        sendAmount.value,
+        receiveAmount.value,
+        formatExchangeRate(rate.value),
       );
 
       if (currentConversionLoggingTimeout)
@@ -272,11 +394,11 @@ export const useExchangeStore = defineStore(
 
     const csvHeaders: (keyof Conversion)[] = [
       "datetime",
-      "base",
-      "quote",
-      "rate",
-      "send",
-      "receive",
+      "sendCurrency",
+      "sendAmount",
+      "receiveCurrency",
+      "receiveAmount",
+      "exchangeRate",
     ];
 
     function downloadConversionLog() {
@@ -348,26 +470,6 @@ export const useExchangeStore = defineStore(
 
     const activeUrlParams = ref<Set<string>>(new Set());
 
-    function normalizeAmountValue(amount: number, currency: string): number {
-      const zeroDecimalCurrencies = new Set(["JPY", "KRW", "ISK", "HUF", "IDR"]);
-
-      if (zeroDecimalCurrencies.has(currency)) {
-        return Math.round(amount);
-      }
-
-      return Number.parseFloat(amount.toFixed(2));
-    }
-
-    function formatAmountForUrl(amount: number, currency: string): string {
-      const zeroDecimalCurrencies = new Set(["JPY", "KRW", "ISK", "HUF", "IDR"]);
-
-      if (zeroDecimalCurrencies.has(currency)) {
-        return Math.round(amount).toString();
-      }
-
-      return amount.toFixed(2);
-    }
-
     function syncFromHash() {
       if (!import.meta.client)
         return;
@@ -384,23 +486,38 @@ export const useExchangeStore = defineStore(
           activeUrlParams.value.add(key.toLowerCase());
         }
 
-        /* sync base currency */
-        const baseParam = params.get("base")?.toUpperCase();
-        if (baseParam && baseParam.length === 3 && availableCurrencies.value.includes(baseParam))
-          base.value = baseParam;
+        /* sync send (base) currency */
+        const fromParam = params.get("from")?.toUpperCase();
+        if (fromParam && fromParam.length === 3 && availableCurrencies.value.includes(fromParam))
+          sendCurrency.value = fromParam;
 
-        /* sync quote currency */
-        const quoteParam = params.get("quote")?.toUpperCase();
-        if (quoteParam && quoteParam.length === 3 && availableCurrencies.value.includes(quoteParam))
-          quote.value = quoteParam;
+        /* sync receive (quote) currency */
+        const toParam = params.get("to")?.toUpperCase();
+        if (toParam && toParam.length === 3 && availableCurrencies.value.includes(toParam))
+          receiveCurrency.value = toParam;
 
         /* sync send amount */
-        const sendParam = params.get("send");
-        if (sendParam) {
-          const parsedSend = Number.parseFloat(sendParam);
-          // Ensure it is a valid number and greater than zero
-          if (!Number.isNaN(parsedSend) && parsedSend > 0)
-            send.value = normalizeAmountValue(parsedSend, base.value);
+        const amountParam = params.get("amount");
+        if (amountParam) {
+          const validNumericRegex = /^(?:\d+(?:\.\d+)?|\.\d+)$/;
+
+          if (!validNumericRegex.test(amountParam)) {
+            console.warn("Malformed amount in URL hash. Ignoring parameter.");
+          }
+          else {
+            try {
+              const testBig = new Big(amountParam);
+              if (testBig.lte(0)) {
+                console.warn("Amount from URL must be greater than zero.");
+              }
+              else {
+                setSendAmount(amountParam);
+              }
+            }
+            catch (error) {
+              console.error("Big.js parsing failed on verified string", error);
+            }
+          }
         }
 
         /* sync active tab */
@@ -417,18 +534,18 @@ export const useExchangeStore = defineStore(
 
     if (import.meta.client) {
       watch(
-        [base, quote, send, activeTab, historyTimeScale],
-        ([newBase, newQuote, newSend, newActiveTab, newHistoryTimeScale]) => {
+        [sendCurrency, receiveCurrency, sendAmount, activeTab, historyTimeScale],
+        ([newSendCurrency, newReceiveCurrency, newSendAmount, newActiveTab, newHistoryTimeScale]) => {
           const params = new URLSearchParams();
 
-          if (activeUrlParams.value.has("base")) {
-            params.set("base", newBase);
+          if (activeUrlParams.value.has("from")) {
+            params.set("from", newSendCurrency);
           }
-          if (activeUrlParams.value.has("quote")) {
-            params.set("quote", newQuote);
+          if (activeUrlParams.value.has("to")) {
+            params.set("to", newReceiveCurrency);
           }
-          if (activeUrlParams.value.has("send") && newSend !== undefined && newSend !== null && !Number.isNaN(newSend)) {
-            params.set("amount", formatAmountForUrl(newSend, newBase));
+          if (activeUrlParams.value.has("amount")) {
+            params.set("amount", newSendAmount);
           }
           if (activeUrlParams.value.has("tab")) {
             params.set("tab", newActiveTab);
@@ -457,11 +574,11 @@ export const useExchangeStore = defineStore(
       const baseUrl = window.location.origin + window.location.pathname;
       const params = new URLSearchParams();
 
-      params.set("base", base.value);
-      params.set("quote", quote.value);
+      params.set("from", sendCurrency.value);
+      params.set("to", receiveCurrency.value);
 
-      if (send.value !== undefined && send.value !== null && !Number.isNaN(send.value)) {
-        params.set("send", formatAmountForUrl(send.value, base.value));
+      if (sendAmount.value !== undefined && sendAmount.value !== null) {
+        params.set("amount", sendAmount.value);
       }
 
       params.set("tab", activeTab.value);
@@ -502,38 +619,54 @@ export const useExchangeStore = defineStore(
     }
 
     return {
-      daysInPastToFetch,
-      startDate,
+      locale,
       provider,
       referenceCurrency,
-      base,
-      quote,
-      swap,
+      startDate,
+
       rates,
+      isLoadingRates,
       fetchRates,
+
       availableDates,
       latestDate,
       previousDate,
+
       availableCurrencies,
+      sendCurrency,
+      receiveCurrency,
+
       latestRates,
       previousRates,
-      rateRelativeToEur,
-      rateForPair,
+      getRateRelativeToReference,
+      getPairRate,
+      getPairRateAsString,
+      getPairRatePercentChange,
       rate,
-      send,
-      isConversionValid,
-      receive,
+
+      sendAmount,
+      receiveAmount,
+      calculateExchangeAmount,
+      setSendAmount,
+      setReceiveAmount,
+      swapCurrencies,
+
       tickerPairs,
+
       activeTab,
       cycleTabs,
+
       historyTimeScale,
       cycleHistoryTimeScale,
+
       favorites,
       doesFavoriteExist,
       addFavorite,
       deleteFavorite,
       toggleFavorite,
+
       conversionLog,
+      isConversionValid,
       doesConversionLogExist,
       addConversionLog,
       deleteConversionLog,
@@ -541,12 +674,14 @@ export const useExchangeStore = defineStore(
       isCurrentConversionLogging,
       logCurrentConversion,
       downloadConversionLog,
+
       sendInputRef,
       receiveInputRef,
       registerSendInput,
       registerReceiveInput,
       focusSendInput,
       focusReceiveInput,
+
       syncFromHash,
       isShareLinkCopied,
       generateShareLink,
@@ -557,9 +692,10 @@ export const useExchangeStore = defineStore(
     persist: {
       storage: piniaPluginPersistedstate.cookies(),
       pick: [
-        "base",
-        "quote",
-        "send",
+        "sendCurrency",
+        "receiveCurrency",
+        "sendAmount",
+        "receiveAmount",
         "activeTab",
         "historyTimeScale",
         "favorites",

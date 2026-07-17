@@ -13,7 +13,7 @@ const exchange = useExchangeStore();
       size="md"
       square
       aria-label="Swap"
-      @click="exchange.swap()"
+      @click="exchange.swapCurrencies()"
     >
       <template #leading>
         <UIcon name="ion:swap-vertical" class="text-highlighted shrink-0 size-5 md:hidden" />

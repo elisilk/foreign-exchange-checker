@@ -1,9 +1,9 @@
 <script setup lang="ts">
-type Props = {
-  rate: Rate;
-};
-
 const { rate } = defineProps<Props>();
+
+type Props = {
+  rate: SanitizedRate;
+};
 
 const exchange = useExchangeStore();
 
@@ -14,14 +14,8 @@ function getCurrencyName(isoCode: string): string | undefined {
   return currency.name;
 }
 
-function getExchangeAmount(pair: Rate, amount: number): string {
-  if (pair.rate === undefined)
-    return "Error";
-  return decimalFormatter.format(amount * pair.rate);
-}
-
 function handleItemClick() {
-  exchange.quote = rate.quote;
+  exchange.receiveCurrency = rate.quote;
   scrollToTop();
 }
 </script>
@@ -43,7 +37,7 @@ function handleItemClick() {
       </div>
 
       <div class="ms-auto grid gap-1.5 justify-items-end min-w-0">
-        <span class="text-xl text-highlighted truncate">{{ exchange.send ? getExchangeAmount(rate, exchange.send) : 'Error' }}</span>
+        <span class="text-xl text-highlighted truncate" data-allow-mismatch>{{ exchange.calculateExchangeAmount(rate.rate, exchange.sendAmount, rate.quote) }}</span>
         <span class="text-xs">@ {{ rate.rate }}</span>
       </div>
     </button>

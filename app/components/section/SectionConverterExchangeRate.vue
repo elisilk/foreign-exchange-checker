@@ -7,6 +7,6 @@ const exchange = useExchangeStore();
     No rate available
   </div>
   <div v-else>
-    1 {{ exchange.base }} = {{ exchange.rate }} {{ exchange.quote }}
+    1 {{ exchange.sendCurrency }} = {{ formatExchangeRate(exchange.rate) }} {{ exchange.receiveCurrency }}
   </div>
 </template>

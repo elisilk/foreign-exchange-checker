@@ -1,73 +1,74 @@
 <script setup lang="ts">
 const exchange = useExchangeStore();
 
-const activeField = ref<"send" | "receive" | null>(null);
-
-const send = computed<string>({
-  get: () => {
-    if (exchange.send === undefined || exchange.send === null)
-      return "";
-    if (activeField.value === "send") {
-      return Number.isInteger(exchange.send)
-        ? exchange.send.toString()
-        : exchange.send.toFixed(2);
-    }
-    return formatWithCommas(exchange.send);
-  },
-  set: (val) => {
-    exchange.send = val === "" ? undefined : parseCleanFloat(val);
-  },
-});
-
-const receive = computed<string>({
-  get: () => {
-    if (!exchange.isConversionValid || exchange.receive === undefined)
-      return "";
-
-    const rawReceive = exchange.receive;
-
-    if (activeField.value === "receive") {
-      return Number.isInteger(rawReceive)
-        ? rawReceive.toString()
-        : rawReceive.toFixed(2);
-    }
-    return formatWithCommas(rawReceive);
-  },
-  set: (val) => {
-    if (val === "" || !exchange.rate || exchange.rate === 0) {
-      exchange.send = undefined;
-      return;
-    }
-    const cleanNum = parseCleanFloat(val);
-    exchange.send = cleanNum !== undefined ? cleanNum / exchange.rate : undefined;
-  },
-});
-
-// Validation States
-const isSendInvalid = computed(() => exchange.send === undefined || exchange.send === null || exchange.send < 0);
-const isReceiveInvalid = computed(() => exchange.send === undefined || exchange.send === null || !exchange.rate || ((exchange.send * exchange.rate) < 0));
-
-function handleSubmit() { }
-
-function formatWithCommas(num: number | null | undefined): string {
-  if (num === null || num === undefined || Number.isNaN(num))
-    return "";
-
-  return Number.isInteger(num) ? integerFormatter.format(num) : decimalFormatter.format(num);
-}
-
-function parseCleanFloat(str: string): number | undefined {
-  const clean = str.replace(/,/g, "");
-  const parsed = Number.parseFloat(clean);
-  return Number.isNaN(parsed) ? undefined : parsed;
-}
-
-function checkClearance(event: Event): void {
-  const target = event.target as HTMLInputElement;
-  if (target.value === "") {
-    exchange.send = undefined;
+function handleSendInput(e: Event) {
+  const target = e.target as HTMLInputElement;
+  if (target) {
+    exchange.setSendAmount(target.value);
   }
 }
+
+function handleReceiveInput(e: Event) {
+  const target = e.target as HTMLInputElement;
+  if (target) {
+    exchange.setReceiveAmount(target.value);
+  }
+}
+
+const activeField = ref<"send" | "receive" | null>(null);
+
+// const send = computed<string>({
+//   get: () => {
+//     if (exchange.send === undefined || exchange.send === null)
+//       return "";
+//     if (activeField.value === "send") {
+//       return Number.isInteger(exchange.send)
+//         ? exchange.send.toString()
+//         : exchange.send.toFixed(2);
+//     }
+//     return formatWithCommas(exchange.send);
+//   },
+//   set: (val) => {
+//     exchange.send = val === "" ? undefined : parseCleanFloat(val);
+//   },
+// });
+
+// const receive = computed<string>({
+//   get: () => {
+//     if (!exchange.isConversionValid || exchange.receive === undefined)
+//       return "";
+
+//     const rawReceive = exchange.receive;
+
+//     if (activeField.value === "receive") {
+//       return Number.isInteger(rawReceive)
+//         ? rawReceive.toString()
+//         : rawReceive.toFixed(2);
+//     }
+//     return formatWithCommas(rawReceive);
+//   },
+//   set: (val) => {
+//     if (val === "" || !exchange.rate || exchange.rate === 0) {
+//       exchange.send = undefined;
+//       return;
+//     }
+//     const cleanNum = parseCleanFloat(val);
+//     exchange.send = cleanNum !== undefined ? cleanNum / exchange.rate : undefined;
+//   },
+// });
+
+// function formatWithCommas(num: number | null | undefined): string {
+//   if (num === null || num === undefined || Number.isNaN(num))
+//     return "";
+
+//   return Number.isInteger(num) ? integerFormatter.format(num) : decimalFormatter.format(num);
+// }
+
+// function parseCleanFloat(str: string): number | undefined {
+//   const clean = str.replace(/,/g, "");
+//   const parsed = Number.parseFloat(clean);
+//   return Number.isNaN(parsed) ? undefined : parsed;
+// }
 
 function validateKey(event: InputEvent): void {
   const target = event.target as HTMLInputElement;
@@ -104,7 +105,7 @@ function handlePaste(event: ClipboardEvent): void {
   }
   else if (cleanNumbers === "") {
     target.value = "";
-    exchange.send = undefined;
+    exchange.setSendAmount("");
     target.dispatchEvent(new Event("input"));
   }
 }
@@ -125,7 +126,7 @@ function handleBlur(): void {
   activeField.value = null;
 }
 
-const announcerText = computed(() => `${send.value} ${exchange.base} equals ${receive.value} ${exchange.quote}.`);
+const announcerText = computed(() => `${exchange.sendAmount} ${exchange.sendCurrency} equals ${exchange.receiveAmount} ${exchange.receiveCurrency}.`);
 
 const sendInputComponentRef = useTemplateRef("send-input");
 const receiveInputComponentRef = useTemplateRef("receive-input");
@@ -149,7 +150,7 @@ onMounted(() => {
     class="space-y-4"
     aria-labelledby="converter-component-heading"
     novalidate
-    @submit.prevent="handleSubmit"
+    @submit.prevent
   >
     <h2 id="converter-component-heading" class="uppercase text-3xl text-highlighted">
       Check the Rate
@@ -179,7 +180,7 @@ onMounted(() => {
             >
               <UInput
                 ref="send-input"
-                v-model="send"
+                v-model="exchange.sendAmount"
                 name="send"
                 size="xl"
                 variant="ghost"
@@ -189,20 +190,19 @@ onMounted(() => {
                 step="0.01"
                 min="0"
                 placeholder="0"
-                :aria-invalid="isSendInvalid"
                 :disabled="!exchange.rate"
+                @input="handleSendInput"
                 @focus="handleFocus($event, 'send')"
                 @blur="handleBlur"
                 @beforeinput="validateKey"
                 @paste="handlePaste"
-                @input="checkClearance"
               />
             </UFormField>
           </UTooltip>
 
           <SectionConverterCurrencyPicker
-            id="base"
-            v-model="exchange.base"
+            id="send-currency"
+            v-model="exchange.sendCurrency"
           />
         </div>
 
@@ -220,7 +220,7 @@ onMounted(() => {
             >
               <UInput
                 ref="receive-input"
-                v-model="receive"
+                v-model="exchange.receiveAmount"
                 name="receive"
                 size="xl"
                 variant="ghost"
@@ -229,21 +229,20 @@ onMounted(() => {
                 inputmode="decimal"
                 step="0.01"
                 min="0"
-                :aria-invalid="isReceiveInvalid"
                 :placeholder="exchange.rate ? '0' : 'Loading rate...'"
                 :disabled="!exchange.rate"
+                @input="handleReceiveInput"
                 @focus="handleFocus($event, 'receive')"
                 @blur="handleBlur"
                 @beforeinput="validateKey"
                 @paste="handlePaste"
-                @input="checkClearance"
               />
             </UFormField>
           </UTooltip>
 
           <SectionConverterCurrencyPicker
-            id="quote"
-            v-model="exchange.quote"
+            id="receive-currency"
+            v-model="exchange.receiveCurrency"
           />
         </div>
       </div>
@@ -255,7 +254,7 @@ onMounted(() => {
 
           <!-- Form Actions Group -->
           <div class="form-actions flex gap-2">
-            <ButtonToggleFavorite :pair="{ base: exchange.base, quote: exchange.quote }" variant="icon-plus-label" />
+            <ButtonToggleFavorite :pair="{ base: exchange.sendCurrency, quote: exchange.receiveCurrency }" variant="icon-plus-label" />
             <ButtonLogConversion />
             <ButtonShareLink />
           </div>

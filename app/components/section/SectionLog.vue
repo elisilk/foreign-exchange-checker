@@ -29,7 +29,7 @@ const conversionLogSorted = computed<Conversion[]>(() => [...exchange.conversion
       >
         <SectionLogItem
           v-for="log in conversionLogSorted"
-          :key="`log-item-${log.base}-${log.quote}-${log.datetime}`"
+          :key="`log-item-${log.sendCurrency}-${log.receiveCurrency}-${log.datetime}`"
           :log
         />
       </TransitionGroup>

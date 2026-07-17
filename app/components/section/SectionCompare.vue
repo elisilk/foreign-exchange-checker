@@ -1,10 +1,10 @@
 <script setup lang="ts">
 const exchange = useExchangeStore();
 
-const compareRates = computed<Rate[]>(() => {
+const compareRates = computed<SanitizedRate[]>(() => {
   // if EUR is base, then return the rates as they are
   // (no need for additional calculations or additions/removals)
-  if (exchange.base === exchange.referenceCurrency)
+  if (exchange.sendCurrency === exchange.referenceCurrency)
     return exchange.latestRates;
 
   // otherwise
@@ -13,36 +13,28 @@ const compareRates = computed<Rate[]>(() => {
   //  - retrieve and add rate with EUR as quote to the array
   //  - sort
   //  - return the new array
-
   const transformedRates = exchange.latestRates
-    .filter(rate => rate.quote !== exchange.base)
-    .map((rate) => {
-      const rateForPair = exchange.rateForPair(exchange.base, rate.quote);
-      return ({
-        date: rate.date,
-        base: exchange.base as string,
-        quote: rate.quote as string,
-        rate: rateForPair,
-      });
-    });
+    .filter(rate => rate.quote !== exchange.sendCurrency)
+    .map(
+      (rate) => {
+        return ({
+          date: rate.date,
+          base: exchange.sendCurrency,
+          quote: rate.quote,
+          rate: exchange.getPairRateAsString(exchange.sendCurrency, rate.quote),
+        });
+      },
+    )
+    .sort((a, b) => a.quote > b.quote ? 1 : -1);
 
-  // const rateEuroToBase = exchange.rateRelativeToEur(exchange.base);
-  // const euroRate: Rate = {
-  //   date: exchange.latestDate || "",
-  //   base: exchange.base as string,
-  //   quote: exchange.referenceCurrency,
-  //   rate: rateEuroToBase ? Number((1 / rateEuroToBase).toPrecision(5)) : undefined,
-  // };
-  // transformedRates.push(euroRate);
-
-  return transformedRates.sort((a, b) => a.quote > b.quote ? 1 : -1);
+  return transformedRates;
 });
 </script>
 
 <template>
   <section class="compare-component" aria-label="Compare">
     <UEmpty
-      v-if="!exchange.send"
+      v-if="!exchange.sendAmount"
       title="No comparison available"
       description="Enter an amount in SEND above to see what your money is worth in other currencies."
     />
@@ -55,13 +47,11 @@ const compareRates = computed<Rate[]>(() => {
 
     <UCard
       v-else
-      :description="`${exchange.latestRates.length} pairs`"
+      :description="`${compareRates.length} pairs`"
     >
       <template #title>
         <span class="text-lg">Multi-currency</span>
-        <span>{{ exchange.send.toLocaleString('en-US', {
-          maximumFractionDigits: 2,
-        }) }} from {{ exchange.base }}</span>
+        <span>{{ exchange.sendAmount }} from {{ exchange.sendCurrency }}</span>
       </template>
 
       <TransitionGroup
@@ -71,7 +61,7 @@ const compareRates = computed<Rate[]>(() => {
       >
         <SectionCompareItem
           v-for="rate in compareRates"
-          :key="`compare-item-${exchange.send}-${rate.base}-${rate.quote}`"
+          :key="`compare-item-${exchange.sendAmount}-${rate.base}-${rate.quote}`"
           :rate
         />
       </TransitionGroup>

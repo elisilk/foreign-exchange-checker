@@ -7,17 +7,15 @@ const { pair } = defineProps<Props>();
 
 const exchange = useExchangeStore();
 
-const rateLatest = computed(() => exchange.rateForPair(pair.base, pair.quote));
+const rateLatest = computed(() => exchange.getPairRateAsString(pair.base, pair.quote));
 
-const ratePrevious = computed(() => exchange.rateForPair(pair.base, pair.quote, "previous"));
-
-const ratePercentChange = computed<number>(() => (rateLatest.value === undefined || ratePrevious.value === undefined) ? 0 : Number((100 * (rateLatest.value - ratePrevious.value) / ratePrevious.value).toPrecision(2)));
-
-const ratePercentChangeIsPositive = computed<boolean>(() => ratePercentChange.value >= 0);
+const ratePercentChange = computed(
+  () => exchange.getPairRatePercentChange(pair.base, pair.quote),
+);
 
 function handleItemClick() {
-  exchange.base = pair.base;
-  exchange.quote = pair.quote;
+  exchange.sendCurrency = pair.base;
+  exchange.receiveCurrency = pair.quote;
   scrollToTop();
 }
 </script>
@@ -39,9 +37,9 @@ function handleItemClick() {
         <span class="text-xl text-highlighted">{{ rateLatest }}</span>
 
         <!-- percent change -->
-        <div class="text-xs flex gap-1 items-center" :class="[ratePercentChangeIsPositive ? 'text-primary' : 'text-red-500']">
-          <UIcon :name="ratePercentChangeIsPositive ? 'ion:arrow-up-b' : 'ion:arrow-down-b'" class="size-3" />
-          <span>{{ ratePercentChangeIsPositive ? '+' : '' }}{{ ratePercentChange.toFixed(2) }}%</span>
+        <div class="text-xs flex gap-1 items-center" :class="[ratePercentChange.isPositive ? 'text-primary' : 'text-red-500']">
+          <UIcon :name="ratePercentChange.isPositive === true ? 'ion:arrow-up-b' : 'ion:arrow-down-b'" class="size-3" />
+          <span>{{ ratePercentChange.percentChange }}</span>
         </div>
       </div>
     </button>

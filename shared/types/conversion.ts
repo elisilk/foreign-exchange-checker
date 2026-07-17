@@ -1,8 +1,9 @@
 export type Conversion = {
+  id: string;
   datetime: string | number | Date;
-  base: CurrencyCode;
-  quote: CurrencyCode;
-  rate: number;
-  send: number;
-  receive: number;
+  sendCurrency: CurrencyCode;
+  receiveCurrency: CurrencyCode;
+  sendAmount: string;
+  receiveAmount: string;
+  exchangeRate: string;
 };

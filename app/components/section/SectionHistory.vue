@@ -5,23 +5,23 @@ const timeScaleItems = computed(() => Object.keys(timeScaleOptions));
 
 const timeScaleStartDate = computed(() => timeScaleOptions[exchange.historyTimeScale]?.startDate);
 
-const historyCacheKey = computed(() => `history-${exchange.base}-${exchange.quote}-${exchange.historyTimeScale}`);
+const historyCacheKey = computed(() => `history-${exchange.sendCurrency}-${exchange.receiveCurrency}-${exchange.historyTimeScale}`);
 
 type CachedPayload<T> = {
   payload: T;
   fetchedAt: number;
 };
 
-const { data, pending, error } = useLazyAsyncData<CachedPayload<Rate[]>>(
+const { data, pending, error } = useLazyAsyncData<CachedPayload<ApiResponseRate[]>>(
   historyCacheKey,
   async () => {
-    const response = await $fetch<Rate[]>(
+    const response = await $fetch<ApiResponseRate[]>(
       "https://api.frankfurter.dev/v2/rates",
       {
         query: {
           providers: exchange.provider,
-          base: exchange.base,
-          quotes: exchange.quote,
+          base: exchange.sendCurrency,
+          quotes: exchange.receiveCurrency,
           from: timeScaleStartDate.value,
         },
       },
@@ -92,7 +92,7 @@ const ratePercentChangeIsPositive = computed<boolean>(() => ratePercentChange.va
       title="No chart data available"
     >
       <template #description>
-        We couldn't load rate history for {{ exchange.base }}/{{ exchange.quote }} right now. This usually clears up in a minute.
+        We couldn't load rate history for {{ exchange.sendCurrency }}/{{ exchange.receiveCurrency }} right now. This usually clears up in a minute.
       </template>
     </UEmpty>
 
@@ -157,7 +157,7 @@ const ratePercentChangeIsPositive = computed<boolean>(() => ratePercentChange.va
 
       <!-- chart display -->
       <UCard
-        :title="`${exchange.base}/${exchange.quote}`"
+        :title="`${exchange.sendCurrency}/${exchange.receiveCurrency}`"
         :description="`${rateLast} · ${ratesLastFetched}`"
         class="h-94.25"
       >

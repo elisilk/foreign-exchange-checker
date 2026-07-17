@@ -7,13 +7,11 @@ const { pair } = defineProps<Props>();
 
 const exchange = useExchangeStore();
 
-const rateLatest = computed(() => exchange.rateForPair(pair.base, pair.quote));
+const rateLatest = computed(() => exchange.getPairRateAsString(pair.base, pair.quote));
 
-const ratePrevious = computed(() => exchange.rateForPair(pair.base, pair.quote, "previous"));
-
-const ratePercentChange = computed<number>(() => (rateLatest.value === undefined || ratePrevious.value === undefined) ? 0 : Number((100 * (rateLatest.value - ratePrevious.value) / ratePrevious.value).toPrecision(2)));
-
-const ratePercentChangeIsPositive = computed<boolean>(() => ratePercentChange.value >= 0);
+const ratePercentChange = computed(
+  () => exchange.getPairRatePercentChange(pair.base, pair.quote),
+);
 </script>
 
 <template>
@@ -30,9 +28,9 @@ const ratePercentChangeIsPositive = computed<boolean>(() => ratePercentChange.va
       <span class="text-highlighted text-xs md:text-md">{{ rateLatest }}</span>
 
       <!-- percent change -->
-      <div class="flex gap-1 items-center text-xs md:text-sm" :class="[ratePercentChangeIsPositive ? 'text-success' : 'text-error']">
-        <UIcon :name="ratePercentChangeIsPositive === true ? 'ion:arrow-up-b' : 'ion:arrow-down-b'" class="size-3" />
-        <span>{{ ratePercentChangeIsPositive === true ? '+' : '' }}{{ ratePercentChange.toFixed(2) }}%</span>
+      <div class="flex gap-1 items-center text-xs md:text-sm" :class="[ratePercentChange.isPositive ? 'text-success' : 'text-error']">
+        <UIcon :name="ratePercentChange.isPositive === true ? 'ion:arrow-up-b' : 'ion:arrow-down-b'" class="size-3" />
+        <span>{{ ratePercentChange.percentChange }}</span>
       </div>
     </div>
   </section>

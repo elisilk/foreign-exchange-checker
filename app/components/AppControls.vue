@@ -24,7 +24,7 @@ const shortcutItems = ref({
     usingInput: true,
   },
   [joinKeys(APP_SHORTCUTS.swapCurrencyPair.kbds)]: {
-    handler: guardShortcut(() => exchange.swap()),
+    handler: guardShortcut(() => exchange.swapCurrencies()),
     usingInput: true,
   },
   [joinKeys(APP_SHORTCUTS.toggleFavorite.kbds)]: {

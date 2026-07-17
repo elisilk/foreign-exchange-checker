@@ -1,9 +1,9 @@
 <script setup lang="ts">
 const exchange = useExchangeStore();
 
-const { data: dataFetched, status } = useLazyFetch<Rate[]>(
+const { data: dataFetched, status } = useLazyFetch<ApiResponseRate[]>(
   () =>
-    `https://api.frankfurter.dev/v2/rates?from=${exchange.startDate}&base=${exchange.base}&quotes=${exchange.quote}&providers=${exchange.provider}`,
+    `https://api.frankfurter.dev/v2/rates?from=${exchange.startDate}&base=${exchange.sendCurrency}&quotes=${exchange.receiveCurrency}&providers=${exchange.provider}`,
   {
     server: false,
     transform: (rates) => {
@@ -24,15 +24,15 @@ const { data: dataFetched, status } = useLazyFetch<Rate[]>(
 const dataCalculated = computed(() => [
   {
     date: exchange.latestDate,
-    base: exchange.base,
-    quote: exchange.quote,
-    rate: exchange.rateForPair(exchange.base, exchange.quote, "latest"),
+    base: exchange.sendCurrency,
+    quote: exchange.receiveCurrency,
+    rate: exchange.getPairRate(exchange.sendCurrency, exchange.receiveCurrency, "latest"),
   },
   {
     date: exchange.previousDate,
-    base: exchange.base,
-    quote: exchange.quote,
-    rate: exchange.rateForPair(exchange.base, exchange.quote, "previous"),
+    base: exchange.sendCurrency,
+    quote: exchange.receiveCurrency,
+    rate: exchange.getPairRate(exchange.sendCurrency, exchange.receiveCurrency, "previous"),
   },
 ]);
 </script>

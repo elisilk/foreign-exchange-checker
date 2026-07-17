@@ -69,6 +69,7 @@ In addition, the solution includes the following bonus features. Users are able 
     - [IonIcons](https://icones.js.org/collection/ion)
     - [Circle Flags](https://icones.js.org/collection/circle-flags)
   - [Nuxt Charts](https://nuxtcharts.com/) - for the history chart
+- [Big.js](https://mikemcl.github.io/big.js/) - for arbitrary-precision decimal arithmetic
 
 For the workflow setup:
 
@@ -174,6 +175,19 @@ Specific additional features or enhancements I'd like to make in the future:
 ### What I Learned
 
 As always, so many cool :sunglasses: things.
+
+#### :bank: JavaScript Representations of Currencies
+
+Where are the math calculations happening and so mathematical precision is needed?
+
+For exchange rates:
+
+- Whenever calculating a rate for a pair that does not have the reference currency as the base currency (EUR). This happens in: (a) ticker items, (b) the main converter, (c) each of the compare items
+
+For currency amounts:
+
+- When triggering the main conversion between the send and receive inputs?
+- When calculating the compare receive amount for each currency using the send input?
 
 #### :satellite: API Data Fetching and Caching Strategy
 
