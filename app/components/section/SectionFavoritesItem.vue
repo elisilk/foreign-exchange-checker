@@ -37,8 +37,8 @@ function handleItemClick() {
         <span class="text-xl text-highlighted">{{ rateLatest }}</span>
 
         <!-- percent change -->
-        <div class="text-xs flex gap-1 items-center" :class="[ratePercentChange.isPositive ? 'text-primary' : 'text-red-500']">
-          <UIcon :name="ratePercentChange.isPositive === true ? 'ion:arrow-up-b' : 'ion:arrow-down-b'" class="size-3" />
+        <div class="text-xs flex gap-1 items-center" :class="[ratePercentChange.isPositive ? 'text-success' : 'text-error']">
+          <UIcon :name="ratePercentChange.isPositive ? 'ion:arrow-up-b' : 'ion:arrow-down-b'" class="size-3" />
           <span>{{ ratePercentChange.percentChange }}</span>
         </div>
       </div>

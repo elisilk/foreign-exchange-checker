@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const { $big } = useNuxtApp();
+
 const exchange = useExchangeStore();
 
 const timeScaleItems = computed(() => Object.keys(timeScaleOptions));
@@ -78,11 +80,26 @@ const rateOpen = computed(() => rateHistory.value?.[0]?.rate);
 
 const rateLast = computed(() => rateHistory.value?.at(-1)?.rate);
 
-const rateChange = computed(() => rateOpen.value && rateLast.value ? Number((rateLast.value - rateOpen.value).toPrecision(4)) : undefined);
+const rateChange = computed(() => {
+  if (!rateOpen.value || !rateLast.value)
+    return undefined;
 
-const ratePercentChange = computed<number>(() => (rateOpen.value === undefined || rateLast.value === undefined) ? 0 : Number((100 * (rateLast.value - rateOpen.value) / rateLast.value).toPrecision(2)));
+  const lastBig = $big(rateLast.value);
+  const openBig = $big(rateOpen.value);
 
-const ratePercentChangeIsPositive = computed<boolean>(() => ratePercentChange.value >= 0);
+  const delta = lastBig.minus(openBig);
+  const change = delta.div(openBig).times(100);
+  const isPositive = delta.gte(0);
+
+  const formattedAbsolute = `${(isPositive ? "+" : "") + delta.toFixed(5)}`;
+  const formattedPercent = `${(isPositive ? "+" : "") + change.toFixed(2)}%`;
+
+  return {
+    absoluteChange: formattedAbsolute,
+    percentChange: formattedPercent,
+    isPositive,
+  };
+});
 </script>
 
 <template>
@@ -122,8 +139,8 @@ const ratePercentChangeIsPositive = computed<boolean>(() => ratePercentChange.va
             <div class="text-lg text-highlighted/70 uppercase">
               Change
             </div>
-            <div class="text-3xl flex gap-1 items-center" :class="[ratePercentChangeIsPositive ? 'text-success' : 'text-error']">
-              <span>{{ ratePercentChangeIsPositive ? '+' : '' }}{{ rateChange }}</span>
+            <div class="text-3xl flex gap-1 items-center" :class="[rateChange?.isPositive ? 'text-success' : 'text-error']">
+              <span>{{ rateChange?.absoluteChange || 'Error' }}</span>
             </div>
           </div>
 
@@ -131,9 +148,9 @@ const ratePercentChangeIsPositive = computed<boolean>(() => ratePercentChange.va
             <div class="text-lg text-highlighted/70 uppercase">
               % Change
             </div>
-            <div class="text-3xl flex gap-1 items-center" :class="[ratePercentChangeIsPositive ? 'text-success' : 'text-error']">
-              <UIcon :name="ratePercentChangeIsPositive ? 'ion:arrow-up-b' : 'ion:arrow-down-b'" class="size-5" />
-              <span>{{ ratePercentChangeIsPositive ? '+' : '' }}{{ ratePercentChange.toFixed(2) }}%</span>
+            <div class="text-3xl flex gap-1 items-center" :class="[rateChange?.isPositive ? 'text-success' : 'text-error']">
+              <UIcon :name="rateChange?.isPositive ? 'ion:arrow-up-b' : 'ion:arrow-down-b'" class="size-5" />
+              <span>{{ rateChange?.percentChange || 'Error' }}</span>
             </div>
           </div>
         </div>

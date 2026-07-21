@@ -29,7 +29,7 @@ const ratePercentChange = computed(
 
       <!-- percent change -->
       <div class="flex gap-1 items-center text-xs md:text-sm" :class="[ratePercentChange.isPositive ? 'text-success' : 'text-error']">
-        <UIcon :name="ratePercentChange.isPositive === true ? 'ion:arrow-up-b' : 'ion:arrow-down-b'" class="size-3" />
+        <UIcon :name="ratePercentChange.isPositive ? 'ion:arrow-up-b' : 'ion:arrow-down-b'" class="size-3" />
         <span>{{ ratePercentChange.percentChange }}</span>
       </div>
     </div>
