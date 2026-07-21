@@ -17,58 +17,38 @@ function handleReceiveInput(e: Event) {
 
 const activeField = ref<"send" | "receive" | null>(null);
 
-// const send = computed<string>({
-//   get: () => {
-//     if (exchange.send === undefined || exchange.send === null)
-//       return "";
-//     if (activeField.value === "send") {
-//       return Number.isInteger(exchange.send)
-//         ? exchange.send.toString()
-//         : exchange.send.toFixed(2);
-//     }
-//     return formatWithCommas(exchange.send);
-//   },
-//   set: (val) => {
-//     exchange.send = val === "" ? undefined : parseCleanFloat(val);
-//   },
-// });
+const sendAmountLocal = computed<string>({
+  get: () => {
+    if (activeField.value === "send") {
+      return exchange.sendAmount;
+    }
+    return formatWithCommas(exchange.sendAmount);
+  },
+  set: (val) => {
+    exchange.setSendAmount(parseCleanFloat(val));
+  },
+});
 
-// const receive = computed<string>({
-//   get: () => {
-//     if (!exchange.isConversionValid || exchange.receive === undefined)
-//       return "";
+const receiveAmountLocal = computed<string>({
+  get: () => {
+    if (activeField.value === "receive") {
+      return exchange.receiveAmount;
+    }
+    return formatWithCommas(exchange.receiveAmount);
+  },
+  set: (val) => {
+    exchange.setReceiveAmount(parseCleanFloat(val));
+  },
+});
 
-//     const rawReceive = exchange.receive;
+function formatWithCommas(num: string): string {
+  const numericValue = Number.parseFloat(num);
+  return Number.isInteger(numericValue) ? integerFormatter.format(numericValue) : decimalFormatter.format(numericValue);
+}
 
-//     if (activeField.value === "receive") {
-//       return Number.isInteger(rawReceive)
-//         ? rawReceive.toString()
-//         : rawReceive.toFixed(2);
-//     }
-//     return formatWithCommas(rawReceive);
-//   },
-//   set: (val) => {
-//     if (val === "" || !exchange.rate || exchange.rate === 0) {
-//       exchange.send = undefined;
-//       return;
-//     }
-//     const cleanNum = parseCleanFloat(val);
-//     exchange.send = cleanNum !== undefined ? cleanNum / exchange.rate : undefined;
-//   },
-// });
-
-// function formatWithCommas(num: number | null | undefined): string {
-//   if (num === null || num === undefined || Number.isNaN(num))
-//     return "";
-
-//   return Number.isInteger(num) ? integerFormatter.format(num) : decimalFormatter.format(num);
-// }
-
-// function parseCleanFloat(str: string): number | undefined {
-//   const clean = str.replace(/,/g, "");
-//   const parsed = Number.parseFloat(clean);
-//   return Number.isNaN(parsed) ? undefined : parsed;
-// }
+function parseCleanFloat(str: string): string {
+  return str.replace(/,/g, "");
+}
 
 function validateKey(event: InputEvent): void {
   const target = event.target as HTMLInputElement;
@@ -134,13 +114,15 @@ const receiveInputComponentRef = useTemplateRef("receive-input");
 onMounted(() => {
   if (sendInputComponentRef.value) {
     const nativeInput = sendInputComponentRef.value.inputRef;
-    if (nativeInput)
+    if (nativeInput) {
       exchange.registerSendInput(nativeInput);
+    }
   }
   if (receiveInputComponentRef.value) {
     const nativeInput = receiveInputComponentRef.value.inputRef;
-    if (nativeInput)
+    if (nativeInput) {
       exchange.registerReceiveInput(nativeInput);
+    }
   }
 });
 </script>
@@ -180,15 +162,13 @@ onMounted(() => {
             >
               <UInput
                 ref="send-input"
-                v-model="exchange.sendAmount"
+                v-model="sendAmountLocal"
                 name="send"
                 size="xl"
                 variant="ghost"
                 color="neutral"
                 type="text"
                 inputmode="decimal"
-                step="0.01"
-                min="0"
                 placeholder="0"
                 :disabled="!exchange.rate"
                 @input="handleSendInput"
@@ -220,15 +200,13 @@ onMounted(() => {
             >
               <UInput
                 ref="receive-input"
-                v-model="exchange.receiveAmount"
+                v-model="receiveAmountLocal"
                 name="receive"
                 size="xl"
                 variant="ghost"
                 color="primary"
                 type="text"
                 inputmode="decimal"
-                step="0.01"
-                min="0"
                 :placeholder="exchange.rate ? '0' : 'Loading rate...'"
                 :disabled="!exchange.rate"
                 @input="handleReceiveInput"

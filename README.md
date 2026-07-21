@@ -149,6 +149,7 @@ Users are able to:
 Specific known areas where I know the solution should be improved:
 
 - [x] Log items styling - The inline size of the log timestamp should be consistent across the item rows. And, the send and receive amounts should be on one line when in larger viewports.
+- [ ] In main converter inputs, prevent or truncate decimal places when zero-decimal currencies are selected
 - [ ] Input error/invalid states and messages in the main converter component
 - [ ] Currency select menu label styling - Figure out how to target the styling of the category labels (e.g., "Popular") so that the badge (the count) is aligned to the end of the container.
 - [ ] Hydration mismatch error - There is a "Hydration completed but contains mismatches" error that shows up in production, but I can't see it in the development environment, so will need to investigate further.
@@ -178,16 +179,7 @@ As always, so many cool :sunglasses: things.
 
 #### :bank: JavaScript Representations of Currencies
 
-Where are the math calculations happening and so mathematical precision is needed?
-
-For exchange rates:
-
-- Whenever calculating a rate for a pair that does not have the reference currency as the base currency (EUR). This happens in: (a) ticker items, (b) the main converter, (c) each of the compare items
-
-For currency amounts:
-
-- When triggering the main conversion between the send and receive inputs?
-- When calculating the compare receive amount for each currency using the send input?
+Across the application, different representations of the currency exchange rates and amounts are needed for different uses in light of [well-known JavaScript rounding errors](https://www.robinwieruch.de/javascript-rounding-errors/). To maintain mathematical precision, Big.js was used for all calculations (i.e., converting between exchange rates, converting amounts between currencies). For rendering and logging, rates and amounts are converted to string representations. Specifically for rendering, different formatting can be used depending upon [the minor units](https://www.iso.org/iso-4217-currency-codes.html) for that specific currency.
 
 #### :satellite: API Data Fetching and Caching Strategy
 
